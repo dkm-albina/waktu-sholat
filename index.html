@@ -3,9 +3,9 @@
 <head>
 	<meta charset="utf-8">
 	<title>Jadwal Shalat</title>
-	<link rel="stylesheet" href="css/normalize.min.css" />
-	<link rel="stylesheet" href="js/owlcarousel/assets/owl.carousel.min.css" />
-	<link rel="stylesheet" href="js/owlcarousel/assets/owl.theme.default.min.css" />
+	<link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css" />
+	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css" />
+	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.theme.default.min.css" />
 	<style>
 		*{
 			padding:0;
@@ -298,19 +298,19 @@ color:#ff4500 !important;
 	<div class="layer"></div>
 	
 	<!--fix problem : google chrome update will not autoplay audio/video-->
-	<iframe src="audio/silence.mp3" allow="autoplay" id="audio" style="display:none"></iframe>
+	<iframe src="www/public/Bilal/audio/silence.mp3" allow="autoplay" id="audio" style="display:none"></iframe>
 	<audio id="player"  >
-		<source src="audio/beep.mp3" type="audio/mp3">
+		<source src="www/public/Bilal/audio/beep.mp3" type="audio/mp3">
 	</audio>
 	
 	
-	<script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/moment-with-locales.min.js"></script>
-<script src="js/moment-hijri.js"></script>
+	<script src="www/public/Bilal/js/jquery-3.3.1.min.js"></script>
+<script src="www/public/Bilal/js/moment-with-locales.min.js"></script>
+<script src="www/public/Bilal/js/moment-hijri.js"></script>
 
-<script src="js/PrayTimes.js"></script>
-<script src="js/jquery.marquee.min.js"></script>
-<script src="js/owlcarousel/owl.carousel.min.js"></script>
+<script src="www/public/Bilal/js/PrayTimes.js"></script>
+<script src="www/public/Bilal/js/jquery.marquee.min.js"></script>
+<script src="www/public/Bilal/js/owlcarousel/owl.carousel.min.js"></script>
 
 <script>
 //app setting
@@ -331,7 +331,7 @@ var setting = {
 	methodCalc:'Egypt', //metode perhitungan adzan http://praytimes.org/wiki/Calculation_Methods .Script test metode test_metode.html . Valid value: MWL, ISNA, Egypt, Makkah, Karachi, Tehran, Jafari
 	dst: 'auto', //Daylight Saving Time: 1 if date is in daylight saving time, 0 otherwise. If omitted or set to 'auto', dst is extracted from the system.
 	tune: {imsak: 0, fajr: 0, sunrise:0, dhuhr:+1.5, asr:+1.5, sunset:0, maghrib:+1.5, isha:+1.5, midnight:0}, //- By default, PrayTimes rounds minutes to the nearest values. To round a specific time up, you can tune it by +0.5 minutes, and to round it down, you can tune it by -0.5 minutes. - Tuning is the last step after calculating step, and thus, it has no effect on the calculation parameters. For example, if Isha is set to be 90 minutes after sunset, tuning sunset by 5 minutes will not push Isha forward.
-	runningTextFile: "https://herifauzan.github.io/public-site/",
+	runningTextFile: "www/public/Bilal/text/runningtext.txt" , ////"https://herifauzan.github.io/public-site/",
 	runningTextSpeed: 15000, //15 detik
 	slideInterval: 17000,  //17 detik waktu interval slide
 	slideImageCount: 30, //jumlah maximum slide file (jgn lupa rename semua file di dalam folder slide jadi 1.jpg, 2.jpg dst)
