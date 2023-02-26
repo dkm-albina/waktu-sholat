@@ -475,13 +475,13 @@ $(function(){
 	}
 	nextSchedule();
 	
-	function refreshApps(){
-		if(moment().format('h')==0){
-			location.reload();
-		}
-		setInterval(refreshApps, 18000);
-	}
-	refreshApps();
+// 	function refreshApps(){
+// 		if(moment().format('h')==0){
+// 			location.reload();
+// 		}
+// 		setInterval(refreshApps, 18000);
+// 	}
+// 	refreshApps();
 
 	for(a=1;a<=setting.slideImageCount;a++){
 		$('.slide-container').append('<div class="item" style="background-image: url(\'www/public/Bilal/img/slide/'+a+'.JPG\')"></div>');
