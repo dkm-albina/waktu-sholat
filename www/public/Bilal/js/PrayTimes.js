@@ -82,6 +82,9 @@ function PrayTimes(method) {
 
 	// Calculation Methods
 	methods = {
+		Kemenag: {
+			name: 'Kementerian Agama RI',
+			params: { fajr: 20, isha: 18 } },
 		MWL: {
 			name: 'Muslim World League',
 			params: { fajr: 18, isha: 17 } },
