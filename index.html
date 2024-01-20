@@ -21,7 +21,7 @@
 		.col4{ /* menjelang*/
 			width:27%;
 			color:#ff4500;
-			font-size:13px;
+			font-size:14px;
 		}
 		.first .mybox{ /*panel waktu 4*/
 			background-color: #005577;
@@ -164,7 +164,7 @@
 			background-repeat:no-repeat;
 			background-color: #124653;
 			height: calc(100vh - 196px);
-			border: 6px solid #124653;
+			border: 5px solid #124653;
 			border-radius: 4px;
 			-webkit-transition: all .2s ease-in-out;
 			-o-transition: all .2s ease-in-out;
@@ -177,7 +177,7 @@
 		}
 		.running-container{ /*contain text*/
 			position: absolute;
-			bottom: 18px;
+			bottom: 16px;
 			left:2%;
 			width: 96%;
 			z-index:99999999;
@@ -315,7 +315,7 @@ color:#ff4500 !important;
 <script>
 //app setting
 var app = {
-	version: '1.0.0',
+	version: '1.0.1',
 	name: 'Bilal App',
 	autoLocation: true //jika anda ingin menggunakan autolocation, setelah memilih opsi enable GPS pada browser, lalukan refresh pada browser. Fitur ini hanya berfungsi jika device terkoneksi dengan internet saja.
 };
@@ -333,7 +333,7 @@ var setting = {
 	tune: {imsak: +3, fajr: +3, sunrise: +3, dhuhr: +3, asr: +3, sunset: +3, maghrib:+3, isha:+3, midnight:+3}, //- By default, PrayTimes rounds minutes to the nearest values. To round a specific time up, you can tune it by +0.5 minutes, and to round it down, you can tune it by -0.5 minutes. - Tuning is the last step after calculating step, and thus, it has no effect on the calculation parameters. For example, if Isha is set to be 90 minutes after sunset, tuning sunset by 5 minutes will not push Isha forward.
 	runningTextFile: "www/public/Bilal/text/runningtext.txt" , ////"https://herifauzan.github.io/public-site/",
 	runningTextSpeed: 15000, //15 detik
-	slideInterval: 17000,  //17 detik waktu interval slide
+	slideInterval: 18000,  //18 detik waktu interval slide
 	slideImageCount: 25, //jumlah maximum slide file (jgn lupa rename semua file di dalam folder slide jadi 1.jpg, 2.jpg dst)
 	adzanTime: 300000, // 5 menit lama tulisan adzan
 	iqomahTime: 6000, //1 menit lama waktu tulisan iqomah
