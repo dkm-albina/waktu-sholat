@@ -330,7 +330,7 @@ var setting = {
 	timezoneOffset:7,
 	methodCalc:'Kemenag', //metode perhitungan adzan http://praytimes.org/wiki/Calculation_Methods .Script test metode test_metode.html . Valid value: MWL, ISNA, Egypt, Makkah, Karachi, Tehran, Jafari
 	dst: 'auto', //Daylight Saving Time: 1 if date is in daylight saving time, 0 otherwise. If omitted or set to 'auto', dst is extracted from the system.
-	tune: {imsak: +3, fajr: +3, sunrise: +6, dhuhr: +3, asr: +3, sunset: +3, maghrib:0, isha:+3, midnight:+3}, //- By default, PrayTimes rounds minutes to the nearest values. To round a specific time up, you can tune it by +0.5 minutes, and to round it down, you can tune it by -0.5 minutes. - Tuning is the last step after calculating step, and thus, it has no effect on the calculation parameters. For example, if Isha is set to be 90 minutes after sunset, tuning sunset by 5 minutes will not push Isha forward.
+	tune: {imsak: +3, fajr: +3, sunrise: +6, dhuhr: +3, asr: +3, sunset: +3, maghrib:+3, isha:+3, midnight:+3}, //- By default, PrayTimes rounds minutes to the nearest values. To round a specific time up, you can tune it by +0.5 minutes, and to round it down, you can tune it by -0.5 minutes. - Tuning is the last step after calculating step, and thus, it has no effect on the calculation parameters. For example, if Isha is set to be 90 minutes after sunset, tuning sunset by 5 minutes will not push Isha forward.
 	runningTextFile: "www/public/Bilal/text/runningtext.txt" , ////"https://herifauzan.github.io/public-site/",
 	runningTextSpeed: 15000, //15 detik
 	slideInterval: 18000,  //18 detik waktu interval slide
