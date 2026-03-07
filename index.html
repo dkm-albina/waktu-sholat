@@ -10,228 +10,260 @@
 	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css" />
 	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.theme.default.min.css" />
 	<style>
-		*{
-			padding:0;
-			margin:0;
-		}
+	*{
+		padding:0;
+		margin:0;
+	}
 
-		body, body *{
-    		font-family: Arial, Helvetica, sans-serif !important;
-		}
+	body, body *{
+		font-family: Arial, Helvetica, sans-serif !important;
+	}
 
-		.row{
-			box-sizing:border-box;
-		}
-		.col{ /*mengatur letak nama masjid dll (yg ada diheader*/
-			float:left;
-			box-sizing:border-box;
-		}
-		.col4{ /* menjelang*/
-			width:27%;
-			color:#ff4500;
-			font-size:14px;
-		}
-		.first .mybox{ /*panel waktu 4*/
-			background-color: #4e342e; /* coklat tua */
-			/*background-color: #005577;*/
-			/*background-color: #003366;*/
-			/*color: #ECF42F;*/
-			text-align:center;
-			border-radius:4px;
-			font-weight:bold;
-		}
-		.col2{ 
-			width:46%;
-		}
-		.col7{ /*jadwal n nama sholat*/
-			float:left;
-			width: 12.28%;
-			margin-left: 1%;
-			margin-right: 1%;
-		}
-		.p-0{padding:0;}
-		.mycontainer{
-			width:100%;
-			height: 100vh;
-		}
-		.first{ /*header*/
-			/*background-color: #013505;*/
-			background-color: #1b5e20; /*#006699;*/
-			padding:5px 0;
-			height:100px;
-		}
-		.first .middle1{ /*nama masjid*/
-			color: #fff;
-			font-size:42px; /*40px*/
-			font-weight:bold;
-		}
+	.row{
+		box-sizing:border-box;
+	}
+
+	.col{ /*mengatur letak nama masjid dll (yg ada diheader*/
+		float:left;
+		box-sizing:border-box;
+	}
+
+	.col4{ /* menjelang*/
+		width:27%;
+		/*color:#ff4500;*/
+		color:#8d6e63; /* diganti coklat medium */
+		font-size:14px;
+	}
+
+	.first .mybox{ /*panel waktu 4*/
+		background-color: #4e342e; /* coklat tua (tetap) */
+		/*background-color: #005577;*/
+		/*background-color: #003366;*/
+		/*color: #ECF42F;*/
+		text-align:center;
+		border-radius:4px;
+		font-weight:bold;
+	}
+
+	.col2{ 
+		width:46%;
+	}
+
+	.col7{ /*jadwal n nama sholat*/
+		float:left;
+		width: 12.28%;
+		margin-left: 1%;
+		margin-right: 1%;
+	}
+
+	.p-0{padding:0;}
+	.mycontainer{
+		width:100%;
+		height: 100vh;
+	}
+
+	.first{ /*header*/
+		/*background-color: #013505;*/
+		/*background-color: #006699;*/
+		background-color: #2e7d32; /* hijau tua */
+		padding:5px 0;
+		height:100px;
+	}
+
+	.first .middle1{ /*nama masjid*/
+		color: #fff;
+		font-size:42px; /*40px*/
+		font-weight:bold;
+	}
+
+	.first .middle2{ /*alamat masjid*/
+		/*color: #F5EC6D;*/
+		color: #c5e1a5; /* hijau muda */
+		font-size:21px; /*20px*/
+		font-weight:bold;
+	}
+
+	.first .middle3{ /*longitudinal masjid*/
+		color: #fff;
+		font-size:14px;
+		font-weight:bold;
+	}
+
+	.second{ /*bawah header box shol n jamshol*/
+		box-sizing: border-box;
+		padding:5px 10px 0 10px;
+		margin-bottom:20px;
+		height:64px;
+	}
+
+	.third{ /*slide*/
+		padding:0 16px; /*20px*/
+	}
+
+	.four{ /*slide bawah foot*/
+		height:8px; /*awalnya 12px*/
+	}
+
+	.four .footer1{ /*versi*/
+		/*color:#000000;*/
+		color:#4e342e; /* coklat tua */
+		float:left;
+		font-size:6px; /*10px*/
+	}
+
+	.four .footer2{ /*bilal app*/
+		/*color:#000000;*/
+		color:#4e342e; /* coklat tua */
+		float:right;
+		font-size:6px; /*10px*/
+	}
+
+	.myprayer{ /*jadwal*/
+		color: #fff;
+		float:left;
+		font-weight:bold;
+	}
+
+	.masehi{ /*jam skrg */
+		font-size:52px; /*dari 50px */
+		font-weight:bold;
+		margin:0 auto 5px auto;
+		padding: 0px 0px;
+		text-transform: uppercase;
+		/*color:#66ffff;*/
+		color:#aed581; /* hijau muda */
+	}
+
+	.hijriah{ /*hari skrg*/
+		padding: 8px 0px;
+		font-weight:bold;
+		/*color:#dcdcdc;*/
+		color:#d7ccc8; /* coklat muda */
+		font-size:12px; /*dari 14px */
+	}
+
+	.countdown-event{ /*waktu mundur*/
+		padding: 0px 0px;
+		font-size:60px; /*60px*/
+		font-weight:bold;
+		/*color:#ccff00;*/
+		color:#ffcc80; /* coklat keemasan */
+	}
+
+	.prayer-title{ /*judul sholat*/
+		font-size: 20px;
+		padding:0px;
+		text-align:center;
+		/*background-color: #81600F;*/
+		/*background-color: #004d47;*/
+		background-color: #5d4037; /* coklat tua */
+		margin-bottom:1px;
+		border-radius: 4px;
+		font-weight:bold;
+	}
+
+	.super-block{ /*background*/
+		/*background-color:#178B9A;*/
+		/*background-image: linear-gradient(#203161, #178B9A);*/
+		/*background-image: linear-gradient(#2193b0, #6dd5ed, #f8f1e5);*/
+		background-image: linear-gradient(#2e7d32, #4e342e, #a1887f); /* hijau + coklat */
+	}
+
+	.prayer-time{ /*waktu sholat*/
+		font-size: 44px;
+		padding:0px;
+		text-align:center;
+		/*background-color: #1E5F95;*/
+		background-color: #6d4c41; /* coklat medium */
+		border-radius: 4px;
+		font-weight:bold;
+	}
+
+	.clear{
+		clear:both;
+	}
+
+	.text-center{
+		text-align:center;
+	}
+
+	.wallpaper-container{
 		
-		.first .middle2{ /*alamat masjid*/
-			color: #F5EC6D;
-			font-size:21px; /*20px*/
-			font-weight:bold;
-		}
+	}
+
+	.wallpaper .item{ /*wallpaper slide*/
+		box-sizing: border-box;
+		width:100%;
+		/*background-image: url("img/img1.jpg");*/
+		background-size:100% 100%;
+		background-position:center;
+		background-repeat:no-repeat;
+		/*background-color: #124653;*/
+		background-color: #2e7d32; /* hijau tua */
+		height: calc(100vh - 196px); /*100vh - 196px*/
+		border: 2px solid #4e342e; /* coklat tua */
+		border-radius: 1px; /*awalnya 4px*/
+		-webkit-transition: all .2s ease-in-out;
+		-o-transition: all .2s ease-in-out;
+		transition: all .2s ease-in-out;
 		
-		.first .middle3{ /*longitudinal masjid*/
-			color: #fff;
-			font-size:14px;
-			font-weight:bold;
-		}
-		.second{ /*bawah header box shol n jamshol*/
-			box-sizing: border-box;
-			padding:5px 10px 0 10px;
-			margin-bottom:20px;
-			height:64px;
-			
-		}
+	}
+
+	.second-block{
+		margin: 0px auto;
+	}
+
+	.running-container{ /*contain text*/
+		position: absolute;
+		bottom: 16px; /*16px*/
+		left:2%; /*2%*/
+		width: 98%; /*96%*/
+		z-index:99999999;
+	}
+
+	.running-text .js-marquee{
+	
+	}
+
+	.running-text{ /*teks berjalan*/
+		padding: 2px; /*4px*/
+		overflow: hidden;
+		/*background: #2c0f0082;*/
+		background: rgba(78, 52, 46, 0.7); /* coklat semi transparan */
+		/*color:#F5EC6D;*/
+		color:#c5e1a5; /* hijau muda */
+		font-size: 28px; /*font-size 30px for running text*/
 		
-		.third{ /*slide*/
-			padding:0 16px; /*20px*/
-			
-		}
+	}
+
+	.highlight{
+		/*color: yellow !important;*/
+		/*color:#ff4500 !important;*/
+		color:#ffd54f !important; /* coklat keemasan */
+		font-weight:bold;
 		
-		.four{ /*slide bawah foot*/
-			height:8px; /*awalnya 12px*/
-		}
-		.four .footer1{ /*versi*/
-			color:#000000;
-			float:left;
-			font-size:6px; /*10px*/
-		}
-		.four .footer2{ /*bilal app*/
-			color:#000000;
-			float:right;
-			font-size:6px; /*10px*/
-		}
-		.myprayer{ /*jadwal*/
-		
-			color: #fff;
-			float:left;
-			font-weight:bold;
-		}
-		.masehi{ /*jam skrg */
-			font-size:52px; /*dari 50px */
-			font-weight:bold;
-			margin:0 auto 5px auto;
-			padding: 0px 0px;
-			text-transform: uppercase;
-			/*color:#66ffff;*/
-			color:#c5e1a5; /* hijau muda */
-		}
-		.hijriah{ /*hari skrg*/
-			padding: 8px 0px;
-			font-weight:bold;
-			color:#dcdcdc;
-			font-size:12px; /*dari 14px */
-		}
-		.countdown-event{ /*waktu mundur*/
-			
-			padding: 0px 0px;
-			font-size:60px; /*60px*/
-			font-weight:bold;
-			/*color:#ccff00;*/
-			color:#ffcc80; /* coklat keemasan */
-		}
-		.prayer-title{ /*judul sholat*/
-			font-size: 20px;
-			padding:0px;
-			text-align:center;
-			/*background-color: #81600F;*/
-			/*background-color: #004d47;*/
-			background-color: #3e2723; /* coklat tua */
-			/*background-color: #006400;*/
-			margin-bottom:1px;
-			border-radius: 4px;
-			font-weight:bold;
-		}
-		.super-block{ /*background*/
-			/*background-color:#178B9A;*/
-			/*background-image: linear-gradient(#203161, #178B9A);*/
-			/*background-image: linear-gradient(#2193b0, #6dd5ed, #f8f1e5);*/
-			background-image: linear-gradient(#1b5e20, #4e342e, #a1887f);
-		}
-		.prayer-time{ /*waktu sholat*/
-			font-size: 44px;
-			padding:0px;
-			text-align:center;
-			/*background-color: #1E5F95;*/
-			background-color: #2c7873;
-			border-radius: 4px;
-			font-weight:bold;
-		}
-		.clear{
-			clear:both;
-		}
-		.text-center{
-			text-align:center;
-		}
-		.wallpaper-container{
-			
-		}
-		.wallpaper .item{ /*wallpaper slide*/
-			box-sizing: border-box;
-			width:100%;
-			/*background-image: url("img/img1.jpg");*/
-			background-size:100% 100%;
-			background-position:center;
-			background-repeat:no-repeat;
-			/*background-color: #124653;*/
-			background-color: #1b5e20;
-			height: calc(100vh - 196px); /*100vh - 196px*/
-			border: 2px solid #124653; /*awalnya 6px*/
-			border-radius: 1px; /*awalnya 4px*/
-			-webkit-transition: all .2s ease-in-out;
-			-o-transition: all .2s ease-in-out;
-			transition: all .2s ease-in-out;
-			
-		}
-		
-		.second-block{
-			margin: 0px auto;
-		}
-		.running-container{ /*contain text*/
-			position: absolute;
-			bottom: 16px; /*16px*/
-			left:2%; /*2%*/
-			width: 98%; /*96%*/
-			z-index:99999999;
-		}
-		.running-text .js-marquee{
-		
-		}
-		.running-text{ /*teks berjalan*/
-			padding: 2px; /*4px*/
-			overflow: hidden;
-			background: #2c0f0082;
-			color:#F5EC6D;
-			font-size: 28px; /*font-size 30px for running text*/
-			
-		}
-		.highlight{
-			/*color: yellow !important;*/
-			/*color:#ff4500 !important;*/
-			color:#ffd54f !important;
-			font-weight:bold;
-			
-		}
-		.countdown-event{ /*margin countdown*/
-			margin-bottom: 2px;
-		}
-		.desc-container{ /*pad menjelang*/
-			padding:4px;
-		}
-		.layer{
-			width:100%;
-			height:100vh;
-			background-color: #000;
-			position:fixed;
-			left:0;
-			top:0;
-			display:none;
-			color:#fff;
-			font-size:20px; /*20px*/
-		}
-	</style>
+	}
+
+	.countdown-event{ /*margin countdown*/
+		margin-bottom: 2px;
+	}
+
+	.desc-container{ /*pad menjelang*/
+		padding:4px;
+	}
+
+	.layer{
+		width:100%;
+		height:100vh;
+		background-color: #000;
+		position:fixed;
+		left:0;
+		top:0;
+		display:none;
+		color:#fff;
+		font-size:20px; /*20px*/
+	}
+</style>
 
 </head>
 <body>
