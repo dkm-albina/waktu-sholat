@@ -364,14 +364,46 @@ var tempShalat;
 // FIX FEATURE auto refresh daily tracking
 var todayDate = moment().format("YYYY-MM-DD");
 
+// ===============================
+// WATCHDOG DISPLAY SYSTEM
+// menjaga sistem tetap hidup 24 jam
+// ===============================
+
+var watchdogLastTick = Date.now();
+
+setInterval(function(){
+
+    var now = Date.now();
+    var diff = now - watchdogLastTick;
+
+    // jika lebih dari 2 menit tidak ada aktivitas
+    if(diff > 120000){
+
+        console.log("Watchdog restart triggered");
+
+        try{
+            startApp(); // restart sistem jadwal
+        }catch(e){
+            console.log("Watchdog error:",e);
+        }
+
+        watchdogLastTick = Date.now();
+
+    }
+
+},30000); // cek setiap 30 detik
+
+
 // FIX BUG geolocation async
 function startApp(){
 
 	stopTimer(); // FIX edge case midnight timer
-
+	
     var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
 	var now = new Date(); // today
 	
+	watchdogLastTick = Date.now();
+
 	prayTimes.setMethod(setting.methodCalc);
 	prayTimes.tune(setting.tune);
 	
@@ -401,35 +433,6 @@ function startApp(){
 
 	nextSchedule();
 }
-
-// ===============================
-// WATCHDOG DISPLAY SYSTEM
-// menjaga sistem tetap hidup 24 jam
-// ===============================
-
-var watchdogLastTick = Date.now();
-
-setInterval(function(){
-
-    var now = Date.now();
-    var diff = now - watchdogLastTick;
-
-    // jika lebih dari 2 menit tidak ada aktivitas
-    if(diff > 120000){
-
-        console.log("Watchdog restart triggered");
-
-        try{
-            startApp(); // restart sistem jadwal
-        }catch(e){
-            console.log("Watchdog error:",e);
-        }
-
-        watchdogLastTick = Date.now();
-
-    }
-
-},30000); // cek setiap 30 detik
 
 // FIX BUG audio autoplay
 function beep(){
@@ -478,7 +481,7 @@ $(function(){
 			}
 
 			// FIX BUG timezone
-			setting.timezoneOffset = moment().utcOffset() / 60;
+			setting.timezoneOffset = Math.round(moment().utcOffset()/60);
 
 			startApp();
 
@@ -546,6 +549,7 @@ $(function(){
 function stopTimer(){
 	if(mycountdown){
 		clearInterval(mycountdown);
+		mycountdown = null; // tambahan kecil
 	}
 }
 
