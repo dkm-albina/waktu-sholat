@@ -215,9 +215,10 @@
 
 .running-container { /* container teks berjalan */
     position: absolute;
-    bottom: 16px;      /* jarak dari bawah layar */
+    bottom: 0;      /* jarak dari bawah layar */
     left: 0;           /* mulai dari kiri layar */
     width: 100%;       /* lebar penuh */
+	overflow: hidden;     /* sembunyikan teks keluar */
     z-index: 99999999;
 }
 
@@ -226,6 +227,7 @@
 	}
 
 .running-text { /* box teks berjalan */
+	display: inline-block;
     height: 50px;                  /* tinggi tetap, pas untuk font-size 28px */
     line-height: 50px;             /* teks vertikal center */
     padding: 0 10px;               /* jarak kiri dan kanan */
