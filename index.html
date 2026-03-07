@@ -213,28 +213,31 @@
 		margin: 0px auto;
 	}
 
-	.running-container{ /*contain text*/
-		position: absolute;
-		bottom: 16px; /*16px*/
-		left:2%; /*2%*/
-		width: 98%; /*96%*/
-		z-index:99999999;
-	}
+.running-container { /* container teks berjalan */
+    position: absolute;
+    bottom: 16px;      /* jarak dari bawah layar */
+    left: 0;           /* mulai dari kiri layar */
+    width: 100%;       /* lebar penuh */
+    z-index: 99999999;
+}
 
-	.running-text .js-marquee{
+		.running-text .js-marquee{
 	
 	}
 
-	.running-text{ /*teks berjalan*/
-		padding: 2px; /*4px*/
-		overflow: hidden;
-		/*background: #2c0f0082;*/
-		background: rgba(78, 52, 46, 0.7); /* coklat semi transparan */
-		/*color:#F5EC6D;*/
-		color:#c5e1a5; /* hijau muda */
-		font-size: 28px; /*font-size 30px for running text*/
+.running-text { /* box teks berjalan */
+    height: 50px;                  /* tinggi tetap, pas untuk font-size 28px */
+    line-height: 50px;             /* teks vertikal center */
+    padding: 0 10px;               /* jarak kiri dan kanan */
+    overflow: hidden;              /* teks keluar container disembunyikan */
+    background: rgba(78, 52, 46, 0.7); /* coklat semi transparan */
+    color: #c5e1a5;                /* hijau muda */
+    font-size: 28px;               /* ukuran font */
+    white-space: nowrap;           /* teks tetap satu baris */
+    box-sizing: border-box;        /* agar padding masuk perhitungan lebar */
+}
 		
-	}
+	
 
 	.highlight{
 		/*color: yellow !important;*/
