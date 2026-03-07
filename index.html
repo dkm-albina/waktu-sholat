@@ -367,7 +367,9 @@ var todayDate = moment().format("YYYY-MM-DD");
 // FIX BUG geolocation async
 function startApp(){
 
-	var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
+	stopTimer(); // FIX edge case midnight timer
+
+    var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
 	var now = new Date(); // today
 	
 	prayTimes.setMethod(setting.methodCalc);
