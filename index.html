@@ -2,6 +2,9 @@
 <html>
 <head>
 	<meta charset="utf-8">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="0">
 	<title>Jadwal Shalat</title>
 	<link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css" />
 	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css" />
@@ -374,7 +377,8 @@ function startApp(){
 	
 	masterTime = [times.imsak, times.fajr, times.sunrise, times.dhuhr, times.asr, times.maghrib, times.isha];
 	masterName = setting.aliasName;
-	tempShalat = masterTime;
+	// FIX BUG reference array (harus copy bukan reference)
+	tempShalat = masterTime.slice();
 	
 	$('.IMSAK').text(times.imsak);
 	$('.SUBUH').text(times.fajr);
@@ -415,12 +419,17 @@ $(function(){
 
 	//running text
 	$.ajax({
-		url: setting.runningTextFile,
-		success: function(d){
-			$('.running-text').text(d);
-			$('.running-text').marquee({duration: setting.runningTextSpeed});
-		}
-	});
+	url: setting.runningTextFile,
+	success: function(d){
+		$('.running-text').text(d);
+	},
+	error:function(){
+		$('.running-text').text("Selamat datang di " + setting.nama);
+	},
+	complete:function(){
+		$('.running-text').marquee({duration: setting.runningTextSpeed});
+	}
+});
 
 	// FIX BUG geolocation async
 	if(app.autoLocation && "geolocation" in navigator){
@@ -444,7 +453,7 @@ $(function(){
 		function error(){
 			startApp(); // fallback jika GPS gagal
 		},
-		{maximumAge:10000, timeout:5000, enableHighAccuracy:true});
+		{maximumAge:10000, timeout:3000, enableHighAccuracy:true});
 
 	}else{
 
@@ -463,27 +472,37 @@ $(function(){
 		dots:false,
 		lazyLoad:true,
 		autoplay:true,
-		smartSpeed:1000,
+		smartSpeed:2000,
 		autoplayTimeout:setting.slideInterval,
-		slideTransition:'swing'
+		slideTransition:'ease-in-out'
 	});
 
-	// FIX FEATURE auto refresh jadwal setiap hari (lebih stabil dari metode lama)
-	setInterval(function(){
+	// FIX FEATURE auto refresh jadwal setiap hari (OFFLINE SAFE)
+// tidak menggunakan reload agar tetap berjalan walaupun tanpa internet
+setInterval(function(){
 
-		var currentDate = moment().format("YYYY-MM-DD");
+	var currentDate = moment().format("YYYY-MM-DD");
 
-		if(currentDate !== todayDate){
-			location.reload();
-		}
+	if(currentDate !== todayDate){
 
-	},60000);
+		todayDate = currentDate; // update hari
+		startApp(); // hitung ulang jadwal shalat tanpa reload halaman
 
+	}
 
-	// FIX STABILITY reload berkala agar tidak freeze pada TV / kiosk browser
-	setInterval(function(){
-		location.reload();
-	},21600000); // 6 jam
+},60000);
+
+	// FIX STABILITY TV BOX MODE
+// tidak reload halaman karena bisa gagal jika internet mati
+// hanya refresh jadwal dan countdown
+
+setInterval(function(){
+
+	console.log("Bilal App stability refresh");
+
+	startApp(); // refresh jadwal tanpa reload halaman
+
+},21600000); // 6 jam
 
 });
 
@@ -510,8 +529,10 @@ function countdownShalat(time, name, desc, shalatName =''){
 	finalTime = time;
 	
 	mycountdown = setInterval(function() {
-		
-		var now = moment().unix();
+
+    watchdogLastTick = Date.now(); // FIX BUG watchdog tick
+
+   		var now = moment().unix();
 		var distance = finalTime - now;
 		
 		// FIX BUG countdown negative time
@@ -582,12 +603,42 @@ function nextSchedule(){
 
 	var splt = tempShalat[0].split(':');
 	
-	next = moment().add(1,'day').hour(splt[0]).minute(splt[1]).second(0).unix();
+	var next = moment().add(1,'day').hour(splt[0]).minute(splt[1]).second(0).unix();
 	
 	if(!found){
 		countdownShalat(next, masterName[0],'MENJELANG '+masterName[0]);
 	}
 }
+
+// ===============================
+// WATCHDOG DISPLAY SYSTEM
+// menjaga sistem tetap hidup 24 jam
+// ===============================
+
+var watchdogLastTick = Date.now();
+
+setInterval(function(){
+
+    var now = Date.now();
+    var diff = now - watchdogLastTick;
+
+    // jika lebih dari 2 menit tidak ada aktivitas
+    if(diff > 120000){
+
+        console.log("Watchdog restart triggered");
+
+        try{
+            startApp(); // restart sistem jadwal
+        }catch(e){
+            console.log("Watchdog error:",e);
+        }
+
+        watchdogLastTick = Date.now();
+
+    }
+
+},30000); // cek setiap 30 detik
+
 
 </script>
 </body>
