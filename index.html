@@ -25,8 +25,8 @@
 		}
 		.first .mybox{ /*panel waktu 4*/
 			background-color: #005577;
-			//background-color: #003366;
-			//color: #ECF42F;
+			/*background-color: #003366;*/
+			/*color: #ECF42F;*/
 			text-align:center;
 			border-radius:4px;
 			font-weight:bold;
@@ -46,7 +46,7 @@
 			height: 100vh;
 		}
 		.first{ /*header*/
-			//background-color: #013505;
+			/*background-color: #013505;*/
 			background-color: #006699;
 			padding:5px 0;
 			height:100px;
@@ -125,23 +125,23 @@
 			font-size: 20px;
 			padding:0px;
 			text-align:center;
-			//background-color: #81600F;
+			/*background-color: #81600F;*/
 			background-color: #004d47;
-//background-           color: #006400;
+			/*background-color: #006400;*/
 			margin-bottom:1px;
 			border-radius: 4px;
 			font-weight:bold;
 		}
 		.super-block{ /*background*/
 			/*background-color:#178B9A;*/
-			//background-image: linear-gradient(#203161, #178B9A);
+			/*background-image: linear-gradient(#203161, #178B9A);*/
 			background-image: linear-gradient(#2193b0, #6dd5ed, #f8f1e5);
 		}
 		.prayer-time{ /*waktu sholat*/
 			font-size: 44px;
 			padding:0px;
 			text-align:center;
-			//background-color: #1E5F95;
+			/*background-color: #1E5F95;*/
 			background-color: #2c7873;
 			border-radius: 4px;
 			font-weight:bold;
@@ -194,8 +194,8 @@
 			
 		}
 		.highlight{
-			//color: yellow !important;
-color:#ff4500 !important;
+			/*color: yellow !important;*/
+			color:#ff4500 !important;
 			font-weight:bold;
 			
 		}
@@ -313,9 +313,10 @@ color:#ff4500 !important;
 <script src="www/public/Bilal/js/owlcarousel/owl.carousel.min.js"></script>
 
 <script>
+
 //app setting
 var app = {
-	version: '1.1.0', //by Andryan Nugraha (07/03/2026)
+	version: '1.1.1', // FIX BUG + auto refresh daily (08/03/2026) by Andryan Nugraha
 	name: 'Bilal App',
 	autoLocation: true //jika anda ingin menggunakan autolocation, setelah memilih opsi enable GPS pada browser, lalukan refresh pada browser. Fitur ini hanya berfungsi jika device terkoneksi dengan internet saja.
 };
@@ -324,60 +325,42 @@ var app = {
 var setting = {
 	nama: 'MASJID AL - BINA',
 	alamat: 'Casablanca East Residences',
+
 	//settingan latitude longitude altitude timezone jika app.autoLocation=false atau jika browser tidak support HTML5 Geolocation
 	latitude: -6.223723,
 	longitude:106.897179,
 	altitude:100,
 	timezoneOffset:7,
+
 	methodCalc:'Kemenag', //metode perhitungan adzan
 	dst: 'auto',
+
 	tune: {imsak: +3, fajr: +3, sunrise: +6, dhuhr: +3, asr: +3, sunset: +3, maghrib:+3, isha:+3, midnight:+3},
+
 	runningTextFile: "www/public/Bilal/text/runningtext.txt",
 	runningTextSpeed: 15000,
+
 	slideInterval: 18000,
 	slideImageCount: 21,
+
 	adzanTime: 300000, // 5 menit lama tulisan adzan
 	iqomahTime: 60000, //1 menit lama waktu tulisan iqomah
 	shalatSunnahTime: 600000, //10 menit lama waktu tulisan sholat sunnah
 	shalatSunnahTimeSubuh:900000,
+
 	aliasName: ['IMSAK', 'SUBUH', 'SYURUQ', 'ZHUHUR', 'ASHAR', 'MAGHRIB', 'ISYA']
 }
 
-if(app.autoLocation){
-	if ("geolocation" in navigator){ //check Geolocation available 
-		navigator.geolocation.getCurrentPosition(function(position){
-			setting.latitude = position.coords.latitude;
-			setting.longitude = position.coords.longitude;
-			setting.altitude	 = position.coords.altitude!==null?position.coords.altitude:setting.altitude;
-			
-			// FIX BUG timezone
-			setting.timezoneOffset = moment().utcOffset() / 60;
-
-		},
-		function error(msg) {
-			//do nothing
-		},
-		{maximumAge:10000, timeout:5000, enableHighAccuracy: true});
-	}
-}
-
-function inArray(needle, haystack) {
-    var length = haystack.length;
-    for(var i = 0; i < length; i++) {
-        if(haystack[i] == needle) return true;
-    }
-    return false;
-}
-
+// FIX BUG global variable
 var mycountdown;
 var finalTime;
+var masterTime;
+var masterName;
+var tempShalat;
 
-$(function(){
+// FIX BUG geolocation async
+function startApp(){
 
-	function beep(){
-		$('#player')[0].play().catch(()=>{});
-	}
-	
 	var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
 	var now = new Date(); // today
 	
@@ -386,9 +369,9 @@ $(function(){
 	
 	var times = prayTimes.getTimes(now, [setting.latitude, setting.longitude], setting.timezoneOffset, setting.dst);
 	
-	var masterTime = [times.imsak, times.fajr, times.sunrise, times.dhuhr, times.asr, times.maghrib, times.isha];
-	var masterName = setting.aliasName;
-	var tempShalat = masterTime;
+	masterTime = [times.imsak, times.fajr, times.sunrise, times.dhuhr, times.asr, times.maghrib, times.isha];
+	masterName = setting.aliasName;
+	tempShalat = masterTime;
 	
 	$('.IMSAK').text(times.imsak);
 	$('.SUBUH').text(times.fajr);
@@ -406,7 +389,28 @@ $(function(){
 	$('.middle2').text(setting.alamat);
 	$('.version').text(app.version);
 	$('.appname').text(app.name);
-	
+
+	nextSchedule();
+}
+
+// FIX BUG audio autoplay
+function beep(){
+	$('#player')[0].play().catch(()=>{});
+}
+
+// FIX BUG inArray
+function inArray(needle, haystack) {
+    for(var i=0;i<haystack.length;i++){
+        if(haystack[i]==needle) return true;
+    }
+    return false;
+}
+
+$(function(){
+
+	moment.locale('id'); 
+
+	//running text
 	$.ajax({
 		url: setting.runningTextFile,
 		success: function(d){
@@ -414,125 +418,158 @@ $(function(){
 			$('.running-text').marquee({duration: setting.runningTextSpeed});
 		}
 	});
-	
-	moment.locale('id'); 
-	
-	function stopTimer(){
-		if(mycountdown){
-			clearInterval(mycountdown);
-		}
+
+	// FIX BUG geolocation async
+	if(app.autoLocation && "geolocation" in navigator){
+
+		navigator.geolocation.getCurrentPosition(function(position){
+
+			setting.latitude = position.coords.latitude;
+			setting.longitude = position.coords.longitude;
+			setting.altitude = position.coords.altitude!==null?position.coords.altitude:setting.altitude;
+
+			// FIX BUG timezone
+			setting.timezoneOffset = moment().utcOffset() / 60;
+
+			startApp();
+
+		},
+		function error(){
+			startApp(); // fallback jika GPS gagal
+		},
+		{maximumAge:10000, timeout:5000, enableHighAccuracy:true});
+
+	}else{
+
+		startApp();
+
 	}
-	
-	function countdownShalat(time, name, desc, shalatName =''){
-		
-		stopTimer(); // FIX memory leak
-		
-		$('.myprayer').removeClass('highlight');
-		$('.'+ name).closest('.myprayer').addClass('highlight');
-		$('.desc').text(desc);
-		
-		finalTime = time;
-		
-		mycountdown = setInterval(function() {
-			
-			var distance = finalTime - moment().unix();
-			
-			var hours = Math.floor((distance % (60 * 60 * 24)) / ( 60 * 60));
-			var minutes = Math.floor((distance % ( 60 * 60)) / 60);
-			var seconds = Math.floor(distance % ( 60) );
-			
-			if (distance < 0) {
-				
-				clearInterval(mycountdown);
-				
-				if(name=='adzan'){
-					
-					// FIX bug SUBUH double timer
-					if(shalatName=='SUBUH'){
-						countdownShalat(moment().add(setting.shalatSunnahTimeSubuh).unix(),'shalat_sunnah','MENJELANG IQOMAH ' +shalatName,shalatName);
-					}else{
-						countdownShalat(moment().add(setting.shalatSunnahTime).unix(), 'shalat_sunnah', 'MENJELANG IQOMAH '+shalatName, shalatName);
-					}
-					
-				}else if(name=='shalat_sunnah'){
-					
-					beep();
-					
-					countdownShalat(moment().add(setting.iqomahTime).unix(), 'iqomah', 'IQOMAH '+shalatName, shalatName);
-					
-				}else if(inArray(name, ['SUBUH', 'ZHUHUR', 'ASHAR', 'MAGHRIB', 'ISYA'])){
-					
-					beep();
-					
-					countdownShalat(moment().add(setting.adzanTime).unix(), 'adzan', 'ADZAN '+name, name);
-					
-				}else{
-					
-					nextSchedule();
-					
-				}
-				
-			}else{
-				
-				$(".countdown-event").text(moment().second(seconds).minute(minutes).hour(hours).format('HH:mm:ss'));
-				
-			}
-			
-			$('.masehi').html(moment().format('HH:mm:ss'));
-			$('.hijriah').text(moment().format('ddd, DD/MM/YYYY')+' - '+moment().format('iD iMMMM iYYYY'));
-			
-		}, 1000);
-		
-	}
-	
-	function nextSchedule(){
-		
-		var found=false;
-		
-		for(a=0;a<tempShalat.length;a++){
-			
-			var now = moment().unix();
-			
-			var next = moment(moment().format('YYYY-MM-DD ['+tempShalat[a]+':00]'), 'YYYY-MM-DD HH:mm:ss').unix();
-			
-			if(now <next){
-				
-				countdownShalat(next, masterName[a], 'MENJELANG '+masterName[a]);
-				
-				found=true;
-				
-				return false;
-				
-			}
-			
-		}
-		
-		var splt = tempShalat[0].split(':');
-		
-		next = moment().add(1, 'day').hour(splt[0]).minute(splt[1]).second(0).unix();
-		
-		if(!found) countdownShalat(next, masterName[0], 'MENJELANG '+masterName[0]);
-		
-	}
-	
-	nextSchedule();
-	
-	for(a=1;a<=setting.slideImageCount;a++){
+
+	//slide wallpaper
+	for(var a=1;a<=setting.slideImageCount;a++){ // FIX BUG global variable
 		$('.slide-container').append('<div class="item" style="background-image: url(\'www/public/Bilal/img/slide/'+a+'.JPG\')"></div>');
 	}
-	
+
 	$('.owl-carousel').owlCarousel({
 		loop:true,
 		items:1,
 		dots:false,
-		lazyLoad: true,
+		lazyLoad:true,
 		autoplay:true,
-		smartSpeed: 1000,
+		smartSpeed:1000,
 		autoplayTimeout:setting.slideInterval,
 		slideTransition:'swing'
 	});
-	
+
+	// FIX FEATURE auto refresh jadwal setiap hari
+	setInterval(function(){
+
+		var now = moment();
+		var midnight = moment().endOf('day');
+
+		if(now.unix() >= midnight.unix()){
+			location.reload();
+		}
+
+	},60000);
+
 });
+
+//stop timer
+function stopTimer(){
+	if(mycountdown){
+		clearInterval(mycountdown);
+	}
+}
+
+function countdownShalat(time, name, desc, shalatName =''){
+
+	stopTimer(); // FIX memory leak
+	
+	$('.myprayer').removeClass('highlight');
+	$('.'+ name).closest('.myprayer').addClass('highlight');
+	$('.desc').text(desc);
+	
+	finalTime = time;
+	
+	mycountdown = setInterval(function() {
+		
+		var now = moment().unix();
+		var distance = finalTime - now;
+		
+		// FIX BUG countdown format
+		if(distance>0){
+			$(".countdown-event").text(moment.utc(distance*1000).format("HH:mm:ss"));
+		}
+
+		if(distance < 0){
+			
+			clearInterval(mycountdown);
+			
+			if(name=='adzan'){
+				
+				// FIX bug SUBUH double timer
+				if(shalatName=='SUBUH'){
+					countdownShalat(moment().add(setting.shalatSunnahTimeSubuh).unix(),'shalat_sunnah','MENJELANG IQOMAH ' +shalatName,shalatName);
+				}else{
+					countdownShalat(moment().add(setting.shalatSunnahTime).unix(),'shalat_sunnah','MENJELANG IQOMAH '+shalatName,shalatName);
+				}
+				
+			}else if(name=='shalat_sunnah'){
+				
+				beep();
+				
+				countdownShalat(moment().add(setting.iqomahTime).unix(),'iqomah','IQOMAH '+shalatName,shalatName);
+				
+			}else if(inArray(name, ['SUBUH','ZHUHUR','ASHAR','MAGHRIB','ISYA'])){
+				
+				beep();
+				
+				countdownShalat(moment().add(setting.adzanTime).unix(),'adzan','ADZAN '+name,name);
+				
+			}else{
+				
+				nextSchedule();
+				
+			}
+			
+		}
+		
+		$('.masehi').html(moment().format('HH:mm:ss'));
+		$('.hijriah').text(moment().format('ddd, DD/MM/YYYY')+' - '+moment().format('iD iMMMM iYYYY'));
+		
+	},1000);
+}
+
+function nextSchedule(){
+
+	var found=false;
+
+	for(var a=0;a<tempShalat.length;a++){ // FIX BUG global variable
+		
+		var now = moment().unix();
+		
+		var next = moment(moment().format('YYYY-MM-DD ['+tempShalat[a]+':00]'),'YYYY-MM-DD HH:mm:ss').unix();
+		
+		if(now < next){
+			
+			countdownShalat(next, masterName[a],'MENJELANG '+masterName[a]);
+			
+			found=true;
+			return false;
+			
+		}
+	}
+
+	var splt = tempShalat[0].split(':');
+	
+	next = moment().add(1,'day').hour(splt[0]).minute(splt[1]).second(0).unix();
+	
+	if(!found){
+		countdownShalat(next, masterName[0],'MENJELANG '+masterName[0]);
+	}
+}
+
 </script>
 </body>
 </html>
