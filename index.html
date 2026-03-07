@@ -472,6 +472,9 @@ $(function(){
 		dots:false,
 		lazyLoad:true,
 		autoplay:true,
+		autoplayHoverPause:false
+		touchDrag:false
+		mouseDrag:false
 		smartSpeed:2000,
 		autoplayTimeout:setting.slideInterval,
 		slideTransition:'ease-in-out'
@@ -530,7 +533,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 	
 	mycountdown = setInterval(function() {
 
-    watchdogLastTick = Date.now(); // FIX BUG watchdog tick
+    var watchdogLastTick = Date.now(); // FIX BUG watchdog tick
 
    		var now = moment().unix();
 		var distance = finalTime - now;
@@ -589,7 +592,8 @@ function nextSchedule(){
 		
 		var now = moment().unix();
 		
-		var next = moment(moment().format('YYYY-MM-DD ['+tempShalat[a]+':00]'),'YYYY-MM-DD HH:mm:ss').unix();
+		var splt = tempShalat[a].split(':');
+		var next = moment().hour(splt[0]).minute(splt[1]).second(0).unix();
 		
 		if(now < next){
 			
