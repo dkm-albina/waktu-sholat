@@ -431,7 +431,9 @@ setInterval(function(){
 
 // FIX BUG audio autoplay
 function beep(){
-	$('#player')[0].play().catch(()=>{});
+	if($('#player')[0]){
+		$('#player')[0].play().catch(()=>{});
+	}
 }
 
 // FIX BUG inArray
@@ -448,7 +450,7 @@ $(function(){
 
 	//running text
 	$.ajax({
-	url: setting.runningTextFile,
+	url: setting.runningTextFile + '?v=' + Date.now(),
 	success: function(d){
 		$('.running-text').text(d);
 	},
@@ -564,7 +566,8 @@ function countdownShalat(time, name, desc, shalatName =''){
 
     watchdogLastTick = Date.now(); // FIX BUG watchdog tick
 
-   		var now = moment().unix();
+   		var nowMoment = moment();
+		var now = nowMoment.unix();
 		var distance = finalTime - now;
 		
 		// FIX BUG countdown negative time
@@ -607,9 +610,9 @@ function countdownShalat(time, name, desc, shalatName =''){
 			
 		}
 		
-		$('.masehi').html(moment().format('HH:mm:ss'));
-		$('.hijriah').text(moment().format('ddd, DD/MM/YYYY')+' - '+moment().format('iD iMMMM iYYYY'));
-		
+		$('.masehi').html(nowMoment.format('HH:mm:ss'));
+		$('.hijriah').text(nowMoment.format('ddd, DD/MM/YYYY')+' - '+nowMoment.format('iD iMMMM iYYYY'));
+
 	},1000);
 }
 
@@ -617,7 +620,7 @@ function nextSchedule(){
 
 	var found=false;
 
-	for(var a=0;a<tempShalat.length;a++){ // FIX BUG global variable
+	for(let a=0;a<tempShalat.length;a++){ // FIX BUG global variable
 		
 		var now = moment().unix();
 		
