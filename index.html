@@ -316,7 +316,7 @@
 
 //app setting
 var app = {
-	version: '1.1.1', // FIX BUG + auto refresh daily (08/03/2026) by Andryan Nugraha
+	version: '1.1.2', // FIX BUG + auto refresh daily + stability fix (08/03/2026) by Andryan Nugraha
 	name: 'Bilal App',
 	autoLocation: true //jika anda ingin menggunakan autolocation, setelah memilih opsi enable GPS pada browser, lalukan refresh pada browser. Fitur ini hanya berfungsi jika device terkoneksi dengan internet saja.
 };
@@ -357,6 +357,9 @@ var finalTime;
 var masterTime;
 var masterName;
 var tempShalat;
+
+// FIX FEATURE auto refresh daily tracking
+var todayDate = moment().format("YYYY-MM-DD");
 
 // FIX BUG geolocation async
 function startApp(){
@@ -426,7 +429,11 @@ $(function(){
 
 			setting.latitude = position.coords.latitude;
 			setting.longitude = position.coords.longitude;
-			setting.altitude = position.coords.altitude!==null?position.coords.altitude:setting.altitude;
+
+			// FIX BUG altitude undefined pada beberapa browser
+			if(position.coords.altitude !== null && position.coords.altitude !== undefined){
+				setting.altitude = position.coords.altitude;
+			}
 
 			// FIX BUG timezone
 			setting.timezoneOffset = moment().utcOffset() / 60;
@@ -461,17 +468,22 @@ $(function(){
 		slideTransition:'swing'
 	});
 
-	// FIX FEATURE auto refresh jadwal setiap hari
+	// FIX FEATURE auto refresh jadwal setiap hari (lebih stabil dari metode lama)
 	setInterval(function(){
 
-		var now = moment();
-		var midnight = moment().endOf('day');
+		var currentDate = moment().format("YYYY-MM-DD");
 
-		if(now.unix() >= midnight.unix()){
+		if(currentDate !== todayDate){
 			location.reload();
 		}
 
 	},60000);
+
+
+	// FIX STABILITY reload berkala agar tidak freeze pada TV / kiosk browser
+	setInterval(function(){
+		location.reload();
+	},21600000); // 6 jam
 
 });
 
@@ -487,7 +499,12 @@ function countdownShalat(time, name, desc, shalatName =''){
 	stopTimer(); // FIX memory leak
 	
 	$('.myprayer').removeClass('highlight');
-	$('.'+ name).closest('.myprayer').addClass('highlight');
+
+	// FIX BUG highlight event adzan/iqomah
+	var highlightName = shalatName ? shalatName : name;
+
+	$('.'+ highlightName).closest('.myprayer').addClass('highlight');
+
 	$('.desc').text(desc);
 	
 	finalTime = time;
@@ -497,9 +514,11 @@ function countdownShalat(time, name, desc, shalatName =''){
 		var now = moment().unix();
 		var distance = finalTime - now;
 		
-		// FIX BUG countdown format
-		if(distance>0){
+		// FIX BUG countdown negative time
+		if(distance > 0){
 			$(".countdown-event").text(moment.utc(distance*1000).format("HH:mm:ss"));
+		}else{
+			$(".countdown-event").text("00:00:00");
 		}
 
 		if(distance < 0){
