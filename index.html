@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -371,7 +372,7 @@
 
 //app setting
 var app = {
-	version: '1.1.2', // FIX BUG + auto refresh daily + stability fix (08/03/2026) by Andryan Nugraha
+	version: '1.6.0', // FIX BUG + auto refresh daily + stability fix (09/03/2026) by Andryan Nugraha
 	name: 'Bilal App',
 	autoLocation: true //jika anda ingin menggunakan autolocation, setelah memilih opsi enable GPS pada browser, lalukan refresh pada browser. Fitur ini hanya berfungsi jika device terkoneksi dengan internet saja.
 };
@@ -443,7 +444,7 @@ setInterval(function(){
 
     }
 
-},30000); // cek setiap 30 detik
+},300000); // cek setiap 5 menit
 
 
 // FIX BUG geolocation async
@@ -508,6 +509,9 @@ $(function(){
 	//running text
 	$.ajax({
 	url: setting.runningTextFile + '?v=' + Date.now(),
+
+	timeout: 5000,
+
 	success: function(d){
 		$('.running-text').text(d);
 	},
@@ -534,6 +538,7 @@ $(function(){
 
 			// FIX BUG timezone
 			setting.timezoneOffset = Math.round(moment().utcOffset()/60);
+			app.autoLocation = false; // ← tambahan kecil
 
 			startApp();
 
@@ -624,8 +629,8 @@ function countdownShalat(time, name, desc, shalatName =''){
 
     watchdogLastTick = Date.now(); // FIX BUG watchdog tick
 
-   		var nowMoment = moment();
-		var now = nowMoment.unix();
+   		var now = Math.floor(Date.now() / 1000);
+		var nowMoment = moment.unix(now);
 		var distance = finalTime - now;
 		
 		// FIX BUG countdown negative time
@@ -703,6 +708,108 @@ function nextSchedule(){
 		countdownShalat(next, masterName[0],'MENJELANG '+masterName[0]);
 	}
 }
+
+// ===============================
+// UI SELF HEALING SYSTEM
+// ===============================
+
+var lastSlideIndex = 0;
+
+setInterval(function(){
+
+    try{
+
+        var carousel = $('.owl-carousel').data('owl.carousel');
+
+        if(carousel){
+
+            var current = carousel.relative(carousel.current());
+
+            if(current === lastSlideIndex){
+
+                console.log("Carousel stuck, reinitializing");
+
+                $('.owl-carousel').trigger('destroy.owl.carousel');
+
+                $('.owl-carousel').owlCarousel({
+                    loop:true,
+                    items:1,
+                    dots:false,
+                    lazyLoad:true,
+                    autoplay:true,
+                    autoplayHoverPause:false,
+                    touchDrag:false,
+                    mouseDrag:false,
+                    smartSpeed:2000,
+                    autoplayTimeout:setting.slideInterval
+                });
+
+            }
+
+            lastSlideIndex = current;
+
+        }
+
+        // cek running text kosong
+        if($('.running-text').text().trim() === ""){
+
+            console.log("Running text empty, reload");
+
+            $.ajax({
+                url: setting.runningTextFile + '?v=' + Date.now(),
+                success:function(d){
+                    $('.running-text').text(d).marquee({
+                        duration: setting.runningTextSpeed
+                    });
+                }
+            });
+
+        }
+
+    }catch(e){
+
+        console.log("UI Watchdog error", e);
+
+    }
+
+},3600000); // cek setiap 60 menit
+
+// ===============================
+// MEMORY CLEAN CYCLE
+// reload ringan setiap hari
+// ===============================
+
+setInterval(function(){
+
+    var now = moment().format("HH:mm");
+
+    if(now >= "21:00" && now < "21:02"){
+
+        console.log("Daily memory cleanup reload");
+
+        location.reload();
+
+    }
+
+},60000);
+
+// ===============================
+// GLOBAL ERROR RECOVERY
+// ===============================
+
+window.onerror = function(message, source, lineno, colno, error){
+
+    console.log("BilalApp global error:", message);
+
+    setTimeout(function(){
+
+        console.log("BilalApp restarting due to error");
+
+        location.reload();
+
+    },3000);
+
+};
 
 </script>
 </body>
