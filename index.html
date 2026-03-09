@@ -6,9 +6,9 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 	<title>Jadwal Shalat</title>
-	<link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css" />
-	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css" />
-	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.theme.default.min.css" />
+	<link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css?v=1.6.0" />
+<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css?v=1.6.0" />
+<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.theme.default.min.css?v=1.6.0" />
 	<style>
 	*{
 		padding:0;
@@ -370,13 +370,13 @@
 	</audio>
 	
 	
-	<script src="www/public/Bilal/js/jquery-3.3.1.min.js"></script>
-<script src="www/public/Bilal/js/moment-with-locales.min.js"></script>
-<script src="www/public/Bilal/js/moment-hijri.js"></script>
+	<script src="www/public/Bilal/js/jquery-3.3.1.min.js?v=1.6.0"></script>
+<script src="www/public/Bilal/js/moment-with-locales.min.js?v=1.6.0"></script>
+<script src="www/public/Bilal/js/moment-hijri.js?v=1.6.0"></script>
 
-<script src="www/public/Bilal/js/PrayTimes.js"></script>
-<script src="www/public/Bilal/js/jquery.marquee.min.js"></script>
-<script src="www/public/Bilal/js/owlcarousel/owl.carousel.min.js"></script>
+<script src="www/public/Bilal/js/PrayTimes.js?v=1.6.0"></script>
+<script src="www/public/Bilal/js/jquery.marquee.min.js?v=1.6.0"></script>
+<script src="www/public/Bilal/js/owlcarousel/owl.carousel.min.js?v=1.6.0"></script>
 
 <script>
 
@@ -651,7 +651,7 @@ $(function(){
 
 	//slide wallpaper
 	for(var a=1;a<=setting.slideImageCount;a++){ // FIX BUG global variable
-		$('.slide-container').append('<div class="item" style="background-image: url(\'www/public/Bilal/img/slide/'+a+'.JPG\')"></div>');
+		$('.slide-container').append('<div class="item" style="background-image: url(\'www/public/Bilal/img/slide/'+a+'.JPG?v='+app.version+'\')"></div>');
 	}
 
 	$('.owl-carousel').owlCarousel({
@@ -782,7 +782,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 
 }
 // FIX: jika target waktu tidak valid, hitung ulang jadwal
-if(distance > 43200){
+if(distance > 43200 || distance < -10){
     console.log("Invalid countdown detected, recalculating schedule");
     nextSchedule();
     return;
@@ -902,8 +902,7 @@ if(!systemBoot && lastPhase !== phase.name){
     	phase.desc = 'MENJELANG IMSAK';
 }
 
-    }
-
+    
     systemBoot = false;
     lastPhase = phase.name;
 
