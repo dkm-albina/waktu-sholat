@@ -849,14 +849,17 @@ function getPrayerPhase(){
     // fallback → IMSAK BESOK
     // ==========================
 
-    var splt = masterTime[0].split(':');
+    // fallback → IMSAK BESOK (fix bug 24 jam)
 
-    var tomorrow = moment()
-        .add(1,'day')
-        .hour(parseInt(splt[0]))
-        .minute(parseInt(splt[1]))
-        .second(0)
-        .millisecond(0);
+var splt = masterTime[0].split(':');
+
+var tomorrow = moment().startOf('day').add(1,'day');
+
+tomorrow
+    .hour(parseInt(splt[0]))
+    .minute(parseInt(splt[1]))
+    .second(0)
+    .millisecond(0);
 
     return {
         target:tomorrow.unix(),
