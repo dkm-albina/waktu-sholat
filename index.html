@@ -498,6 +498,19 @@ var lastPhase = null;
 var systemBoot = true;
 var startAppRunning = false;
 
+// =========================================
+// DEBUG TIME SYSTEM
+// isi dengan format "HH:mm:ss" untuk simulasi waktu
+// set null untuk menjalankan waktu normal
+// =========================================
+
+var debugTime = null;
+
+// contoh:
+// var debugTime = "04:42:30";
+
+
+
 // FIX FEATURE auto refresh daily tracking
 var todayDate = moment().format("YYYY-MM-DD");
 
@@ -530,6 +543,18 @@ setInterval(function(){
 
 },300000); // cek setiap 5 menit
 
+// DEBUGGING mode option
+function getNowMoment(){
+
+    if(debugTime){
+        return moment(debugTime,"HH:mm:ss");
+    }
+
+    return moment();
+
+}
+
+
 // FIX PrayTimes bug: normalisasi waktu > 24
 function normalizeTime(t){
     var p = t.split(':');
@@ -548,6 +573,11 @@ function startApp(){
     // LOCK SYSTEM
     // mencegah startApp dipanggil bersamaan
     // =========================================
+
+	if(debugTime){
+    $('.middle3 .debug').remove();
+    $('.middle3').append('<span class="debug"> | DEBUG TIME: '+debugTime+'</span>');
+}
 
     if(startAppRunning) return;
     startAppRunning = true;
@@ -815,7 +845,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 
     watchdogLastTick = Date.now(); // FIX BUG watchdog tick
 
-   		var nowMoment = moment();
+   		var nowMoment = getNowMoment();
 		var now = nowMoment.unix();
 
 		var distance = finalTime - now;
@@ -886,7 +916,7 @@ $('.countdown-event').text(
 // =========================================
 function getPrayerPhase(){
 
-    var now = moment();
+    var now = getNowMoment();
 
     // ===============================
     // CARI WAKTU SHALAT BERIKUTNYA
