@@ -767,7 +767,7 @@ $('.countdown-event').text(
 
 function getPrayerPhase(){
 
-    var now = Math.floor(Date.now()/1000);
+    var now = moment();
 
     for(let i=0;i<masterTime.length;i++){
 
@@ -776,11 +776,11 @@ function getPrayerPhase(){
         var prayerMoment = moment()
             .hour(parseInt(splt[0]))
             .minute(parseInt(splt[1]))
-            .second(0);
+            .second(0)
+            .millisecond(0);
 
-        var T0 = prayerMoment.unix();
-
-        var T1 = prayerMoment.clone().add(setting.adzanTime,'ms').unix();
+        var T0 = prayerMoment.clone();
+        var T1 = prayerMoment.clone().add(setting.adzanTime,'ms');
 
         var sunnahTime = (masterName[i]=='SUBUH')
             ? setting.shalatSunnahTimeSubuh
@@ -788,26 +788,18 @@ function getPrayerPhase(){
 
         var T2 = prayerMoment.clone()
             .add(setting.adzanTime,'ms')
-            .add(sunnahTime,'ms')
-            .unix();
+            .add(sunnahTime,'ms');
 
         var T3 = prayerMoment.clone()
             .add(setting.adzanTime,'ms')
             .add(sunnahTime,'ms')
-            .add(setting.iqomahTime,'ms')
-            .unix();
-
-			if(now > T3){
-    		if(i < masterTime.length - 1){
-        		continue;
-    			}
-			}
+            .add(setting.iqomahTime,'ms');
 
         // MENJELANG SHALAT
-        if(now < T0){
+        if(now.isBefore(T0)){
 
             return {
-                target:T0,
+                target:T0.unix(),
                 name:masterName[i],
                 desc:'MENJELANG '+masterName[i],
                 highlight:masterName[i]
@@ -816,10 +808,10 @@ function getPrayerPhase(){
         }
 
         // ADZAN
-        if(now >= T0 && now < T1){
+        if(now.isBetween(T0,T1)){
 
             return {
-                target:T1,
+                target:T1.unix(),
                 name:'adzan',
                 desc:'ADZAN '+masterName[i],
                 highlight:masterName[i]
@@ -828,10 +820,10 @@ function getPrayerPhase(){
         }
 
         // SHALAT SUNNAH
-        if(now >= T1 && now < T2){
+        if(now.isBetween(T1,T2)){
 
             return {
-                target:T2,
+                target:T2.unix(),
                 name:'sunnah',
                 desc:'SHALAT SUNNAH '+masterName[i],
                 highlight:masterName[i]
@@ -839,11 +831,11 @@ function getPrayerPhase(){
 
         }
 
-        // IQAMAH
-        if(now >= T2 && now < T3){
+        // IQOMAH
+        if(now.isBetween(T2,T3)){
 
             return {
-                target:T3,
+                target:T3.unix(),
                 name:'iqomah',
                 desc:'IQOMAH '+masterName[i],
                 highlight:masterName[i]
@@ -851,23 +843,23 @@ function getPrayerPhase(){
 
         }
 
-		
     }
 
-    // jika semua waktu hari ini lewat → kembali ke IMSAK besok
+    // ==========================
+    // fallback → IMSAK BESOK
+    // ==========================
 
     var splt = masterTime[0].split(':');
 
     var tomorrow = moment()
-    .add(1,'day')
-    .startOf('day')
-    .hour(splt[0])
-    .minute(splt[1])
-    .second(0)
-    .unix();
+        .add(1,'day')
+        .hour(parseInt(splt[0]))
+        .minute(parseInt(splt[1]))
+        .second(0)
+        .millisecond(0);
 
     return {
-        target:tomorrow,
+        target:tomorrow.unix(),
         name:masterName[0],
         desc:'MENJELANG '+masterName[0],
         highlight:masterName[0]
