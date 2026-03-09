@@ -928,25 +928,99 @@ $('.countdown-event').text(
 // FIX TOTAL : LOGIKA PENENTUAN WAKTU SHALAT
 // menghindari bug countdown 24:00:00
 // =========================================
+// ===============================================================
+// FUNCTION : getPrayerPhase()
+// ---------------------------------------------------------------
+// Fungsi ini menentukan fase waktu shalat yang sedang berlangsung.
+//
+// Urutan fase untuk setiap waktu shalat:
+//
+// 1. MENJELANG SHALAT
+// 2. ADZAN
+// 3. SHALAT SUNNAH
+// 4. IQAMAH
+// 5. WAKTU SHALAT (layar blank / fokus shalat)
+//
+// Setelah semua waktu shalat hari ini selesai,
+// sistem akan kembali ke fase:
+//
+// MENJELANG IMSAK (untuk hari berikutnya)
+//
+// Fungsi ini mengembalikan object:
+// {
+//     target    : timestamp tujuan countdown
+//     name      : nama fase
+//     desc      : teks yang ditampilkan di layar
+//     highlight : jadwal shalat yang di-highlight
+// }
+//
+// Fungsi ini dipanggil oleh nextSchedule()
+// dan hasilnya digunakan oleh countdownShalat().
+// ===============================================================
+
 function getPrayerPhase(){
 
+    // ambil waktu sekarang (support debugTime)
     var now = getNowMoment();
 
-    // ===============================
-    // CARI WAKTU SHALAT BERIKUTNYA
-    // ===============================
+
+    // ===============================================================
+    // LOOP SEMUA WAKTU SHALAT HARI INI
+    // masterTime berisi:
+    // [IMSAK, SUBUH, SYURUQ, ZHUHUR, ASHAR, MAGHRIB, ISYA]
+    // ===============================================================
+
     for(let i=0;i<masterTime.length;i++){
 
+        // pisahkan jam dan menit dari string waktu
         var splt = masterTime[i].split(':');
 
-        // waktu shalat hari ini
+
+        // ===============================================================
+        // WAKTU SHALAT UTAMA
+        // contoh:
+        // SUBUH = 04:43
+        // ===============================================================
+
         var prayerMoment = getNowMoment().clone()
             .hour(parseInt(splt[0]))
             .minute(parseInt(splt[1]))
             .second(0)
             .millisecond(0);
 
-        // jika waktu sekarang masih sebelum waktu shalat
+
+        // ===============================================================
+        // HITUNG BATAS AKHIR SETIAP FASE
+        // ===============================================================
+
+        // fase adzan selesai
+        var adzanEnd = prayerMoment.clone().add(setting.adzanTime,'ms');
+
+
+        // durasi shalat sunnah
+        // khusus SUBUH menggunakan waktu yang berbeda
+        var sunnahDuration = setting.shalatSunnahTime;
+
+        if(masterName[i] === 'SUBUH'){
+            sunnahDuration = setting.shalatSunnahTimeSubuh;
+        }
+
+        // akhir fase sunnah
+        var sunnahEnd = adzanEnd.clone().add(sunnahDuration,'ms');
+
+
+        // akhir fase iqamah
+        var iqamahEnd = sunnahEnd.clone().add(setting.iqomahTime,'ms');
+
+
+        // akhir fase shalat (layar blank)
+        var shalatEnd = iqamahEnd.clone().add(setting.blankShalatTime,'ms');
+
+
+        // ===============================================================
+        // 1️⃣ FASE : MENJELANG SHALAT
+        // ===============================================================
+
         if(now.isBefore(prayerMoment)){
 
             return {
@@ -958,16 +1032,82 @@ function getPrayerPhase(){
 
         }
 
+
+        // ===============================================================
+        // 2️⃣ FASE : ADZAN
+        // ===============================================================
+
+        if(now.isBefore(adzanEnd)){
+
+            return {
+                target: adzanEnd.unix(),
+                name: masterName[i],
+                desc: 'ADZAN ' + masterName[i],
+                highlight: masterName[i]
+            };
+
+        }
+
+
+        // ===============================================================
+        // 3️⃣ FASE : SHALAT SUNNAH
+        // ===============================================================
+
+        if(now.isBefore(sunnahEnd)){
+
+            return {
+                target: sunnahEnd.unix(),
+                name: masterName[i],
+                desc: 'SHALAT SUNNAH ' + masterName[i],
+                highlight: masterName[i]
+            };
+
+        }
+
+
+        // ===============================================================
+        // 4️⃣ FASE : IQAMAH
+        // ===============================================================
+
+        if(now.isBefore(iqamahEnd)){
+
+            return {
+                target: iqamahEnd.unix(),
+                name: 'iqomah',
+                desc: 'IQAMAH',
+                highlight: masterName[i]
+            };
+
+        }
+
+
+        // ===============================================================
+        // 5️⃣ FASE : WAKTU SHALAT
+        // layar akan blank untuk menjaga kekhusyukan
+        // ===============================================================
+
+        if(now.isBefore(shalatEnd)){
+
+            return {
+                target: shalatEnd.unix(),
+                name: masterName[i],
+                desc: 'SHALAT ' + masterName[i],
+                highlight: masterName[i]
+            };
+
+        }
+
     }
 
-    // =========================================
-    // JIKA SEMUA WAKTU HARI INI SUDAH LEWAT
-    // MAKA MENUJU IMSAK BESOK
-    // =========================================
+
+    // ===============================================================
+    // JIKA SEMUA WAKTU SHALAT HARI INI SUDAH SELESAI
+    // SISTEM MENUJU IMSAK BESOK
+    // ===============================================================
 
     var splt = masterTime[0].split(':');
 
-    // FIX BUG 24 JAM
+	// FIX BUG 24 JAM
     // gunakan startOf('day') agar timestamp selalu benar
     var tomorrow = getNowMoment().clone()
         .add(1,'day')
@@ -976,6 +1116,7 @@ function getPrayerPhase(){
         .minute(parseInt(splt[1]))
         .second(0)
         .millisecond(0);
+
 
     return {
         target: tomorrow.unix(),
