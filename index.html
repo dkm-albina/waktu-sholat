@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -180,6 +179,26 @@
 		font-weight:bold;
 	}
 
+.layer{
+    width:100%;
+    height:100vh;
+    background:#000;
+    position:fixed;
+    left:0;
+    top:0;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+
+    color:#fff;
+    font-size:120px;
+    font-weight:bold;
+    z-index:999999;
+}
+
 	.clear{
 		clear:both;
 	}
@@ -261,17 +280,7 @@
 		padding:4px;
 	}
 
-	.layer{
-		width:100%;
-		height:100vh;
-		background-color: #000;
-		position:fixed;
-		left:0;
-		top:0;
-		display:none;
-		color:#fff;
-		font-size:20px; /*20px*/
-	}
+	
 </style>
 
 </head>
@@ -403,6 +412,7 @@ var setting = {
 	iqomahTime: 60000, //1 menit lama waktu tulisan iqomah
 	shalatSunnahTime: 600000, //10 menit lama waktu tulisan sholat sunnah
 	shalatSunnahTimeSubuh:900000,
+	blankShalatTime: 600000, // 10 menit layar blank saat shalat
 
 	aliasName: ['IMSAK', 'SUBUH', 'SYURUQ', 'ZHUHUR', 'ASHAR', 'MAGHRIB', 'ISYA']
 }
@@ -412,7 +422,9 @@ var mycountdown;
 var finalTime;
 var masterTime;
 var masterName;
-var tempShalat;
+var lastPhase = null;
+var systemBoot = true;
+var startAppRunning = false;
 
 // FIX FEATURE auto refresh daily tracking
 var todayDate = moment().format("YYYY-MM-DD");
@@ -450,41 +462,87 @@ setInterval(function(){
 // FIX BUG geolocation async
 function startApp(){
 
-	stopTimer(); // FIX edge case midnight timer
-	
-    var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
-	var now = new Date(); // today
-	
-	watchdogLastTick = Date.now();
+    // =========================================
+    // LOCK SYSTEM
+    // mencegah startApp dipanggil bersamaan
+    // =========================================
 
-	prayTimes.setMethod(setting.methodCalc);
-	prayTimes.tune(setting.tune);
-	
-	var times = prayTimes.getTimes(now, [setting.latitude, setting.longitude], setting.timezoneOffset, setting.dst);
-	
-	masterTime = [times.imsak, times.fajr, times.sunrise, times.dhuhr, times.asr, times.maghrib, times.isha];
-	masterName = setting.aliasName;
-	// FIX BUG reference array (harus copy bukan reference)
-	tempShalat = masterTime.slice();
-	
-	$('.IMSAK').text(times.imsak);
-	$('.SUBUH').text(times.fajr);
-	$('.SYURUQ').text(times.sunrise);
-	$('.ZHUHUR').text(times.dhuhr);
-	$('.ASHAR').text(times.asr);
-	$('.MAGHRIB').text(times.maghrib);
-	$('.ISYA').text(times.isha);
-	
-	$('.tz-offset').text(offsetIcon+setting.timezoneOffset);
-	$('.latitude').text(setting.latitude);
-	$('.longitude').text(setting.longitude);
-	$('.altitude').text(setting.altitude);
-	$('.middle1').text(setting.nama);
-	$('.middle2').text(setting.alamat);
-	$('.version').text(app.version);
-	$('.appname').text(app.name);
+    if(startAppRunning) return;
+    startAppRunning = true;
 
-	nextSchedule();
+    try{
+
+        stopTimer(); // pastikan timer lama berhenti
+
+        var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
+        var now = new Date();
+
+        // watchdog heartbeat
+        watchdogLastTick = Date.now();
+
+        // =========================================
+        // HITUNG JADWAL SHOLAT
+        // =========================================
+
+        prayTimes.setMethod(setting.methodCalc);
+        prayTimes.tune(setting.tune);
+
+        var times = prayTimes.getTimes(
+            now,
+            [setting.latitude, setting.longitude],
+            setting.timezoneOffset,
+            setting.dst
+        );
+
+        masterTime = [
+            times.imsak,
+            times.fajr,
+            times.sunrise,
+            times.dhuhr,
+            times.asr,
+            times.maghrib,
+            times.isha
+        ];
+
+        masterName = setting.aliasName;
+
+        // =========================================
+        // UPDATE UI
+        // =========================================
+
+        $('.IMSAK').text(times.imsak);
+        $('.SUBUH').text(times.fajr);
+        $('.SYURUQ').text(times.sunrise);
+        $('.ZHUHUR').text(times.dhuhr);
+        $('.ASHAR').text(times.asr);
+        $('.MAGHRIB').text(times.maghrib);
+        $('.ISYA').text(times.isha);
+
+        $('.tz-offset').text(offsetIcon+setting.timezoneOffset);
+        $('.latitude').text(setting.latitude);
+        $('.longitude').text(setting.longitude);
+        $('.altitude').text(setting.altitude);
+
+        $('.middle1').text(setting.nama);
+        $('.middle2').text(setting.alamat);
+
+        $('.version').text(app.version);
+        $('.appname').text(app.name);
+
+        // mulai sistem jadwal
+        nextSchedule();
+
+    }
+    finally{
+
+        // =========================================
+        // UNLOCK SYSTEM
+        // selalu dijalankan walaupun error terjadi
+        // =========================================
+
+        startAppRunning = false;
+
+    }
 }
 
 // FIX BUG audio autoplay
@@ -519,8 +577,14 @@ $(function(){
 		$('.running-text').text("Selamat datang di " + setting.nama);
 	},
 	complete:function(){
-		$('.running-text').marquee({duration: setting.runningTextSpeed});
-	}
+
+    $('.running-text').marquee('destroy');
+
+    $('.running-text').marquee({
+        duration: setting.runningTextSpeed
+    });
+
+}
 });
 
 	// FIX BUG geolocation async
@@ -537,7 +601,7 @@ $(function(){
 			}
 
 			// FIX BUG timezone
-			setting.timezoneOffset = Math.round(moment().utcOffset()/60);
+			setting.timezoneOffset = -new Date().getTimezoneOffset()/60;
 			app.autoLocation = false; // ← tambahan kecil
 
 			startApp();
@@ -625,6 +689,15 @@ function countdownShalat(time, name, desc, shalatName =''){
 	
 	finalTime = time;
 	
+	// =========================================
+	// TIMER PROTECTION
+	// memastikan tidak ada timer ganda
+	// =========================================
+
+	if(mycountdown){
+    	clearInterval(mycountdown);
+	}
+
 	mycountdown = setInterval(function() {
 
     watchdogLastTick = Date.now(); // FIX BUG watchdog tick
@@ -634,44 +707,39 @@ function countdownShalat(time, name, desc, shalatName =''){
 		var distance = finalTime - now;
 		
 		// FIX BUG countdown negative time
-		if(distance > 0){
-			$(".countdown-event").text(moment.utc(distance*1000).format("HH:mm:ss"));
-		}else{
-			$(".countdown-event").text("00:00:00");
-		}
+		if(distance <= 0){
 
-		if(distance < 0){
-			
 			clearInterval(mycountdown);
-			
-			if(name=='adzan'){
-				
-				// FIX bug SUBUH double timer
-				if(shalatName=='SUBUH'){
-					countdownShalat(moment().add(setting.shalatSunnahTimeSubuh).unix(),'shalat_sunnah','MENJELANG IQOMAH ' +shalatName,shalatName);
-				}else{
-					countdownShalat(moment().add(setting.shalatSunnahTime).unix(),'shalat_sunnah','MENJELANG IQOMAH '+shalatName,shalatName);
-				}
-				
-			}else if(name=='shalat_sunnah'){
-				
-				beep();
-				
-				countdownShalat(moment().add(setting.iqomahTime).unix(),'iqomah','IQOMAH '+shalatName,shalatName);
-				
-			}else if(inArray(name, ['SUBUH','ZHUHUR','ASHAR','MAGHRIB','ISYA'])){
-				
-				beep();
-				
-				countdownShalat(moment().add(setting.adzanTime).unix(),'adzan','ADZAN '+name,name);
-				
-			}else{
-				
-				nextSchedule();
-				
-			}
-			
-		}
+
+		if(name === 'iqomah'){
+
+		// tampilkan pesan iqamah
+		$('.layer')
+		.css('display','flex')
+		.hide()
+		.html('IQAMAH<br><div style="font-size:60px;margin-top:30px">Waktunya Shalat '+shalatName+'</div>')
+		.fadeIn(300);
+
+		// setelah 5 detik layar jadi blank
+		setTimeout(function(){
+
+			$('.layer').html('');
+
+		},5000);
+
+		// setelah waktu shalat selesai kembali normal
+		setTimeout(function(){
+
+			$('.layer').fadeOut(500);
+
+		}, setting.blankShalatTime + 5000);
+
+	}
+
+	nextSchedule();
+	return;
+
+}
 		
 		$('.masehi').html(nowMoment.format('HH:mm:ss'));
 		$('.hijriah').text(nowMoment.format('ddd, DD/MM/YYYY')+' - '+nowMoment.format('iD iMMMM iYYYY'));
@@ -679,35 +747,137 @@ function countdownShalat(time, name, desc, shalatName =''){
 	},1000);
 }
 
+function getPrayerPhase(){
+
+    var now = Math.floor(Date.now()/1000);
+
+    for(let i=0;i<masterTime.length;i++){
+
+        var splt = masterTime[i].split(':');
+
+        var prayerMoment = moment()
+            .hour(parseInt(splt[0]))
+            .minute(parseInt(splt[1]))
+            .second(0);
+
+        var T0 = prayerMoment.unix();
+
+        var T1 = prayerMoment.clone().add(setting.adzanTime,'ms').unix();
+
+        var sunnahTime = (masterName[i]=='SUBUH')
+            ? setting.shalatSunnahTimeSubuh
+            : setting.shalatSunnahTime;
+
+        var T2 = prayerMoment.clone()
+            .add(setting.adzanTime,'ms')
+            .add(sunnahTime,'ms')
+            .unix();
+
+        var T3 = prayerMoment.clone()
+            .add(setting.adzanTime,'ms')
+            .add(sunnahTime,'ms')
+            .add(setting.iqomahTime,'ms')
+            .unix();
+
+        // MENJELANG SHALAT
+        if(now < T0){
+
+            return {
+                target:T0,
+                name:masterName[i],
+                desc:'MENJELANG '+masterName[i],
+                highlight:masterName[i]
+            };
+
+        }
+
+        // ADZAN
+        if(now >= T0 && now < T1){
+
+            return {
+                target:T1,
+                name:'adzan',
+                desc:'ADZAN '+masterName[i],
+                highlight:masterName[i]
+            };
+
+        }
+
+        // SHALAT SUNNAH
+        if(now >= T1 && now < T2){
+
+            return {
+                target:T2,
+                name:'sunnah',
+                desc:'SHALAT SUNNAH '+masterName[i],
+                highlight:masterName[i]
+            };
+
+        }
+
+        // IQAMAH
+        if(now >= T2 && now < T3){
+
+            return {
+                target:T3,
+                name:'iqomah',
+                desc:'IQOMAH '+masterName[i],
+                highlight:masterName[i]
+            };
+
+        }
+
+    }
+
+    // jika semua waktu hari ini lewat → kembali ke IMSAK besok
+
+    var splt = masterTime[0].split(':');
+
+    var tomorrow = moment()
+    .add(1,'day')
+    .startOf('day')
+    .hour(splt[0])
+    .minute(splt[1])
+    .second(0)
+    .unix();
+
+    return {
+        target:tomorrow,
+        name:masterName[0],
+        desc:'MENJELANG '+masterName[0],
+        highlight:masterName[0]
+    };
+
+}
+
 function nextSchedule(){
 
-	var found=false;
+    var phase = getPrayerPhase();
 
-	for(let a=0;a<tempShalat.length;a++){ // FIX BUG global variable
-		
-		var now = moment().unix();
-		
-		var splt = tempShalat[a].split(':');
-		var next = moment().hour(splt[0]).minute(splt[1]).second(0).unix();
-		
-		if(now < next){
-			
-			countdownShalat(next, masterName[a],'MENJELANG '+masterName[a]);
-			
-			found=true;
-			return false;
-			
-		}
-	}
+    // beep hanya ketika fase berubah
+    if(!systemBoot && lastPhase !== phase.name){
 
-	var splt = tempShalat[0].split(':');
-	
-	var next = moment().add(1,'day').hour(splt[0]).minute(splt[1]).second(0).unix();
-	
-	if(!found){
-		countdownShalat(next, masterName[0],'MENJELANG '+masterName[0]);
-	}
-}
+        if(phase.name === 'adzan'){
+            beep();
+        }
+
+        if(phase.name === 'iqomah'){
+            beep();
+        }
+
+    }
+
+    systemBoot = false;
+    lastPhase = phase.name;
+
+    countdownShalat(
+        phase.target,
+        phase.name,
+        phase.desc,
+        phase.highlight
+    );
+
+}	
 
 // ===============================
 // UI SELF HEALING SYSTEM
@@ -719,7 +889,12 @@ setInterval(function(){
 
     try{
 
-        var carousel = $('.owl-carousel').data('owl.carousel');
+        var owl = $('.owl-carousel');
+        var carousel = owl.data('owl.carousel');
+
+        // ===============================
+        // CAROUSEL SELF HEAL
+        // ===============================
 
         if(carousel){
 
@@ -729,9 +904,13 @@ setInterval(function(){
 
                 console.log("Carousel stuck, reinitializing");
 
-                $('.owl-carousel').trigger('destroy.owl.carousel');
+                owl.trigger('destroy.owl.carousel');
 
-                $('.owl-carousel').owlCarousel({
+                owl.find('.owl-stage-outer')
+                   .children()
+                   .unwrap();
+
+                owl.owlCarousel({
                     loop:true,
                     items:1,
                     dots:false,
@@ -750,7 +929,10 @@ setInterval(function(){
 
         }
 
-        // cek running text kosong
+        // ===============================
+        // RUNNING TEXT SELF HEAL
+        // ===============================
+
         if($('.running-text').text().trim() === ""){
 
             console.log("Running text empty, reload");
@@ -758,9 +940,15 @@ setInterval(function(){
             $.ajax({
                 url: setting.runningTextFile + '?v=' + Date.now(),
                 success:function(d){
-                    $('.running-text').text(d).marquee({
+
+                    $('.running-text').marquee('destroy');
+
+                    $('.running-text')
+                    .text(d)
+                    .marquee({
                         duration: setting.runningTextSpeed
                     });
+
                 }
             });
 
@@ -772,7 +960,8 @@ setInterval(function(){
 
     }
 
-},3600000); // cek setiap 60 menit
+},600000); // cek setiap 10 menit
+
 
 // ===============================
 // MEMORY CLEAN CYCLE
@@ -787,11 +976,42 @@ setInterval(function(){
 
         console.log("Daily memory cleanup reload");
 
-        location.reload();
+        stopTimer();
+		startApp();
 
     }
 
 },60000);
+
+setInterval(function(){
+
+    requestAnimationFrame(function(){});
+
+},30000);
+
+// =========================================
+// TIMER DRIFT DETECTOR
+// mendeteksi jika javascript loop macet
+// =========================================
+
+var lastLoop = Date.now();
+
+setInterval(function(){
+
+    var now = Date.now();
+
+    // jika javascript berhenti lebih dari 30 detik
+    if(now - lastLoop > 30000){
+
+        console.log("Timer drift detected → restarting schedule");
+
+        startApp();
+
+    }
+
+    lastLoop = now;
+
+},5000);
 
 // ===============================
 // GLOBAL ERROR RECOVERY
