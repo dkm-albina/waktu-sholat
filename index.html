@@ -839,6 +839,10 @@ function getPrayerPhase(){
 
         }
 
+		if(now > T3){
+        continue; // lewati waktu yang sudah selesai
+    	}
+
     }
 
     // jika semua waktu hari ini lewat → kembali ke IMSAK besok
