@@ -574,11 +574,7 @@ function startApp(){
     // mencegah startApp dipanggil bersamaan
     // =========================================
 
-	if(debugTime){
-    $('.middle3 .debug').remove();
-    $('.middle3').append('<span class="debug"> | DEBUG TIME: '+debugTime+'</span>');
-}
-
+	
     if(startAppRunning) return;
     startAppRunning = true;
 
@@ -605,6 +601,11 @@ function startApp(){
             setting.timezoneOffset,
             setting.dst
         );
+
+		if(debugTime){
+    $('.middle3 .debug').remove();
+    $('.middle3').append('<span class="debug"> | DEBUG TIME: '+debugTime+'</span>');
+}
 
 
 // =========================================
@@ -926,7 +927,7 @@ function getPrayerPhase(){
         var splt = masterTime[i].split(':');
 
         // waktu shalat hari ini
-        var prayerMoment = moment()
+        var prayerMoment = getNowMoment()
             .hour(parseInt(splt[0]))
             .minute(parseInt(splt[1]))
             .second(0)
@@ -955,7 +956,7 @@ function getPrayerPhase(){
 
     // FIX BUG 24 JAM
     // gunakan startOf('day') agar timestamp selalu benar
-    var tomorrow = moment()
+    var tomorrow = getNowMoment()
         .add(1,'day')
         .startOf('day')
         .hour(parseInt(splt[0]))
@@ -1117,7 +1118,7 @@ owl.find(".owl-stage").children().unwrap();
 
 setInterval(function(){
 
-    var now = moment().format("HH:mm");
+    var now = getNowMoment().format("HH:mm");
 
     if(now >= "21:00" && now < "21:02"){
 
