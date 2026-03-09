@@ -371,13 +371,16 @@
 	</audio>
 	
 	
-	<script src="www/public/Bilal/js/jquery-3.3.1.min.js?v=1.6.0"></script>
+<script src="www/public/Bilal/js/jquery-3.3.1.min.js?v=1.6.0"></script>
 <script src="www/public/Bilal/js/moment-with-locales.min.js?v=1.6.0"></script>
 <script src="www/public/Bilal/js/moment-hijri.js?v=1.6.0"></script>
 
 <script src="www/public/Bilal/js/PrayTimes.js?v=1.6.0"></script>
 <script src="www/public/Bilal/js/jquery.marquee.min.js?v=1.6.0"></script>
 <script src="www/public/Bilal/js/owlcarousel/owl.carousel.min.js?v=1.6.0"></script>
+
+
+
 
 <script>
 
@@ -460,6 +463,16 @@ setInterval(function(){
 
 },300000); // cek setiap 5 menit
 
+// FIX PrayTimes bug: normalisasi waktu > 24
+function normalizeTime(t){
+    var p = t.split(':');
+    var h = parseInt(p[0]);
+    var m = parseInt(p[1]);
+
+    if(h >= 24) h = h - 24;
+
+    return h.toString().padStart(2,'0') + ':' + p[1];
+}
 
 // FIX BUG geolocation async
 function startApp(){
@@ -507,17 +520,7 @@ if(!times.fajr || !times.dhuhr || !times.maghrib){
     return;
 }
 
-		// FIX PrayTimes bug: normalisasi waktu > 24
-function normalizeTime(t){
-    var p = t.split(':');
-    var h = parseInt(p[0]);
-    var m = parseInt(p[1]);
-
-    if(h >= 24) h = h - 24;
-
-    return h.toString().padStart(2,'0') + ':' + p[1];
-}
-
+		
 times.imsak = normalizeTime(times.imsak);
 times.fajr = normalizeTime(times.fajr);
 times.sunrise = normalizeTime(times.sunrise);
@@ -609,6 +612,8 @@ $(function(){
 		$('.running-text').text("Selamat datang di " + setting.nama);
 	},
 	complete:function(){
+
+    if($.fn.marquee){
 
     $('.running-text').marquee('destroy');
 
@@ -927,7 +932,10 @@ setInterval(function(){
     try{
 
         var owl = $('.owl-carousel');
-        var carousel = owl.data('owl.carousel');
+
+		if(!owl.length) return;
+
+		var carousel = owl.data('owl.carousel');
 
         // ===============================
         // CAROUSEL SELF HEAL
@@ -978,14 +986,18 @@ owl.find(".owl-stage").children().unwrap();
                 url: setting.runningTextFile + '?v=' + Date.now(),
                 success:function(d){
 
-                    $('.running-text').marquee('destroy');
-
-                    $('.running-text')
-                    .text(d)
-                    .marquee({
-                        duration: setting.runningTextSpeed
-                    });
-
+					if($.fn.marquee){
+   					$('.running-text').marquee('destroy');
+					}
+                    
+					if($.fn.marquee){
+   					$('.running-text')
+   					.text(d)
+   					.marquee({
+       					duration: setting.runningTextSpeed
+   					});
+					}
+                    
                 }
             });
 
@@ -1044,6 +1056,37 @@ setInterval(function(){
     lastLoop = now;
 
 },5000);
+
+
+// ===============================
+// SOFT MEMORY RESET SYSTEM
+// membersihkan memory JS tanpa reload halaman
+// ===============================
+
+setInterval(function(){
+
+    console.log("Soft memory reset triggered");
+
+    try{
+
+        // hentikan timer lama
+        stopTimer();
+
+        // reset beberapa variabel penting
+        lastPhase = null;
+        systemBoot = true;
+
+        // jalankan ulang sistem jadwal
+        startApp();
+
+    }catch(e){
+
+        console.log("Soft reset error:", e);
+
+    }
+
+},7200000); // setiap 2 jam
+
 
 // ===============================
 // GLOBAL ERROR RECOVERY
