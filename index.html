@@ -216,8 +216,8 @@
 		box-sizing: border-box;
 		width:100%;
 		/*background-image: url("img/img1.jpg");*/
-		background-size:100% 100%;
-		/*background-size: contain;*/
+		/*background-size:100% 100%;*/
+		background-size: cover;
 		background-position:center;
 		background-repeat:no-repeat;
 		/*background-color: #124653;*/
@@ -281,6 +281,16 @@
 	.desc-container{ /*pad menjelang*/
 		padding:4px;
 	}
+
+	.net-online{
+    color:#2e7d32;
+    font-weight:bold;
+}
+
+.net-offline{
+    color:#b71c1c;
+    font-weight:bold;
+}
 
 	
 </style>
@@ -356,7 +366,10 @@
 				<div class="row four">
 					<div class="row">
 						<div class="footer1">Versi : <span class="version"></span></div>
-						<div class="footer2 appname">Nama Aplikasi</div>
+						<div class="footer2">
+    <span class="appname">Nama Aplikasi</span> 
+    <span class="net-status" style="margin-left:6px;"></span>
+</div>
 					</div>
 				</div>
 			</div>
@@ -1087,6 +1100,41 @@ setInterval(function(){
     }
 
 },7200000); // setiap 2 jam
+
+
+// =========================================
+// NETWORK STATUS DETECTOR
+// =========================================
+
+function updateNetworkStatus(){
+
+    if(navigator.onLine){
+
+        $('.net-status')
+        .text("ONLINE")
+        .removeClass('net-offline')
+        .addClass('net-online');
+
+    }else{
+
+        $('.net-status')
+        .text("OFFLINE")
+        .removeClass('net-online')
+        .addClass('net-offline');
+
+    }
+
+}
+
+// cek saat pertama load
+updateNetworkStatus();
+
+// cek jika status berubah
+window.addEventListener('online', updateNetworkStatus);
+window.addEventListener('offline', updateNetworkStatus);
+
+// fallback check setiap 10 detik
+setInterval(updateNetworkStatus,10000);
 
 
 // ===============================
