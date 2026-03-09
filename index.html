@@ -405,7 +405,7 @@ var setting = {
 	methodCalc:'Kemenag', //metode perhitungan adzan
 	dst: 'auto',
 
-	tune: {imsak: +3, fajr: +3, sunrise: +6, dhuhr: +3, asr: +3, sunset: +3, maghrib:+3, isha:+3, midnight:+3},
+	tune: {imsak: +3, fajr: +3, sunrise: +6, dhuhr: +3, asr: +3, sunset: +3, maghrib:+3, isha:+0, midnight:+3},
 
 	runningTextFile: "www/public/Bilal/text/runningtext.txt",
 	runningTextSpeed: 15000,
@@ -615,12 +615,14 @@ $(function(){
 
     if($.fn.marquee){
 
-    $('.running-text').marquee('destroy');
+        $('.running-text').marquee('destroy');
 
-    $('.running-text').marquee({
-        duration: setting.runningTextSpeed
-    });
-	}
+        $('.running-text').marquee({
+            duration: setting.runningTextSpeed
+        });
+
+    }
+
 }
 });
 
