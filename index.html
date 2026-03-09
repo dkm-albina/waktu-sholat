@@ -877,7 +877,12 @@ function nextSchedule(){
 
     var phase = getPrayerPhase();
 
-    // beep hanya ketika fase berubah
+    if(!phase){
+        console.log("Schedule error, restarting...");
+        startApp();
+        return;
+    }
+
     if(!systemBoot && lastPhase !== phase.name){
 
         if(phase.name === 'adzan'){
