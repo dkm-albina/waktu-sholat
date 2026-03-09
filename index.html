@@ -292,6 +292,39 @@
     font-weight:bold;
 }
 
+.message-overlay{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:calc(100vh - 196px);
+    background:rgba(0,0,0,0.85);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    z-index:9999;
+}
+
+.message-box{
+    color:#fff;
+    font-weight:bold;
+}
+
+.msg1{
+    font-size:70px;
+    margin-bottom:20px;
+}
+
+.msg2{
+    font-size:60px;
+    margin-bottom:20px;
+}
+
+.msg3{
+    font-size:50px;
+}
+
 	
 </style>
 
@@ -361,6 +394,13 @@
 					<div class="running-container">
 						<div class="running-text"></div>
 					</div>
+					 <div class="message-overlay">
+        <div class="message-box">
+            <div class="msg1"></div>
+            <div class="msg2"></div>
+            <div class="msg3"></div>
+        </div>
+    </div>
 				</div>
 				
 				<div class="row four">
@@ -433,6 +473,19 @@ var setting = {
 	blankShalatTime: 600000, // 10 menit layar blank saat shalat
 
 	aliasName: ['IMSAK', 'SUBUH', 'SYURUQ', 'ZHUHUR', 'ASHAR', 'MAGHRIB', 'ISYA']
+
+messageSystem:{
+    enabled:true,
+
+    line1:"MOHON MERAPIKAN",
+    line2:"SAF SHALAT",
+    line3:"DAN MATIKAN HP",
+
+    duration:20000,   // tampil 20 detik
+    interval:900000   // muncul setiap 15 menit
+	}
+	
+	
 }
 
 // FIX BUG global variable
@@ -1154,6 +1207,39 @@ window.onerror = function(message, source, lineno, colno, error){
     },3000);
 
 };
+
+// =====================================
+// MESSAGE DISPLAY SYSTEM
+// =====================================
+
+function showMessage(){
+
+    if(!setting.messageSystem.enabled) return;
+
+    $('.msg1').text(setting.messageSystem.line1);
+    $('.msg2').text(setting.messageSystem.line2);
+    $('.msg3').text(setting.messageSystem.line3);
+
+    $('.message-overlay').fadeIn(500);
+
+    setTimeout(function(){
+
+        $('.message-overlay').fadeOut(500);
+
+    }, setting.messageSystem.duration);
+
+}
+
+// jalankan berkala
+if(setting.messageSystem.enabled){
+
+    setInterval(function(){
+
+        showMessage();
+
+    }, setting.messageSystem.interval);
+
+}
 
 </script>
 </body>
