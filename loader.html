@@ -7,31 +7,97 @@
 
 <script>
 
+// =========================================
+// BILAL APP LOADER
+// Digunakan sebagai halaman awal kiosk
+// Tujuan:
+// 1. Mengecek apakah internet tersedia
+// 2. Jika online → load versi terbaru dari GitHub
+// 3. Jika offline → load versi yang sudah ada di cache browser
+// =========================================
+
+
+// Membuat URL index dengan timestamp
+// Tujuannya agar browser tidak memakai cache lama
+// jika internet tersedia
 var url = "index.html?v=" + Date.now();
 
-fetch(url,{cache:"no-store"})
-.then(function(){
 
-    window.location.href = url;
+// =========================================
+// FUNGSI LOAD APP
+// =========================================
 
-})
-.catch(function(){
+function loadApp(){
 
-    console.log("Offline → loading cached version");
+    // mencoba mengambil index.html dari server
+    // cache:"no-store" memastikan request benar-benar
+    // mencoba ke internet (bukan dari cache)
+    fetch(url,{cache:"no-store"})
 
-    window.location.href = "index.html";
+    .then(function(){
 
-});
+        // =========================================
+        // JIKA ONLINE
+        // =========================================
+        // Jika request berhasil berarti internet ada
+        // maka kita load index terbaru
+        console.log("Online → loading latest version");
 
-    setInterval(function(){
+        window.location.href = url;
+
+    })
+
+    .catch(function(){
+
+        // =========================================
+        // JIKA OFFLINE
+        // =========================================
+        // Jika fetch gagal berarti internet tidak ada
+        // maka kita load index.html tanpa parameter
+        // sehingga browser menggunakan cache lokal
+        console.log("Offline → loading cached version");
+
+        window.location.href = "index.html";
+
+    });
+
+}
+
+
+// =========================================
+// MENJALANKAN LOADER
+// =========================================
+
+loadApp();
+
+
+// =========================================
+// AUTO REFRESH LOADER
+// =========================================
+// Loader akan refresh setiap 6 jam
+// Tujuannya:
+//
+// 1. memastikan aplikasi tetap sinkron dengan server
+// 2. membersihkan kemungkinan memory leak browser
+// 3. memaksa cek update jika internet kembali tersedia
+//
+// Jika internet mati, loader tetap mencoba
+// memuat versi cache dari index.html
+// =========================================
+
+setInterval(function(){
+
+    console.log("Loader refresh (6 hours)");
 
     location.reload();
 
-},21600000);
-    
+},21600000); // 6 jam
+
+
 </script>
 
 </head>
+
 
 <body style="background:black;color:white;font-family:Arial;text-align:center;margin-top:20%">
 
