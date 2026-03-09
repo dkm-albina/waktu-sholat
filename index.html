@@ -780,93 +780,38 @@ function getPrayerPhase(){
             .second(0)
             .millisecond(0);
 
-        var T0 = prayerMoment.clone();
-        var T1 = prayerMoment.clone().add(setting.adzanTime,'ms');
-
-        var sunnahTime = (masterName[i]=='SUBUH')
-            ? setting.shalatSunnahTimeSubuh
-            : setting.shalatSunnahTime;
-
-        var T2 = prayerMoment.clone()
-            .add(setting.adzanTime,'ms')
-            .add(sunnahTime,'ms');
-
-        var T3 = prayerMoment.clone()
-            .add(setting.adzanTime,'ms')
-            .add(sunnahTime,'ms')
-            .add(setting.iqomahTime,'ms');
-
-        // MENJELANG SHALAT
-        if(now.isBefore(T0)){
+        // jika waktu shalat masih di depan
+        if(now.isBefore(prayerMoment)){
 
             return {
-                target:T0.unix(),
-                name:masterName[i],
-                desc:'MENJELANG '+masterName[i],
-                highlight:masterName[i]
-            };
-
-        }
-
-        // ADZAN
-        if(now.isBetween(T0,T1)){
-
-            return {
-                target:T1.unix(),
-                name:'adzan',
-                desc:'ADZAN '+masterName[i],
-                highlight:masterName[i]
-            };
-
-        }
-
-        // SHALAT SUNNAH
-        if(now.isBetween(T1,T2)){
-
-            return {
-                target:T2.unix(),
-                name:'sunnah',
-                desc:'SHALAT SUNNAH '+masterName[i],
-                highlight:masterName[i]
-            };
-
-        }
-
-        // IQOMAH
-        if(now.isBetween(T2,T3)){
-
-            return {
-                target:T3.unix(),
-                name:'iqomah',
-                desc:'IQOMAH '+masterName[i],
-                highlight:masterName[i]
+                target: prayerMoment.unix(),
+                name: masterName[i],
+                desc: 'MENJELANG ' + masterName[i],
+                highlight: masterName[i]
             };
 
         }
 
     }
 
-    // ==========================
-    // fallback → IMSAK BESOK
-    // ==========================
+    // jika semua waktu hari ini sudah lewat
+    // maka menuju IMSAK besok
 
-    // fallback → IMSAK BESOK (fix bug 24 jam)
+    var splt = masterTime[0].split(':');
 
-var splt = masterTime[0].split(':');
+    var tomorrow = moment().add(1,'day');
 
-var tomorrow = moment().startOf('day').add(1,'day');
-
-tomorrow
-    .hour(parseInt(splt[0]))
-    .minute(parseInt(splt[1]))
-    .second(0)
-    .millisecond(0);
+    tomorrow
+        .hour(parseInt(splt[0]))
+        .minute(parseInt(splt[1]))
+        .second(0)
+        .millisecond(0);
 
     return {
-        target:tomorrow.unix(),
-        name:masterName[0],
-        desc:'MENJELANG '+masterName[0],
-        highlight:masterName[0]
+        target: tomorrow.unix(),
+        name: masterName[0],
+        desc: 'MENJELANG ' + masterName[0],
+        highlight: masterName[0]
     };
 
 }
