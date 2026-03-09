@@ -483,7 +483,7 @@ var setting = {
     line3:"DAN MATIKAN HP",
 
     duration:20000,   // tampil 20 detik
-    interval:90000   // muncul setiap 15 menit
+    interval:30000   // muncul setiap 5 menit
 	}
 	
 	
@@ -504,7 +504,7 @@ var startAppRunning = false;
 // set null untuk menjalankan waktu normal
 // =========================================
 
-var debugTime = null;
+var debugTime = "04:41:00";
 
 // contoh:
 // var debugTime = "04:42:30";
@@ -602,11 +602,7 @@ function startApp(){
             setting.dst
         );
 
-		if(debugTime){
-    $('.middle3 .debug').remove();
-    $('.middle3').append('<span class="debug"> | DEBUG TIME: '+debugTime+'</span>');
-}
-
+		
 
 // =========================================
 // SAFETY CHECK
@@ -655,6 +651,11 @@ times.isha = normalizeTime(times.isha);
         $('.latitude').text(setting.latitude);
         $('.longitude').text(setting.longitude);
         $('.altitude').text(setting.altitude);
+
+		if(debugTime){
+    	$('.middle3 .debug').remove();
+    	$('.middle3').append('<span class="debug"> | DEBUG TIME: '+debugTime+'</span>');
+		}
 
         $('.middle1').text(setting.nama);
         $('.middle2').text(setting.alamat);
@@ -927,7 +928,7 @@ function getPrayerPhase(){
         var splt = masterTime[i].split(':');
 
         // waktu shalat hari ini
-        var prayerMoment = getNowMoment()
+        var prayerMoment = getNowMoment().clone()
             .hour(parseInt(splt[0]))
             .minute(parseInt(splt[1]))
             .second(0)
@@ -956,7 +957,7 @@ function getPrayerPhase(){
 
     // FIX BUG 24 JAM
     // gunakan startOf('day') agar timestamp selalu benar
-    var tomorrow = getNowMoment()
+    var tomorrow = getNowMoment().clone()
         .add(1,'day')
         .startOf('day')
         .hour(parseInt(splt[0]))
