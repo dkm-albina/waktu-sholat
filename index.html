@@ -595,7 +595,7 @@ function startApp(){
         stopTimer(); // pastikan timer lama berhenti
 
         var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
-        var now = new Date();
+        var now = getNowMoment().toDate();
 
         // watchdog heartbeat
         watchdogLastTick = Date.now();
