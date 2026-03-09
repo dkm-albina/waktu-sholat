@@ -2,9 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Cache-Control" content="public, max-age=31536000">
 	<title>Jadwal Shalat</title>
 	<link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css" />
 	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css" />
@@ -215,7 +213,8 @@
 		box-sizing: border-box;
 		width:100%;
 		/*background-image: url("img/img1.jpg");*/
-		background-size:100% 100%;
+		/*background-size:100% 100%;*/
+		background-size: cover;
 		background-position:center;
 		background-repeat:no-repeat;
 		/*background-color: #124653;*/
@@ -696,9 +695,12 @@ function countdownShalat(time, name, desc, shalatName =''){
 
 	if(mycountdown){
     	clearInterval(mycountdown);
+		mycountdown = null; // tambahan kecil
 	}
 
-	mycountdown = setInterval(function() {
+	setTimeout(function(){
+
+    mycountdown = setInterval(function() {
 
     watchdogLastTick = Date.now(); // FIX BUG watchdog tick
 
@@ -710,6 +712,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 		if(distance <= 0){
 
 			clearInterval(mycountdown);
+			mycountdown = null;
 
 		if(name === 'iqomah'){
 
@@ -720,19 +723,19 @@ function countdownShalat(time, name, desc, shalatName =''){
 		.html('IQAMAH<br><div style="font-size:60px;margin-top:30px">Waktunya Shalat '+shalatName+'</div>')
 		.fadeIn(300);
 
-		// setelah 5 detik layar jadi blank
+		// setelah 16 detik layar jadi blank
 		setTimeout(function(){
 
 			$('.layer').html('');
 
-		},5000);
+		},16000);
 
 		// setelah waktu shalat selesai kembali normal
 		setTimeout(function(){
 
 			$('.layer').fadeOut(500);
 
-		}, setting.blankShalatTime + 5000);
+		}, setting.blankShalatTime + 16000);
 
 	}
 
@@ -741,11 +744,20 @@ function countdownShalat(time, name, desc, shalatName =''){
 
 }
 		
+var minutes = Math.floor(distance / 60);
+var seconds = distance % 60;
+
+$('.countdown-event').text(
+    minutes.toString().padStart(2,'0') + ':' +
+    seconds.toString().padStart(2,'0')
+);
+
 		$('.masehi').html(nowMoment.format('HH:mm:ss'));
 		$('.hijriah').text(nowMoment.format('ddd, DD/MM/YYYY')+' - '+nowMoment.format('iD iMMMM iYYYY'));
 
-	},1000);
-}
+	    },1000);
+
+},1000 - (Date.now() % 1000));
 
 function getPrayerPhase(){
 
@@ -906,9 +918,9 @@ setInterval(function(){
 
                 owl.trigger('destroy.owl.carousel');
 
-                owl.find('.owl-stage-outer')
-                   .children()
-                   .unwrap();
+owl.removeClass("owl-loaded");
+owl.find(".owl-stage-outer").children().unwrap();
+owl.find(".owl-stage").children().unwrap();
 
                 owl.owlCarousel({
                     loop:true,
