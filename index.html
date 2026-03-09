@@ -793,6 +793,10 @@ function getPrayerPhase(){
             .add(setting.iqomahTime,'ms')
             .unix();
 
+			if(now > T3){
+        continue;
+    }
+
         // MENJELANG SHALAT
         if(now < T0){
 
