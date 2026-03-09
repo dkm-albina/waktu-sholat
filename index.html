@@ -495,6 +495,25 @@ function startApp(){
             setting.dst
         );
 
+		// FIX PrayTimes bug: normalisasi waktu > 24
+function normalizeTime(t){
+    var p = t.split(':');
+    var h = parseInt(p[0]);
+    var m = parseInt(p[1]);
+
+    if(h >= 24) h = h - 24;
+
+    return h.toString().padStart(2,'0') + ':' + p[1];
+}
+
+times.imsak = normalizeTime(times.imsak);
+times.fajr = normalizeTime(times.fajr);
+times.sunrise = normalizeTime(times.sunrise);
+times.dhuhr = normalizeTime(times.dhuhr);
+times.asr = normalizeTime(times.asr);
+times.maghrib = normalizeTime(times.maghrib);
+times.isha = normalizeTime(times.isha);
+
         masterTime = [
             times.imsak,
             times.fajr,
@@ -682,7 +701,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 	$('.myprayer').removeClass('highlight');
 
 	// FIX BUG highlight event adzan/iqomah
-	var highlightName = shalatName ? shalatName : name;
+	var highlightName = shalatName || name;
 
 	$('.'+ highlightName).closest('.myprayer').addClass('highlight');
 
@@ -746,7 +765,12 @@ function countdownShalat(time, name, desc, shalatName =''){
 	return;
 
 }
-if(distance > 86400) distance = 86400; // max 24 jam
+// FIX: jika target waktu tidak valid, hitung ulang jadwal
+if(distance > 43200){
+    console.log("Invalid countdown detected, recalculating schedule");
+    nextSchedule();
+    return;
+}
 var hours = Math.floor(distance / 3600);
 var minutes = Math.floor((distance % 3600) / 60);
 var seconds = distance % 60;
@@ -847,6 +871,12 @@ function nextSchedule(){
         if(phase.name === 'iqomah'){
             beep();
         }
+
+	// FIX: IMSAK tidak memiliki fase adzan
+		if(phase.name === 'IMSAK'){
+    		beep();
+			phase.desc = 'MENJELANG IMSAK';
+}
 
     }
 
