@@ -900,7 +900,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 
 }
 // FIX: jika target waktu tidak valid, hitung ulang jadwal
-if(distance > 43200 || distance < -10){
+if(distance > 86400 || distance < -10){
     console.log("Invalid countdown detected, recalculating schedule");
     nextSchedule();
     return;
