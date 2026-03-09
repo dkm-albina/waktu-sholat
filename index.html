@@ -509,6 +509,7 @@ var startAppRunning = false;
 // =========================================
 
 var debugTime = "04:41:00";
+var debugStart = Date.now();
 
 // contoh:
 // var debugTime = "04:42:30";
@@ -554,7 +555,11 @@ function getNowMoment(){
 
         var today = moment().format("YYYY-MM-DD");
 
-        return moment(today + " " + debugTime,"YYYY-MM-DD HH:mm:ss");
+        var base = moment(today + " " + debugTime,"YYYY-MM-DD HH:mm:ss");
+
+        var elapsed = Math.floor((Date.now() - debugStart)/1000);
+
+        return base.clone().add(elapsed,'seconds');
     }
 
     return moment();
