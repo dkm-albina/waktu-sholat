@@ -745,11 +745,12 @@ function countdownShalat(time, name, desc, shalatName =''){
 	return;
 
 }
-		
-var minutes = Math.floor(distance / 60);
+var hours = Math.floor(distance / 3600);
+var minutes = Math.floor((distance % 3600) / 60);
 var seconds = distance % 60;
 
 $('.countdown-event').text(
+    hours.toString().padStart(2,'0') + ':' +
     minutes.toString().padStart(2,'0') + ':' +
     seconds.toString().padStart(2,'0')
 );
