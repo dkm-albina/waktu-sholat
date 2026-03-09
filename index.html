@@ -706,8 +706,9 @@ function countdownShalat(time, name, desc, shalatName =''){
 
     watchdogLastTick = Date.now(); // FIX BUG watchdog tick
 
-   		var now = Math.floor(Date.now() / 1000);
-		var nowMoment = moment.unix(now);
+   		var nowMoment = moment();
+		var now = nowMoment.unix();
+
 		var distance = finalTime - now;
 		
 		// FIX BUG countdown negative time
