@@ -766,21 +766,29 @@ $('.countdown-event').text(
 
 }
 
+// =========================================
+// FIX TOTAL : LOGIKA PENENTUAN WAKTU SHALAT
+// menghindari bug countdown 24:00:00
+// =========================================
 function getPrayerPhase(){
 
     var now = moment();
 
+    // ===============================
+    // CARI WAKTU SHALAT BERIKUTNYA
+    // ===============================
     for(let i=0;i<masterTime.length;i++){
 
         var splt = masterTime[i].split(':');
 
+        // waktu shalat hari ini
         var prayerMoment = moment()
             .hour(parseInt(splt[0]))
             .minute(parseInt(splt[1]))
             .second(0)
             .millisecond(0);
 
-        // jika waktu shalat masih di depan
+        // jika waktu sekarang masih sebelum waktu shalat
         if(now.isBefore(prayerMoment)){
 
             return {
@@ -794,14 +802,18 @@ function getPrayerPhase(){
 
     }
 
-    // jika semua waktu hari ini sudah lewat
-    // maka menuju IMSAK besok
+    // =========================================
+    // JIKA SEMUA WAKTU HARI INI SUDAH LEWAT
+    // MAKA MENUJU IMSAK BESOK
+    // =========================================
 
     var splt = masterTime[0].split(':');
 
-    var tomorrow = moment().add(1,'day');
-
-    tomorrow
+    // FIX BUG 24 JAM
+    // gunakan startOf('day') agar timestamp selalu benar
+    var tomorrow = moment()
+        .add(1,'day')
+        .startOf('day')
         .hour(parseInt(splt[0]))
         .minute(parseInt(splt[1]))
         .second(0)
