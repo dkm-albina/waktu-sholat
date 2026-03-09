@@ -212,6 +212,10 @@
 		position:relative;
 	}
 
+	.wallpaper{
+		position:relative;
+	}
+
 	.wallpaper .item{ /*wallpaper slide*/
 		box-sizing: border-box;
 		width:100%;
@@ -547,7 +551,10 @@ setInterval(function(){
 function getNowMoment(){
 
     if(debugTime){
-        return moment(debugTime,"HH:mm:ss");
+
+        var today = moment().format("YYYY-MM-DD");
+
+        return moment(today + " " + debugTime,"YYYY-MM-DD HH:mm:ss");
     }
 
     return moment();
