@@ -745,6 +745,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 	return;
 
 }
+if(distance > 86400) distance = 86400; // max 24 jam
 var hours = Math.floor(distance / 3600);
 var minutes = Math.floor((distance % 3600) / 60);
 var seconds = distance % 60;
