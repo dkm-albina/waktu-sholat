@@ -238,7 +238,7 @@
 .running-container { /* contain text */
     position: absolute;
     bottom: 16px;        /* jarak dari bawah layar */
-    left: 2%;            /* sebelumnya 2% */
+    left: 1%;            /* sebelumnya 2% */
     width: 98%;          /* sebelumnya 98% */
     z-index: 99999999;
 }
@@ -719,15 +719,14 @@ function countdownShalat(time, name, desc, shalatName =''){
 	
 	$('.myprayer').removeClass('highlight');
 
-	// FIX BUG highlight event adzan/iqomah
-	// FIX: highlight selalu berdasarkan nama shalat
-	var highlightName = shalatName ? shalatName : name;
+	var highlightName = shalatName || name;
 
+	// jika class tidak ada, gunakan jadwal berikutnya (name)
 	if(!$('.'+highlightName).length){
-    	highlightName = name;
+    highlightName = name;
 	}
 
-	$('.'+ highlightName).closest('.myprayer').addClass('highlight');
+	$('.'+highlightName).closest('.myprayer').addClass('highlight');
 
 	$('.desc').text(desc);
 	
