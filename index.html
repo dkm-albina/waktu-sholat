@@ -425,7 +425,7 @@
 
 //app setting
 var app = {
-	version: '1.1.2', // FIX BUG + auto refresh daily + stability fix (08/03/2026) by Andryan Nugraha
+	version: '1.2.8', // FIX BUG + auto refresh daily + stability fix (09/03/2026) by Andryan Nugraha
 	name: 'Bilal App',
 	autoLocation: true //jika anda ingin menggunakan autolocation, setelah memilih opsi enable GPS pada browser, lalukan refresh pada browser. Fitur ini hanya berfungsi jika device terkoneksi dengan internet saja.
 };
@@ -480,44 +480,9 @@ var systemPrayer = "";
 // FIX FEATURE auto refresh daily tracking
 var todayDate = moment().format("YYYY-MM-DD");
 
-// ===============================
-// WATCHDOG DISPLAY SYSTEM
-// menjaga sistem tetap hidup 24 jam
-// ===============================
-
-var watchdogLastTick = Date.now();
-
-setInterval(function(){
-
-    var now = Date.now();
-    var diff = now - watchdogLastTick;
-
-    // jika lebih dari 2 menit tidak ada aktivitas
-    if(diff > 120000 && !mycountdown){
-
-        if(systemState == "countdown"){
-        console.log("Watchdog restart triggered");
-        startApp();
-         }else{
-        console.log("Watchdog skipped (ritual phase)");
-        }
-
-        try{
-            startApp(); // restart sistem jadwal
-        }catch(e){
-            console.log("Watchdog error:",e);
-        }
-
-        watchdogLastTick = Date.now();
-
-    }
-
-},300000); // cek setiap 5 menit
 
 
-
-
-// FIX BUG geolocation async
+// with FIX BUG geolocation async
 function startApp(){
 
 	stopTimer(); // FIX edge case midnight timer
@@ -556,6 +521,41 @@ function startApp(){
 
 	nextSchedule();
 }
+
+// ===============================
+// WATCHDOG DISPLAY SYSTEM
+// menjaga sistem tetap hidup 24 jam
+// ===============================
+
+var watchdogLastTick = Date.now();
+
+setInterval(function(){
+
+    var now = Date.now();
+    var diff = now - watchdogLastTick;
+
+    // jika lebih dari 2 menit tidak ada aktivitas
+    if(diff > 120000 && !mycountdown){
+
+        if(systemState == "countdown"){
+        console.log("Watchdog restart triggered");
+        startApp();
+         }else{
+        console.log("Watchdog skipped (ritual phase)");
+        }
+
+        try{
+            startApp(); // restart sistem jadwal
+        }catch(e){
+            console.log("Watchdog error:",e);
+        }
+
+        watchdogLastTick = Date.now();
+
+    }
+
+},300000); // cek setiap 5 menit
+
 
 // FIX BUG audio autoplay
 function beep(){
