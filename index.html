@@ -865,7 +865,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 		var distance = finalTime - now;
 		
 		// FIX BUG countdown negative time
-		if(distance <= 0){
+		if(distance <= -4){
 
 			clearInterval(mycountdown);
 			mycountdown = null;
