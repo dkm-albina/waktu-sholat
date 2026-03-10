@@ -2,7 +2,6 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	
 	<title>Jadwal Shalat</title>
 	<link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css" />
 	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css" />
@@ -56,9 +55,11 @@
 
 	.p-0{padding:0;}
 	.mycontainer{
-		width:100%;
-		height: 100vh;
-	}
+	    width:100%;
+	    height:100vh;
+	    padding:3vh 3vw;
+	    box-sizing:border-box;
+    }
 
 	.first{ /*header*/
 		/*background-color: #013505;*/
@@ -131,7 +132,7 @@
 	}
 
 	.masehi{ /*jam skrg */
-		font-size:53px; /*dari 50px */
+		font-size:56px; /*dari 50px */
 		font-weight:bold;
 		margin:0 auto 5px auto;
 		padding: 0px 0px;
@@ -499,6 +500,24 @@ var tempShalat;
 var systemState = "countdown";
 var systemPrayer = "";
 var shalatTimer = null;
+var bilalLogger = setInterval(function(){
+
+//Bilal Status for 5 minutes di awal
+console.log(
+"Bilal Status |",
+"Time:",moment().format("HH:mm:ss"),
+"| State:",systemState,
+"| Prayer:",systemPrayer,
+"| Internet:",navigator.onLine
+);
+
+},60000);
+
+// berhenti setelah 5 menit
+setTimeout(function(){
+clearInterval(bilalLogger);
+console.log("Bilal Logger stopped after 5 minutes");
+},300000);
 
 // FIX FEATURE auto refresh daily tracking
 var todayDate = moment().format("YYYY-MM-DD");
