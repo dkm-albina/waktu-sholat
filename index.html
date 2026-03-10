@@ -508,8 +508,8 @@ var startAppRunning = false;
 // set null untuk menjalankan waktu normal
 // =========================================
 
-var debugTime = Null;
-var debugStart = Null;
+var debugTime = "04:41:00";
+var debugStart = Date.now();
 
 // contoh:
 // var debugTime = "04:42:30";
@@ -982,7 +982,7 @@ function getPrayerPhase(){
         // SUBUH = 04:43
         // ===============================================================
 
-       var prayerMoment = now.clone().startOf('day')
+       var prayerMoment = now.clone().startof('day')
             .hour(parseInt(splt[0]))
             .minute(parseInt(splt[1]))
             .second(0)
