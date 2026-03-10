@@ -590,6 +590,9 @@ $(function(){
      // cek saat pertama load
     updateNetworkStatus();
 
+    // pastikan update lagi setelah DOM stabil
+    setTimeout(updateNetworkStatus,500);
+
     // cek jika status berubah
     window.addEventListener('online', updateNetworkStatus);
     window.addEventListener('offline', updateNetworkStatus);
@@ -825,6 +828,7 @@ function updateNetworkStatus(){
     }
 
 }
+
 
 </script>
 </body>
