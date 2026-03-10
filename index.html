@@ -279,8 +279,9 @@
 }
 
 .net-offline{
-    color:#b71c1c;
+    color:#ff5252;
     font-weight:bold;
+    animation: blinkOffline 1.5s infinite;
 }
 
 .message-overlay{
@@ -315,6 +316,12 @@
 
 .msg3{
     font-size:50px;
+}
+
+@keyframes blinkOffline {
+    0% { opacity: 1; }
+    50% { opacity: 0.25; }
+    100% { opacity: 1; }
 }
 
 </style>
@@ -818,16 +825,6 @@ function updateNetworkStatus(){
     }
 
 }
-
-// cek saat pertama load
-updateNetworkStatus();
-
-// cek jika status berubah
-window.addEventListener('online', updateNetworkStatus);
-window.addEventListener('offline', updateNetworkStatus);
-
-// fallback check setiap 10 detik
-setInterval(updateNetworkStatus,10000);
 
 </script>
 </body>
