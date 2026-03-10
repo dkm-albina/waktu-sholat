@@ -865,7 +865,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 		var distance = finalTime - now;
 		
 		// FIX BUG countdown negative time
-		if(distance <= -4){
+		if(distance <= 0){
 
 			clearInterval(mycountdown);
 			mycountdown = null;
@@ -982,7 +982,7 @@ function getPrayerPhase(){
         // SUBUH = 04:43
         // ===============================================================
 
-       var prayerMoment = now.clone().startof('day')
+        var prayerMoment = getNowMoment().clone()
             .hour(parseInt(splt[0]))
             .minute(parseInt(splt[1]))
             .second(0)
