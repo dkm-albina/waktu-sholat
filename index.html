@@ -455,7 +455,7 @@ var setting = {
 	methodCalc:'Kemenag', //metode perhitungan adzan
 	dst: 'auto',
 
-	tune: {imsak: +3, fajr: +3, sunrise: +6, dhuhr: +3, asr: +3, sunset: +3, maghrib:+3, isha:+3, midnight:+3},
+	tune: {imsak: +3, fajr: +3, sunrise: +6, dhuhr: +3, asr: +3, sunset: +3, maghrib:+3, isha:+1, midnight:+3},
 
 	runningTextFile: "www/public/Bilal/text/runningtext.txt",
 	runningTextSpeed: 15000,
@@ -741,6 +741,8 @@ function countdownShalat(time, name, desc, shalatName =''){
 			
 			if(name=='adzan'){
 				
+                showOverlay("Laksanakan","Shalat Sunnah","Sebelum Iqomah");
+
 				// FIX bug SUBUH double timer
 				if(shalatName=='SUBUH'){
 					countdownShalat(moment().add(setting.shalatSunnahTimeSubuh).unix(),'shalat_sunnah','MENJELANG IQOMAH ' +shalatName,shalatName);
@@ -752,19 +754,42 @@ function countdownShalat(time, name, desc, shalatName =''){
 				
 				beep();
 				
-				countdownShalat(moment().add(setting.iqomahTime).unix(),'iqomah','IQOMAH '+shalatName,shalatName);
+				showOverlay("IQOMAH","Luruskan dan Rapatkan","Shaf");
+
+                countdownShalat(
+                moment().add(setting.iqomahTime).unix(),
+                'iqomah',
+                'IQOMAH '+shalatName,
+                shalatName
+                );
 				
 			}else if(inArray(name, ['SUBUH','ZHUHUR','ASHAR','MAGHRIB','ISYA'])){
 				
 				beep();
-				
+				showOverlay("ADZAN","Telah Masuk Waktu","Shalat " + name);
 				countdownShalat(moment().add(setting.adzanTime).unix(),'adzan','ADZAN '+name,name);
 				
-			}else{
-				
-				nextSchedule();
-				
-			}
+
+			}else if(name=='iqomah'){
+
+                // tampilkan overlay shalat berlangsung
+                showOverlay("SHALAT","SEDANG BERLANGSUNG","");
+
+                // tutup overlay setelah durasi shalat
+                var durasi = setting.shalatDuration[shalatName] || 600000;
+
+                setTimeout(function(){
+                hideOverlay();
+            }, durasi);
+
+                // countdown langsung menuju jadwal berikutnya
+                nextSchedule();
+
+            }else{
+
+                nextSchedule();
+
+            }
 			
 		}
 		
@@ -778,6 +803,7 @@ function nextSchedule(){
 
 	var found=false;
     systemState = "countdown";
+    hideOverlay();
 
 	for(let a=0;a<tempShalat.length;a++){ // FIX BUG global variable
 		
@@ -827,6 +853,20 @@ function updateNetworkStatus(){
 
     }
 
+}
+
+// Gunakan Overlay
+function showOverlay(msg1,msg2,msg3){
+
+    $('.msg1').text(msg1);
+    $('.msg2').text(msg2);
+    $('.msg3').text(msg3);
+
+    $('.message-overlay').css('display','flex');
+}
+
+function hideOverlay(){
+    $('.message-overlay').hide();
 }
 
 
