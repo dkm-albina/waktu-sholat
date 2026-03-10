@@ -982,7 +982,7 @@ function getPrayerPhase(){
         // SUBUH = 04:43
         // ===============================================================
 
-       var prayerMoment = now.clone()
+       var prayerMoment = now.clone().startof('day')
             .hour(parseInt(splt[0]))
             .minute(parseInt(splt[1]))
             .second(0)
