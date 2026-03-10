@@ -107,14 +107,16 @@
 		/*color:#000000;*/
 		color:#4e342e; /* coklat tua */
 		float:left;
-		font-size:6px; /*10px*/
+		font-size:8px; /*10px*/
+        margin-left:12px;
 	}
 
 	.four .footer2{ /*bilal app*/
 		/*color:#000000;*/
 		color:#4e342e; /* coklat tua */
 		float:right;
-		font-size:6px; /*10px*/
+		font-size:8px; /*10px*/
+        margin-right:12px;
 	}
 
 	.myprayer{ /*jadwal*/
@@ -289,7 +291,8 @@
     /*height:calc(100vh - 196px);*/
 	height:100%;
     background:rgba(0,0,0,0.85);
-    display:none;
+    /*display:none;*/
+    display:flex;
     align-items:center;
     justify-content:center;
     text-align:center;
@@ -512,8 +515,8 @@ function startApp(){
 	$('.ISYA').text(times.isha);
 	
 	$('.tz-offset').text(offsetIcon+setting.timezoneOffset);
-	$('.latitude').text(setting.latitude);
-	$('.longitude').text(setting.longitude);
+	$('.latitude').text(parseFloat(setting.latitude).toFixed(4));
+    $('.longitude').text(parseFloat(setting.longitude).toFixed(4));
 	$('.altitude').text(setting.altitude);
 	$('.middle1').text(setting.nama);
 	$('.middle2').text(setting.alamat);
