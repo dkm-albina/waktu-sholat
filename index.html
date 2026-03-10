@@ -331,11 +331,12 @@
 				<div class="middle1"></div>
 				<div class="middle2"></div>
 				<div class="middle3">
-					TZ: <span class="tz-offset"></span> | 
-					LAT: <span class="latitude"></span> | 
-					LNG: <span class="longitude"></span> | 
-					ALT: <span class="altitude"></span>
-				</div>
+	                TZ: <span class="tz-offset"></span> | 
+	                LAT: <span class="latitude"></span> | 
+	                LNG: <span class="longitude"></span> | 
+	                ALT: <span class="altitude"></span> | 
+	                STATUS: <span class="net-status-header"></span>
+                </div>
 			</div>
 			<div class="col col4">
 				<div class="countdown-event mybox"></div>
@@ -792,14 +793,14 @@ function updateNetworkStatus(){
 
     if(navigator.onLine){
 
-        $('.net-status')
+        $('.net-status, .net-status-header')
         .text("ONLINE")
         .removeClass('net-offline')
         .addClass('net-online');
 
     }else{
 
-        $('.net-status')
+        $('.net-status, .net-status-header')
         .text("OFFLINE")
         .removeClass('net-online')
         .addClass('net-offline');
