@@ -487,6 +487,7 @@ var masterName;
 var tempShalat;
 var systemState = "countdown";
 var systemPrayer = "";
+var shalatTimer = null;
 
 // FIX FEATURE auto refresh daily tracking
 var todayDate = moment().format("YYYY-MM-DD");
@@ -774,13 +775,18 @@ function countdownShalat(time, name, desc, shalatName =''){
 
                 // tampilkan overlay shalat berlangsung
                 showOverlay("SHALAT","SEDANG BERLANGSUNG","");
+                $('.owl-carousel').trigger('stop.owl.autoplay');
 
                 // tutup overlay setelah durasi shalat
                 var durasi = setting.shalatDuration[shalatName] || 600000;
 
-                setTimeout(function(){
+                clearTimeout(shalatTimer);
+
+                shalatTimer = setTimeout(function(){
                 hideOverlay();
-            }, durasi);
+                $('.owl-carousel').trigger('play.owl.autoplay');
+                systemPrayer = "";
+                }, durasi);
 
                 // countdown langsung menuju jadwal berikutnya
                 nextSchedule();
@@ -803,7 +809,10 @@ function nextSchedule(){
 
 	var found=false;
     systemState = "countdown";
-    hideOverlay();
+
+    if(systemPrayer==""){
+        hideOverlay();
+    }
 
 	for(let a=0;a<tempShalat.length;a++){ // FIX BUG global variable
 		
