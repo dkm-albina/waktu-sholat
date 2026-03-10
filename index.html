@@ -580,6 +580,16 @@ $(function(){
 
 	moment.locale('id'); 
 
+     // cek saat pertama load
+    updateNetworkStatus();
+
+    // cek jika status berubah
+    window.addEventListener('online', updateNetworkStatus);
+    window.addEventListener('offline', updateNetworkStatus);
+
+    // fallback check setiap 30 detik
+    setInterval(updateNetworkStatus,30000);
+
 	//running text
 	$.ajax({
 	url: setting.runningTextFile + '?v=' + Date.now(),
