@@ -1,15 +1,13 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
 	<base href="./">
-	<meta http-equiv="Cache-Control" content="no-cache">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Expires" content="0">
 	<title>Jadwal Shalat</title>
-	<link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css?v=1.6.0" />
-	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css?v=1.6.0" />
-	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.theme.default.min.css?v=1.6.0" />
+	<link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css" />
+	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css" />
+	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.theme.default.min.css" />
 	<style>
 	*{
 		padding:0;
@@ -180,26 +178,6 @@
 		font-weight:bold;
 	}
 
-.layer{
-    width:100%;
-    height:100vh;
-    background:#000;
-    position:fixed;
-    left:0;
-    top:0;
-
-    display:none;
-
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-
-    color:#fff;
-    font-size:120px;
-    font-weight:bold;
-    z-index:999999;
-}
-
 	.clear{
 		clear:both;
 	}
@@ -209,7 +187,7 @@
 	}
 
 	.wallpaper-container{
-		position:relative;
+		
 	}
 
 	.wallpaper .item{ /*wallpaper slide*/
@@ -217,7 +195,6 @@
 		width:100%;
 		/*background-image: url("img/img1.jpg");*/
 		background-size:100% 100%;
-		/*background-size: cover;*/
 		background-position:center;
 		background-repeat:no-repeat;
 		/*background-color: #124653;*/
@@ -238,7 +215,7 @@
 .running-container { /* contain text */
     position: absolute;
     bottom: 16px;        /* jarak dari bawah layar */
-    left: 1%;            /* sebelumnya 2% */
+    left: 2%;            /* sebelumnya 2% */
     width: 98%;          /* sebelumnya 98% */
     z-index: 99999999;
 }
@@ -265,7 +242,6 @@
 }
 		
 	
-
 	.highlight{
 		/*color: yellow !important;*/
 		/*color:#ff4500 !important;*/
@@ -282,7 +258,19 @@
 		padding:4px;
 	}
 
-	.net-online{
+	.layer{
+		width:100%;
+		height:100vh;
+		background-color: #000;
+		position:fixed;
+		left:0;
+		top:0;
+		display:none;
+		color:#fff;
+		font-size:20px; /*20px*/
+	}
+
+.net-online{
     color:#2e7d32;
     font-weight:bold;
 }
@@ -326,7 +314,6 @@
     font-size:50px;
 }
 
-	
 </style>
 
 </head>
@@ -395,22 +382,23 @@
 					<div class="running-container">
 						<div class="running-text"></div>
 					</div>
-					 <div class="message-overlay">
-        <div class="message-box">
-            <div class="msg1"></div>
-            <div class="msg2"></div>
-            <div class="msg3"></div>
-        </div>
-    </div>
+                     <div class="message-overlay">
+                        <div class="message-box">
+                            <div class="msg1"></div>
+                            <div class="msg2"></div>
+                            <div class="msg3"></div>
+                        </div>
+                    </div>
 				</div>
+            </div>    
 				
 				<div class="row four">
 					<div class="row">
 						<div class="footer1">Versi : <span class="version"></span></div>
 						<div class="footer2">
-    <span class="appname">Nama Aplikasi</span> 
-    <span class="net-status" style="margin-left:6px;"></span>
-</div>
+                            <span class="appname">Nama Aplikasi</span> 
+                            <span class="net-status" style="margin-left:6px;"></span>
+                        </div>
 					</div>
 				</div>
 			</div>
@@ -425,24 +413,21 @@
 	</audio>
 	
 	
-<script src="www/public/Bilal/js/jquery-3.3.1.min.js?v=1.6.0"></script>
-<script src="www/public/Bilal/js/moment-with-locales.min.js?v=1.6.0"></script>
-<script src="www/public/Bilal/js/moment-hijri.js?v=1.6.0"></script>
+	<script src="www/public/Bilal/js/jquery-3.3.1.min.js"></script>
+<script src="www/public/Bilal/js/moment-with-locales.min.js"></script>
+<script src="www/public/Bilal/js/moment-hijri.js"></script>
 
-<script src="www/public/Bilal/js/PrayTimes.js?v=1.6.0"></script>
-<script src="www/public/Bilal/js/jquery.marquee.min.js?v=1.6.0"></script>
-<script src="www/public/Bilal/js/owlcarousel/owl.carousel.min.js?v=1.6.0"></script>
-
-
-
+<script src="www/public/Bilal/js/PrayTimes.js"></script>
+<script src="www/public/Bilal/js/jquery.marquee.min.js"></script>
+<script src="www/public/Bilal/js/owlcarousel/owl.carousel.min.js"></script>
 
 <script>
 
 //app setting
 var app = {
-	version: '1.6.0', // FIX BUG + auto refresh daily + stability fix (09/03/2026) by Andryan Nugraha
+	version: '1.1.2', // FIX BUG + auto refresh daily + stability fix (08/03/2026) by Andryan Nugraha
 	name: 'Bilal App',
-	autoLocation: false //jika anda ingin menggunakan autolocation, setelah memilih opsi enable GPS pada browser, lalukan refresh pada browser. Fitur ini hanya berfungsi jika device terkoneksi dengan internet saja.
+	autoLocation: true //jika anda ingin menggunakan autolocation, setelah memilih opsi enable GPS pada browser, lalukan refresh pada browser. Fitur ini hanya berfungsi jika device terkoneksi dengan internet saja.
 };
 
 //general setting
@@ -459,7 +444,7 @@ var setting = {
 	methodCalc:'Kemenag', //metode perhitungan adzan
 	dst: 'auto',
 
-	tune: {imsak: +3, fajr: +3, sunrise: +6, dhuhr: +3, asr: +3, sunset: +3, maghrib:+3, isha:+0, midnight:+3},
+	tune: {imsak: +3, fajr: +3, sunrise: +6, dhuhr: +3, asr: +3, sunset: +3, maghrib:+3, isha:+3, midnight:+3},
 
 	runningTextFile: "www/public/Bilal/text/runningtext.txt",
 	runningTextSpeed: 15000,
@@ -471,22 +456,16 @@ var setting = {
 	iqomahTime: 60000, //1 menit lama waktu tulisan iqomah
 	shalatSunnahTime: 600000, //10 menit lama waktu tulisan sholat sunnah
 	shalatSunnahTimeSubuh:900000,
-	blankShalatTime: 600000, // 10 menit layar blank saat shalat
 
-	aliasName: ['IMSAK', 'SUBUH', 'SYURUQ', 'ZHUHUR', 'ASHAR', 'MAGHRIB', 'ISYA'],
-
-	messageSystem:{
-    enabled:true,
-
-    line1:"MOHON MERAPIKAN",
-    line2:"SAF SHALAT",
-    line3:"DAN MATIKAN HP",
-
-    duration:20000,   // tampil 20 detik
-    interval:90000   // muncul setiap 15 menit
-	}
-	
-	
+    shalatDuration:{
+    SUBUH: 600000,
+    ZHUHUR: 600000,
+    ASHAR: 600000,
+    MAGHRIB: 600000,
+    ISYA: 600000
+    } //10 menit lama untuk Shalat
+    
+	aliasName: ['IMSAK', 'SUBUH', 'SYURUQ', 'ZHUHUR', 'ASHAR', 'MAGHRIB', 'ISYA']
 }
 
 // FIX BUG global variable
@@ -494,22 +473,9 @@ var mycountdown;
 var finalTime;
 var masterTime;
 var masterName;
-var lastPhase = null;
-var systemBoot = true;
-var startAppRunning = false;
-
-// =========================================
-// DEBUG TIME SYSTEM
-// isi dengan format "HH:mm:ss" untuk simulasi waktu
-// set null untuk menjalankan waktu normal
-// =========================================
-
-var debugTime = "04:41:30";
-
-// contoh:
-// var debugTime = "04:42:30";
-
-
+var tempShalat;
+var systemState = "countdown";
+var systemPrayer = "";
 
 // FIX FEATURE auto refresh daily tracking
 var todayDate = moment().format("YYYY-MM-DD");
@@ -527,9 +493,14 @@ setInterval(function(){
     var diff = now - watchdogLastTick;
 
     // jika lebih dari 2 menit tidak ada aktivitas
-    if(diff > 120000){
+    if(diff > 120000 && !mycountdown){
 
+        if(systemState == "countdown"){
         console.log("Watchdog restart triggered");
+        startApp();
+         }else{
+        console.log("Watchdog skipped (ritual phase)");
+        }
 
         try{
             startApp(); // restart sistem jadwal
@@ -543,138 +514,47 @@ setInterval(function(){
 
 },300000); // cek setiap 5 menit
 
-// DEBUGGING mode option
-function getNowMoment(){
-
-    if(debugTime){
-        return moment(debugTime,"HH:mm:ss");
-    }
-
-    return moment();
-
-}
 
 
-// FIX PrayTimes bug: normalisasi waktu > 24
-function normalizeTime(t){
-    var p = t.split(':');
-    var h = parseInt(p[0]);
-    var m = parseInt(p[1]);
-
-    if(h >= 24) h = h - 24;
-
-    return h.toString().padStart(2,'0') + ':' + p[1];
-}
 
 // FIX BUG geolocation async
 function startApp(){
 
-    // =========================================
-    // LOCK SYSTEM
-    // mencegah startApp dipanggil bersamaan
-    // =========================================
+	stopTimer(); // FIX edge case midnight timer
+	
+    var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
+	var now = new Date(); // today
+	
+	watchdogLastTick = Date.now();
 
-	if(debugTime){
-    $('.middle3 .debug').remove();
-    $('.middle3').append('<span class="debug"> | DEBUG TIME: '+debugTime+'</span>');
-}
+	prayTimes.setMethod(setting.methodCalc);
+	prayTimes.tune(setting.tune);
+	
+	var times = prayTimes.getTimes(now, [setting.latitude, setting.longitude], setting.timezoneOffset, setting.dst);
+	
+	masterTime = [times.imsak, times.fajr, times.sunrise, times.dhuhr, times.asr, times.maghrib, times.isha];
+	masterName = setting.aliasName;
+	// FIX BUG reference array (harus copy bukan reference)
+	tempShalat = masterTime.slice();
+	
+	$('.IMSAK').text(times.imsak);
+	$('.SUBUH').text(times.fajr);
+	$('.SYURUQ').text(times.sunrise);
+	$('.ZHUHUR').text(times.dhuhr);
+	$('.ASHAR').text(times.asr);
+	$('.MAGHRIB').text(times.maghrib);
+	$('.ISYA').text(times.isha);
+	
+	$('.tz-offset').text(offsetIcon+setting.timezoneOffset);
+	$('.latitude').text(setting.latitude);
+	$('.longitude').text(setting.longitude);
+	$('.altitude').text(setting.altitude);
+	$('.middle1').text(setting.nama);
+	$('.middle2').text(setting.alamat);
+	$('.version').text(app.version);
+	$('.appname').text(app.name);
 
-    if(startAppRunning) return;
-    startAppRunning = true;
-
-    try{
-
-        stopTimer(); // pastikan timer lama berhenti
-
-        var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
-        var now = new Date();
-
-        // watchdog heartbeat
-        watchdogLastTick = Date.now();
-
-        // =========================================
-        // HITUNG JADWAL SHOLAT
-        // =========================================
-
-        prayTimes.setMethod(setting.methodCalc);
-        prayTimes.tune(setting.tune);
-
-        var times = prayTimes.getTimes(
-            now,
-            [setting.latitude, setting.longitude],
-            setting.timezoneOffset,
-            setting.dst
-        );
-
-
-// =========================================
-// SAFETY CHECK
-// jika PrayTimes gagal mengembalikan waktu
-// =========================================
-if(!times.fajr || !times.dhuhr || !times.maghrib){
-    console.log("PrayTimes error, retrying...");
-    setTimeout(startApp,2000);
-    return;
-}
-
-		
-times.imsak = normalizeTime(times.imsak);
-times.fajr = normalizeTime(times.fajr);
-times.sunrise = normalizeTime(times.sunrise);
-times.dhuhr = normalizeTime(times.dhuhr);
-times.asr = normalizeTime(times.asr);
-times.maghrib = normalizeTime(times.maghrib);
-times.isha = normalizeTime(times.isha);
-
-        masterTime = [
-            times.imsak,
-            times.fajr,
-            times.sunrise,
-            times.dhuhr,
-            times.asr,
-            times.maghrib,
-            times.isha
-        ];
-
-        masterName = setting.aliasName;
-
-        // =========================================
-        // UPDATE UI
-        // =========================================
-
-        $('.IMSAK').text(times.imsak);
-        $('.SUBUH').text(times.fajr);
-        $('.SYURUQ').text(times.sunrise);
-        $('.ZHUHUR').text(times.dhuhr);
-        $('.ASHAR').text(times.asr);
-        $('.MAGHRIB').text(times.maghrib);
-        $('.ISYA').text(times.isha);
-
-        $('.tz-offset').text(offsetIcon+setting.timezoneOffset);
-        $('.latitude').text(setting.latitude);
-        $('.longitude').text(setting.longitude);
-        $('.altitude').text(setting.altitude);
-
-        $('.middle1').text(setting.nama);
-        $('.middle2').text(setting.alamat);
-
-        $('.version').text(app.version);
-        $('.appname').text(app.name);
-
-        // mulai sistem jadwal
-        nextSchedule();
-
-    }
-    finally{
-
-        // =========================================
-        // UNLOCK SYSTEM
-        // selalu dijalankan walaupun error terjadi
-        // =========================================
-
-        startAppRunning = false;
-
-    }
+	nextSchedule();
 }
 
 // FIX BUG audio autoplay
@@ -699,9 +579,6 @@ $(function(){
 	//running text
 	$.ajax({
 	url: setting.runningTextFile + '?v=' + Date.now(),
-
-	timeout: 5000,
-
 	success: function(d){
 		$('.running-text').text(d);
 	},
@@ -709,18 +586,8 @@ $(function(){
 		$('.running-text').text("Selamat datang di " + setting.nama);
 	},
 	complete:function(){
-
-    if($.fn.marquee){
-
-        $('.running-text').marquee('destroy');
-
-        $('.running-text').marquee({
-            duration: setting.runningTextSpeed
-        });
-
-    }
-
-}
+		$('.running-text').marquee({duration: setting.runningTextSpeed});
+	}
 });
 
 	// FIX BUG geolocation async
@@ -737,8 +604,7 @@ $(function(){
 			}
 
 			// FIX BUG timezone
-			setting.timezoneOffset = -new Date().getTimezoneOffset()/60;
-			app.autoLocation = false; // ← tambahan kecil
+			setting.timezoneOffset = Math.round(moment().utcOffset()/60);
 
 			startApp();
 
@@ -756,7 +622,7 @@ $(function(){
 
 	//slide wallpaper
 	for(var a=1;a<=setting.slideImageCount;a++){ // FIX BUG global variable
-		$('.slide-container').append('<div class="item" style="background-image: url(\'www/public/Bilal/img/slide/'+a+'.JPG?v='+app.version+'\')"></div>');
+		$('.slide-container').append('<div class="item" style="background-image: url(\'www/public/Bilal/img/slide/'+a+'.JPG\')"></div>');
 	}
 
 	$('.owl-carousel').owlCarousel({
@@ -779,7 +645,7 @@ $(function(){
 
 	var currentDate = moment().format("YYYY-MM-DD");
 
-	if(currentDate !== todayDate){
+	if(currentDate !== todayDate && systemState == "countdown"){
 
 		todayDate = currentDate; // update hari
 		startApp(); // hitung ulang jadwal shalat tanpa reload halaman
@@ -794,9 +660,13 @@ $(function(){
 
 	setInterval(function(){
 
-	console.log("Bilal App stability refresh");
+console.log("Bilal App stability refresh");
 
-	startApp(); // refresh jadwal tanpa reload halaman
+if(systemState == "countdown"){
+    startApp(); // refresh jadwal tanpa reload halaman
+}else{
+    console.log("Refresh skipped (ritual phase)");
+}
 
 },21600000); // 6 jam
 
@@ -813,378 +683,103 @@ function stopTimer(){
 function countdownShalat(time, name, desc, shalatName =''){
 
 	stopTimer(); // FIX memory leak
-	
+	systemState = name;
+    systemPrayer = shalatName;
 	$('.myprayer').removeClass('highlight');
 
-	var highlightName = shalatName || name;
+	// FIX BUG highlight event adzan/iqomah
+	var highlightName = shalatName ? shalatName : name;
 
-	// jika class tidak ada, gunakan jadwal berikutnya (name)
-	if(!$('.'+highlightName).length){
-    highlightName = name;
-	}
-
-	$('.'+highlightName).closest('.myprayer').addClass('highlight');
+	$('.'+ highlightName).closest('.myprayer').addClass('highlight');
 
 	$('.desc').text(desc);
 	
 	finalTime = time;
 	
-	// =========================================
-	// TIMER PROTECTION
-	// memastikan tidak ada timer ganda
-	// =========================================
-
-	if(mycountdown){
-    	clearInterval(mycountdown);
-		mycountdown = null; // tambahan kecil
-	}
-
-	setTimeout(function(){
-
-    mycountdown = setInterval(function() {
+	mycountdown = setInterval(function() {
 
     watchdogLastTick = Date.now(); // FIX BUG watchdog tick
 
-   		var nowMoment = getNowMoment();
+   		var nowMoment = moment();
 		var now = nowMoment.unix();
-
 		var distance = finalTime - now;
 		
 		// FIX BUG countdown negative time
-		if(distance <= 0){
+		if(distance > 0){
+			$(".countdown-event").text(moment.utc(distance*1000).format("HH:mm:ss"));
+		}else{
+			$(".countdown-event").text("00:00:00");
+		}
 
+		if(distance < 0){
+			
 			clearInterval(mycountdown);
-			mycountdown = null;
-
-		if(name === 'iqomah'){
-
-		// tampilkan pesan iqamah
-		$('.layer')
-		.css('display','flex')
-		.hide()
-		.html('IQAMAH<br><div style="font-size:60px;margin-top:30px">Waktunya Shalat '+shalatName+'</div>')
-		.fadeIn(300);
-
-		// setelah 16 detik layar jadi blank
-		setTimeout(function(){
-
-			$('.layer').html('');
-
-		},16000);
-
-		// setelah waktu shalat selesai kembali normal
-		setTimeout(function(){
-
-			$('.layer').fadeOut(500);
-
-		}, setting.blankShalatTime + 16000);
-
-	}
-
-	nextSchedule();
-	return;
-
-}
-// FIX: jika target waktu tidak valid, hitung ulang jadwal
-if(distance > 43200 || distance < -10){
-    console.log("Invalid countdown detected, recalculating schedule");
-    nextSchedule();
-    return;
-}
-var hours = Math.floor(distance / 3600);
-var minutes = Math.floor((distance % 3600) / 60);
-var seconds = distance % 60;
-
-$('.countdown-event').text(
-    hours.toString().padStart(2,'0') + ':' +
-    minutes.toString().padStart(2,'0') + ':' +
-    seconds.toString().padStart(2,'0')
-);
-
+			
+			if(name=='adzan'){
+				
+				// FIX bug SUBUH double timer
+				if(shalatName=='SUBUH'){
+					countdownShalat(moment().add(setting.shalatSunnahTimeSubuh).unix(),'shalat_sunnah','MENJELANG IQOMAH ' +shalatName,shalatName);
+				}else{
+					countdownShalat(moment().add(setting.shalatSunnahTime).unix(),'shalat_sunnah','MENJELANG IQOMAH '+shalatName,shalatName);
+				}
+				
+			}else if(name=='shalat_sunnah'){
+				
+				beep();
+				
+				countdownShalat(moment().add(setting.iqomahTime).unix(),'iqomah','IQOMAH '+shalatName,shalatName);
+				
+			}else if(inArray(name, ['SUBUH','ZHUHUR','ASHAR','MAGHRIB','ISYA'])){
+				
+				beep();
+				
+				countdownShalat(moment().add(setting.adzanTime).unix(),'adzan','ADZAN '+name,name);
+				
+			}else{
+				
+				nextSchedule();
+				
+			}
+			
+		}
+		
 		$('.masehi').html(nowMoment.format('HH:mm:ss'));
 		$('.hijriah').text(nowMoment.format('ddd, DD/MM/YYYY')+' - '+nowMoment.format('iD iMMMM iYYYY'));
 
-	    },1000);
-
-},1000 - (Date.now() % 1000));
-
-}
-
-// =========================================
-// FIX TOTAL : LOGIKA PENENTUAN WAKTU SHALAT
-// menghindari bug countdown 24:00:00
-// =========================================
-function getPrayerPhase(){
-
-    var now = getNowMoment();
-
-    // ===============================
-    // CARI WAKTU SHALAT BERIKUTNYA
-    // ===============================
-    for(let i=0;i<masterTime.length;i++){
-
-        var splt = masterTime[i].split(':');
-
-        // waktu shalat hari ini
-        var prayerMoment = moment()
-            .hour(parseInt(splt[0]))
-            .minute(parseInt(splt[1]))
-            .second(0)
-            .millisecond(0);
-
-        // jika waktu sekarang masih sebelum waktu shalat
-        if(now.isBefore(prayerMoment)){
-
-            return {
-                target: prayerMoment.unix(),
-                name: masterName[i],
-                desc: 'MENJELANG ' + masterName[i],
-                highlight: masterName[i]
-            };
-
-        }
-
-    }
-
-    // =========================================
-    // JIKA SEMUA WAKTU HARI INI SUDAH LEWAT
-    // MAKA MENUJU IMSAK BESOK
-    // =========================================
-
-    var splt = masterTime[0].split(':');
-
-    // FIX BUG 24 JAM
-    // gunakan startOf('day') agar timestamp selalu benar
-    var tomorrow = moment()
-        .add(1,'day')
-        .startOf('day')
-        .hour(parseInt(splt[0]))
-        .minute(parseInt(splt[1]))
-        .second(0)
-        .millisecond(0);
-
-    return {
-        target: tomorrow.unix(),
-        name: masterName[0],
-        desc: 'MENJELANG ' + masterName[0],
-        highlight: masterName[0]
-    };
-
+	},1000);
 }
 
 function nextSchedule(){
 
-    var phase = getPrayerPhase();
+	var found=false;
+    systemState = "countdown";
 
-    if(!phase){
-        console.log("Schedule error, restarting...");
-        startApp();
-        return;
-    }
-// =========================================
-// SOUND NOTIFICATION SYSTEM
-// BEEP untuk semua event waktu penting
-// =========================================
-if(!systemBoot && lastPhase !== phase.name){
+	for(let a=0;a<tempShalat.length;a++){ // FIX BUG global variable
+		
+		var now = moment().unix();
+		
+		var splt = tempShalat[a].split(':');
+		var next = moment().hour(splt[0]).minute(splt[1]).second(0).unix();
+		
+		if(now < next){
+			
+			countdownShalat(next, masterName[a],'MENJELANG '+masterName[a]);
+			
+			found=true;
+			return false;
+			
+		}
+	}
 
-    // BEEP untuk semua waktu utama
-    if(
-        phase.name === 'IMSAK' ||
-        phase.name === 'SUBUH' ||
-        phase.name === 'SYURUQ' ||
-        phase.name === 'ZHUHUR' ||
-        phase.name === 'ASHAR' ||
-        phase.name === 'MAGHRIB' ||
-        phase.name === 'ISYA'
-    ){
-        beep();
-    }
-
+	var splt = tempShalat[0].split(':');
+	
+	var next = moment().add(1,'day').hour(splt[0]).minute(splt[1]).second(0).unix();
+	
+	if(!found){
+		countdownShalat(next, masterName[0],'MENJELANG '+masterName[0]);
+	}
 }
-	// FIX: IMSAK tidak memiliki fase adzan
-		if(phase.name === 'IMSAK'){
-    	phase.desc = 'MENJELANG IMSAK';
-}
-
-    
-    systemBoot = false;
-    lastPhase = phase.name;
-
-    countdownShalat(
-        phase.target,
-        phase.name,
-        phase.desc,
-        phase.highlight
-    );
-
-}	
-
-// ===============================
-// UI SELF HEALING SYSTEM
-// ===============================
-
-var lastSlideIndex = 0;
-
-setInterval(function(){
-
-    try{
-
-        var owl = $('.owl-carousel');
-
-		if(!owl.length) return;
-
-		var carousel = owl.data('owl.carousel');
-
-        // ===============================
-        // CAROUSEL SELF HEAL
-        // ===============================
-
-        if(carousel){
-
-            var current = carousel.relative(carousel.current());
-
-            if(current === lastSlideIndex){
-
-                console.log("Carousel stuck, reinitializing");
-
-                owl.trigger('destroy.owl.carousel');
-
-owl.removeClass("owl-loaded");
-owl.find(".owl-stage-outer").children().unwrap();
-owl.find(".owl-stage").children().unwrap();
-
-                owl.owlCarousel({
-                    loop:true,
-                    items:1,
-                    dots:false,
-                    lazyLoad:true,
-                    autoplay:true,
-                    autoplayHoverPause:false,
-                    touchDrag:false,
-                    mouseDrag:false,
-                    smartSpeed:2000,
-                    autoplayTimeout:setting.slideInterval
-                });
-
-            }
-
-            lastSlideIndex = current;
-
-        }
-
-        // ===============================
-        // RUNNING TEXT SELF HEAL
-        // ===============================
-
-        if($('.running-text').text().trim() === ""){
-
-            console.log("Running text empty, reload");
-
-            $.ajax({
-                url: setting.runningTextFile + '?v=' + Date.now(),
-                success:function(d){
-
-					if($.fn.marquee){
-   					$('.running-text').marquee('destroy');
-					}
-                    
-					if($.fn.marquee){
-   					$('.running-text')
-   					.text(d)
-   					.marquee({
-       					duration: setting.runningTextSpeed
-   					});
-					}
-                    
-                }
-            });
-
-        }
-
-    }catch(e){
-
-        console.log("UI Watchdog error", e);
-
-    }
-
-},600000); // cek setiap 10 menit
-
-
-// ===============================
-// MEMORY CLEAN CYCLE
-// reload ringan setiap hari
-// ===============================
-
-setInterval(function(){
-
-    var now = moment().format("HH:mm");
-
-    if(now >= "21:00" && now < "21:02"){
-
-        console.log("Daily memory cleanup reload");
-
-        stopTimer();
-		startApp();
-
-    }
-
-},60000);
-
-
-// =========================================
-// TIMER DRIFT DETECTOR
-// mendeteksi jika javascript loop macet
-// =========================================
-
-var lastLoop = Date.now();
-
-setInterval(function(){
-
-    var now = Date.now();
-
-    // jika javascript berhenti lebih dari 30 detik
-    if(now - lastLoop > 30000){
-
-        console.log("Timer drift detected → restarting schedule");
-
-        startApp();
-
-    }
-
-    lastLoop = now;
-
-},5000);
-
-
-// ===============================
-// SOFT MEMORY RESET SYSTEM
-// membersihkan memory JS tanpa reload halaman
-// ===============================
-
-setInterval(function(){
-
-    console.log("Soft memory reset triggered");
-
-    try{
-
-        // hentikan timer lama
-        stopTimer();
-
-        // reset beberapa variabel penting
-        lastPhase = null;
-        systemBoot = true;
-
-        // jalankan ulang sistem jadwal
-        startApp();
-
-    }catch(e){
-
-        console.log("Soft reset error:", e);
-
-    }
-
-},7200000); // setiap 2 jam
-
 
 // =========================================
 // NETWORK STATUS DETECTOR
@@ -1219,58 +814,6 @@ window.addEventListener('offline', updateNetworkStatus);
 
 // fallback check setiap 10 detik
 setInterval(updateNetworkStatus,10000);
-
-
-// ===============================
-// GLOBAL ERROR RECOVERY
-// ===============================
-
-window.onerror = function(message, source, lineno, colno, error){
-
-    console.log("BilalApp global error:", message);
-
-    setTimeout(function(){
-
-        console.log("BilalApp restarting due to error");
-
-        location.reload();
-
-    },3000);
-
-};
-
-// =====================================
-// MESSAGE DISPLAY SYSTEM
-// =====================================
-
-function showMessage(){
-
-    if(!setting.messageSystem.enabled) return;
-
-    $('.msg1').text(setting.messageSystem.line1);
-    $('.msg2').text(setting.messageSystem.line2);
-    $('.msg3').text(setting.messageSystem.line3);
-
-    $('.message-overlay').fadeIn(500);
-
-    setTimeout(function(){
-
-        $('.message-overlay').fadeOut(500);
-
-    }, setting.messageSystem.duration);
-
-}
-
-// jalankan berkala
-if(setting.messageSystem.enabled){
-
-    setInterval(function(){
-
-        showMessage();
-
-    }, setting.messageSystem.interval);
-
-}
 
 </script>
 </body>
