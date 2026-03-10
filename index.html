@@ -268,6 +268,7 @@
 		display:none;
 		color:#fff;
 		font-size:20px; /*20px*/
+        z-index:10000;
 	}
 
 .net-online{
@@ -537,20 +538,20 @@ setInterval(function(){
     // jika lebih dari 2 menit tidak ada aktivitas
     if(diff > 120000 && !mycountdown){
 
-        if(systemState == "countdown"){
+    if(systemState == "countdown"){
         console.log("Watchdog restart triggered");
-        startApp();
-         }else{
-        console.log("Watchdog skipped (ritual phase)");
-        }
 
         try{
-            startApp(); // restart sistem jadwal
+            startApp();
         }catch(e){
             console.log("Watchdog error:",e);
         }
 
-        watchdogLastTick = Date.now();
+    }else{
+        console.log("Watchdog skipped (ritual phase)");
+    }
+
+    watchdogLastTick = Date.now();
 
     }
 
