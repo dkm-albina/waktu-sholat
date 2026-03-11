@@ -504,26 +504,41 @@ var systemState = "countdown";
 var systemPrayer = "";
 var shalatTimer = null;
 var watchdogLastTick = Date.now();
-var bilalLogger = setInterval(function(){
+var bilalLogger = null;
+var bilalLoggerStopper = null;
 
-//Bilal Status for 5 minutes di awal
-console.log(
-"Bilal Status |",
-"Time:",moment().format("HH:mm:ss"),
-"| State:",systemState,
-"| Prayer:",systemPrayer,
-"| Internet:",navigator.onLine
-);
+// BilalApp Logger
+function startLogger(){
 
-},60000);
+    // cegah logger ganda
+    if(bilalLogger) clearInterval(bilalLogger);
+    if(bilalLoggerStopper) clearTimeout(bilalLoggerStopper);
 
-// berhenti setelah 5 menit
-setTimeout(function(){
-clearInterval(bilalLogger);
-console.log("Bilal App started at",moment().format("YYYY-MM-DD HH:mm:ss"));
-console.log("Bilal Logger stopped after 5 minutes");
-},300000);
+    console.log("Bilal App started at",moment().format("YYYY-MM-DD HH:mm:ss"));
 
+    bilalLogger = setInterval(function(){
+
+        console.log(
+        "Bilal Status |",
+        "Time:",moment().format("HH:mm:ss"),
+        "| State:",systemState,
+        "| Prayer:",systemPrayer,
+        "| Internet:",navigator.onLine
+        );
+
+    },60000);
+
+    // stop setelah 5 menit
+    bilalLoggerStopper = setTimeout(function(){
+
+        clearInterval(bilalLogger);
+        bilalLogger = null;
+
+        console.log("Bilal Logger stopped after 5 minutes");
+
+    },300000);
+
+}
 
 // FIX FEATURE auto refresh daily tracking
 var todayDate = moment().format("YYYY-MM-DD");
@@ -620,6 +635,7 @@ function inArray(needle, haystack) {
 
 $(function(){
 
+    startLogger(); // mulai BilalApp logger untuk 5 menit di awal saja
 	moment.locale('id'); 
 
      // cek saat pertama load
