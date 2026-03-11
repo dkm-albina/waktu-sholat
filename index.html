@@ -882,6 +882,9 @@ function countdownShalat(time, name, desc, shalatName =''){
                 // reset state agar nextSchedule diizinkan
                 systemState = "countdown";
 
+                // pastikan timer bersih
+                stopTimer();
+
                 // countdown langsung menuju jadwal berikutnya
                 nextSchedule();
 
