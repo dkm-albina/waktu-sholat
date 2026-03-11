@@ -144,11 +144,12 @@
 	}
 
 	.hijriah{ /*hari skrg*/
-		padding: 8px 0px;
+		padding: 2px 0px;
 		font-weight:bold;
 		/*color:#dcdcdc;*/
 		color:#d7ccc8; /* coklat muda */
 		font-size:12px; /*dari 14px */
+        line-height: 1.1;
 	}
 
 	.countdown-event{ /*waktu mundur*/
@@ -518,12 +519,13 @@ console.log(
 // berhenti setelah 5 menit
 setTimeout(function(){
 clearInterval(bilalLogger);
+console.log("Bilal App started at",moment().format("YYYY-MM-DD HH:mm:ss"));
 console.log("Bilal Logger stopped after 5 minutes");
 },300000);
 
+
 // FIX FEATURE auto refresh daily tracking
 var todayDate = moment().format("YYYY-MM-DD");
-
 
 
 // with FIX BUG geolocation async
