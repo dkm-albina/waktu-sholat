@@ -877,17 +877,17 @@ function countdownShalat(time, name, desc, shalatName =''){
                 hideOverlay();
                 $('.owl-carousel').trigger('play.owl.autoplay');
                 systemPrayer = "";
-                }, durasi);
 
                 // reset state agar nextSchedule diizinkan
                 systemState = "countdown";
-
-                // pastikan timer bersih
-                stopTimer();
-
                 // countdown langsung menuju jadwal berikutnya
                 nextSchedule();
 
+                }, durasi);
+             
+                // pastikan timer bersih
+                stopTimer();
+           
             }else{
 
                 nextSchedule();
