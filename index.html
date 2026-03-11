@@ -17,6 +17,13 @@
 		font-family: Arial, Helvetica, sans-serif !important;
 	}
 
+body{
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+text-rendering: optimizeLegibility;
+font-synthesis:none;
+}
+
 	.row{
 		box-sizing:border-box;
 	}
@@ -132,6 +139,12 @@
         margin-right:12px;
 	}
 
+    .first,
+    .second,
+    .third{
+    transform:translateZ(0);
+    }
+
 	.myprayer{ /*jadwal*/
 		color: #fff;
 		float:left;
@@ -172,6 +185,7 @@
         font-variant-numeric: tabular-nums;
         line-height:1;
         margin-bottom:3px;
+        font-weight: 700;
     }
 
 	.prayer-title{ /*judul sholat*/
