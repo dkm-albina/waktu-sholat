@@ -2,6 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Jadwal Shalat</title>
 	<link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css" />
 	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css" />
@@ -500,6 +501,7 @@ var tempShalat;
 var systemState = "countdown";
 var systemPrayer = "";
 var shalatTimer = null;
+var watchdogLastTick = Date.now();
 var bilalLogger = setInterval(function(){
 
 //Bilal Status for 5 minutes di awal
@@ -569,7 +571,6 @@ function startApp(){
 // menjaga sistem tetap hidup 24 jam
 // ===============================
 
-var watchdogLastTick = Date.now();
 
 setInterval(function(){
 
@@ -641,7 +642,10 @@ $(function(){
 		$('.running-text').text("Selamat datang di " + setting.nama);
 	},
 	complete:function(){
-		$('.running-text').marquee({duration: setting.runningTextSpeed});
+		$('.running-text').marquee({
+	    duration: setting.runningTextSpeed,
+	    gap:50
+        });
 	}
 });
 
@@ -684,7 +688,7 @@ $(function(){
 		loop:true,
 		items:1,
 		dots:false,
-		lazyLoad:true,
+		lazyLoad:false,
 		autoplay:true,
 		autoplayHoverPause:false,
 		touchDrag:false,
@@ -731,7 +735,12 @@ if(systemState == "countdown"){
 function stopTimer(){
 	if(mycountdown){
 		clearInterval(mycountdown);
-		mycountdown = null; // tambahan kecil
+		mycountdown = null;
+	}
+
+	if(shalatTimer){
+		clearTimeout(shalatTimer);
+		shalatTimer = null;
 	}
 }
 
