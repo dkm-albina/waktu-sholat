@@ -871,7 +871,9 @@ function countdownShalat(time, name, desc, shalatName =''){
                 // tutup overlay setelah durasi shalat
                 var durasi = setting.shalatDuration[shalatName] || 600000;
 
-                clearTimeout(shalatTimer);
+                /*clearTimeout(shalatTimer)*/ //tidak perlu karena sudah ada di stopTimer()
+                // pastikan timer bersih
+                stopTimer();
 
                 shalatTimer = setTimeout(function(){
                 hideOverlay();
@@ -885,8 +887,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 
                 }, durasi);
              
-                // pastikan timer bersih
-                stopTimer();
+                
            
             }else{
 
