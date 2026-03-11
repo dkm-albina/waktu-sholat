@@ -879,6 +879,9 @@ function countdownShalat(time, name, desc, shalatName =''){
                 systemPrayer = "";
                 }, durasi);
 
+                // reset state agar nextSchedule diizinkan
+                systemState = "countdown";
+
                 // countdown langsung menuju jadwal berikutnya
                 nextSchedule();
 
