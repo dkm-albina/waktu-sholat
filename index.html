@@ -896,6 +896,23 @@ function countdownShalat(time, name, desc, shalatName =''){
 
 function nextSchedule(){
 
+// ========================================
+// PROTEKSI RITUAL PHASE
+// nextSchedule hanya boleh berjalan saat mode countdown
+// ========================================
+
+if(systemState !== "countdown"){
+
+    console.log(
+        "nextSchedule blocked (ritual phase)",
+        "| state:",systemState,
+        "| prayer:",systemPrayer,
+        "| time:",moment().format("HH:mm:ss")
+    );
+
+    return;
+}
+
 	var found=false;
     systemState = "countdown";
 
@@ -971,4 +988,3 @@ function hideOverlay(){
 </script>
 </body>
 </html>
-
