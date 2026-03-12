@@ -350,6 +350,7 @@
 .message-box{
     color:#fff;
     font-weight:bold;
+	transform: translateY(-60px);
 }
 
 .msg1{
@@ -833,7 +834,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 			
 			if(name=='adzan'){
 				
-                showOverlay("Laksanakan","Shalat Sunnah","Sebelum Iqomah");
+                showOverlay("(Jaga ketertiban) Laksanakan","Shalat Sunnah","Sebelum Iqomah");
 
 				// FIX bug SUBUH double timer
 				if(shalatName=='SUBUH'){
@@ -846,7 +847,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 				
 				beep();
 				
-				showOverlay("IQOMAH","Luruskan dan Rapatkan","Shaf");
+				showOverlay("IQOMAH","Luruskan dan Rapatkan Shaf","(Silent/Matikan Handphone)");
 
                 countdownShalat(
                 moment().add(setting.iqomahTime).unix(),
@@ -865,7 +866,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 			}else if(name=='iqomah'){
 
                 // tampilkan overlay shalat berlangsung
-                showOverlay("SHALAT","SEDANG BERLANGSUNG","");
+                showOverlay("SHALAT","SEDANG BERLANGSUNG","(Jaga kekhusyukan Shalat)");
                 $('.owl-carousel').trigger('stop.owl.autoplay');
 
                 // tutup overlay setelah durasi shalat
