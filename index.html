@@ -694,21 +694,19 @@ $(function(){
 
 	//running text
 	$.ajax({
-	url: setting.runningTextFile + '?v=' + Date.now(),
-	success: function(d){
-		$('.running-text').text(d);
-	},
-	error:function(){
-		$('.running-text').text("Selamat datang di " + setting.nama);
-	},
-	complete:function(){
-		$('.running-text').marquee({
-	    duration: setting.runningTextSpeed,
-	    gap:50
-        });
-	}
-
-
+url: setting.runningTextFile + '?v=' + Date.now(),
+success:function(d){
+    $('.running-text').text(d);
+},
+error:function(){
+    $('.running-text').text("Selamat datang di " + setting.nama);
+},
+complete:function(){
+    $('.running-text').marquee({
+        duration: setting.runningTextSpeed,
+        gap:50
+    });
+}
 });
 
 //CHECK Visibility
