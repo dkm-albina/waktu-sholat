@@ -892,7 +892,9 @@ function countdownShalat(time, name, desc, shalatName =''){
 
                 /*clearTimeout(shalatTimer)*/ //tidak perlu karena sudah ada di stopTimer()
                 // pastikan timer bersih
-                stopTimer();
+                // stopTimer(); diganti dengan null saja
+				clearInterval(mycountdown)
+				mycountdown=null
 
                 shalatTimer = setTimeout(function(){
                 hideOverlay();
