@@ -350,7 +350,6 @@
 .message-box{
     color:#fff;
     font-weight:bold;
-	transform: translateY(-60px);
 }
 
 .msg1{
@@ -583,6 +582,7 @@ function startApp(){
 
 	stopTimer(); // FIX edge case midnight timer
 	
+
     var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
 	var now = new Date(); // today
 	
@@ -685,6 +685,13 @@ $(function(){
     // fallback check setiap 30 detik
     setInterval(updateNetworkStatus,30000);
 
+	// heartbeat agar kiosk tahu JS masih hidup
+    setInterval(function(){
+        console.log("Bilal heartbeat", Date.now());
+    },60000);
+
+	preloadSlides(); // DOWNLOAD semua file images di awal
+
 	//running text
 	$.ajax({
 	url: setting.runningTextFile + '?v=' + Date.now(),
@@ -700,6 +707,17 @@ $(function(){
 	    gap:50
         });
 	}
+
+
+});
+
+//CHECK Visibility
+document.addEventListener("visibilitychange", function(){
+
+    if(document.visibilityState === "visible"){
+        watchdogLastTick = Date.now();
+    }
+
 });
 
 	// FIX BUG geolocation async
@@ -834,7 +852,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 			
 			if(name=='adzan'){
 				
-                showOverlay("(Jaga ketertiban) Laksanakan","Shalat Sunnah","Sebelum Iqomah");
+                showOverlay("Laksanakan","Shalat Sunnah","Sebelum Iqomah");
 
 				// FIX bug SUBUH double timer
 				if(shalatName=='SUBUH'){
@@ -847,7 +865,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 				
 				beep();
 				
-				showOverlay("IQOMAH","Luruskan dan Rapatkan Shaf","(Silent/Matikan Handphone)");
+				showOverlay("IQOMAH","Luruskan dan Rapatkan","Shaf");
 
                 countdownShalat(
                 moment().add(setting.iqomahTime).unix(),
@@ -866,7 +884,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 			}else if(name=='iqomah'){
 
                 // tampilkan overlay shalat berlangsung
-                showOverlay("SHALAT","SEDANG BERLANGSUNG","(Jaga kekhusyukan Shalat)");
+                showOverlay("SHALAT","SEDANG BERLANGSUNG","");
                 $('.owl-carousel').trigger('stop.owl.autoplay');
 
                 // tutup overlay setelah durasi shalat
@@ -874,9 +892,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 
                 /*clearTimeout(shalatTimer)*/ //tidak perlu karena sudah ada di stopTimer()
                 // pastikan timer bersih
-                /*stopTimer();*/ // ternyata jangan pakai ini
-				clearInterval(mycountdown);
-                mycountdown = null;
+                stopTimer();
 
                 shalatTimer = setTimeout(function(){
                 hideOverlay();
@@ -966,23 +982,45 @@ if(systemState !== "countdown" && systemState !== "iqomah"){
 
 function updateNetworkStatus(){
 
-    if(navigator.onLine){
-
-        $('.net-status, .net-status-header')
-        .text("ONLINE")
-        .removeClass('net-offline')
-        .addClass('net-online');
-
-    }else{
+    if(!navigator.onLine){
 
         $('.net-status, .net-status-header')
         .text("OFFLINE")
         .removeClass('net-online')
         .addClass('net-offline');
 
+        return;
+
     }
 
+    // jika WIFI ada, cek benar internet hidup
+    checkInternet();
+
 }
+
+// CHECK koneksi INTERNET real time, bukan sekedar adanya WIFI 
+function checkInternet(){
+
+fetch(setting.runningTextFile + "?t=" + Date.now(), {method:'HEAD'})
+.then(function(){
+
+    $('.net-status, .net-status-header')
+    .text("ONLINE")
+    .removeClass('net-offline')
+    .addClass('net-online');
+
+})
+.catch(function(){
+
+    $('.net-status, .net-status-header')
+    .text("OFFLINE")
+    .removeClass('net-online')
+    .addClass('net-offline');
+
+});
+
+}
+
 
 // Gunakan Overlay
 function showOverlay(msg1,msg2,msg3){
@@ -998,7 +1036,20 @@ function hideOverlay(){
     $('.message-overlay').hide();
 }
 
-	
+function preloadSlides(){
+
+    for(let i=1;i<=setting.slideImageCount;i++){
+
+        setTimeout(function(){
+
+            let img = new Image();
+            img.src="www/public/Bilal/img/slide/"+i+".JPG";
+
+        }, i*300); // delay 300ms tiap image
+    }
+
+}
+
 
 </script>
 </body>
