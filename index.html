@@ -824,6 +824,24 @@ function stopTimer(){
 	}
 }
 
+// =========================
+// UPDATE CLOCK DISPLAY
+// agar kode jam tidak duplikat
+// =========================
+function updateClockDisplay(){
+
+    var nowMoment = moment();
+
+    $('.masehi').text(nowMoment.format('HH:mm:ss'));
+
+    $('.hijriah').text(
+        nowMoment.format('ddd, DD/MM/YYYY') +
+        ' - ' +
+        nowMoment.format('iD iMMMM iYYYY [H]')
+    );
+
+}
+
 function countdownShalat(time, name, desc, shalatName =''){
 
     stopTimer(); // FIX BUG memory leak, pastikan semua timer bersih
@@ -847,12 +865,7 @@ function countdownShalat(time, name, desc, shalatName =''){
         // =========================
         // OPTIMASI MOMENT
         // =========================
-        var nowMoment = moment();
-        var now = nowMoment.unix();
-
-        var timeStr = nowMoment.format('HH:mm:ss');
-        var dateStr = nowMoment.format('ddd, DD/MM/YYYY');
-        var hijriStr = nowMoment.format('iD iMMMM iYYYY [H]');
+        var now = moment().unix();
 
         var distance = finalTime - now;
 
@@ -957,9 +970,7 @@ function countdownShalat(time, name, desc, shalatName =''){
         // =========================
         // UPDATE JAM & TANGGAL
         // =========================
-        $('.masehi').text(timeStr);
-        $('.hijriah').text(dateStr + ' - ' + hijriStr);
-
+       updateClockDisplay();
     },1000);
 }
 
@@ -1096,8 +1107,10 @@ function preloadSlides(){
 
             };
 
-            slideCache.push(img); // simpan agar tidak di-GC
-
+			if(slideCache.length < setting.slideImageCount){
+    			slideCache.push(img); // simpan agar tidak di-GC
+			}
+            
         }, i*800);
 
     }
