@@ -905,6 +905,7 @@ function countdownShalat(time, name, desc, shalatName =''){
                         shalatName
                     );
                 }
+				return;
 
             }else if(name=='shalat_sunnah'){
 
@@ -918,6 +919,7 @@ function countdownShalat(time, name, desc, shalatName =''){
                     'IQOMAH '+shalatName,
                     shalatName
                 );
+				return;
 
             }else if(inArray(name, ['SUBUH','ZHUHUR','ASHAR','MAGHRIB','ISYA'])){
 
@@ -931,6 +933,7 @@ function countdownShalat(time, name, desc, shalatName =''){
                     'ADZAN '+name,
                     name
                 );
+				return;
 
             }else if(name=='iqomah'){
 
