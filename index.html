@@ -938,7 +938,7 @@ function countdownShalat(time, name, desc, shalatName =''){
     // MODE : SHALAT BERLANGSUNG
     // =========================================
 
-    // tampilkan overlay besar di layar
+    // tampilkan overlay besar
     showOverlay("SHALAT","SEDANG BERLANGSUNG","");
 
     // hentikan slideshow selama shalat
@@ -947,62 +947,49 @@ function countdownShalat(time, name, desc, shalatName =''){
     // ambil durasi shalat dari setting (default 10 menit)
     var durasi = setting.shalatDuration[shalatName] || 600000;
 
-    // ubah text desc di header kanan
+    // update text di header kanan
     $('.desc').text('SEDANG SHALAT ' + shalatName);
 
-    // =========================================
-    // HITUNG WAKTU SELESAI SHALAT
-    // =========================================
-    // pakai Date.now() agar benar-benar berbasis durasi
-    // bukan mengikuti jadwal shalat berikutnya
-
-    finalTime = Math.floor((Date.now() + durasi) / 1000);
-
-    // pastikan semua timer lama dihentikan
+    // -----------------------------------------
+    // hentikan timer sebelumnya (iqomah timer)
+    // -----------------------------------------
     stopTimer();
 
-    // =========================================
-    // COUNTDOWN DURASI SHALAT
-    // =========================================
+    // -----------------------------------------
+    // hitung waktu selesai shalat
+    // menggunakan timestamp agar stabil
+    // -----------------------------------------
+    finalTime = Math.floor((Date.now() + durasi) / 1000);
+
+    // -----------------------------------------
+    // countdown DURASI SHALAT
+    // -----------------------------------------
     mycountdown = setInterval(function(){
 
-        // watchdog tick agar sistem tidak dianggap freeze
         watchdogLastTick = Date.now();
 
-        // waktu sekarang dalam detik
         var now = Math.floor(Date.now()/1000);
-
-        // selisih waktu menuju selesai shalat
         var distance = finalTime - now;
 
         if(distance > 0){
-
-            // tampilkan countdown HH:mm:ss
-            $(".countdown-event")
-            .text(moment.utc(distance*1000).format("HH:mm:ss"));
-
+            $(".countdown-event").text(moment.utc(distance*1000).format("HH:mm:ss"));
         }else{
-
-            // jika waktu habis
             $(".countdown-event").text("00:00:00");
-
         }
 
-        // update jam dan tanggal di kiri atas
         updateClockDisplay();
 
     },1000);
 
-
-    // =========================================
-    // TIMER AKHIR SHALAT
-    // =========================================
+    // -----------------------------------------
+    // timer akhir shalat
+    // -----------------------------------------
     shalatTimer = setTimeout(function(){
 
-        // hentikan semua timer
+        // hentikan countdown shalat
         stopTimer();
 
-        // tutup overlay shalat
+        // tutup overlay
         hideOverlay();
 
         // hidupkan kembali slideshow
@@ -1012,7 +999,7 @@ function countdownShalat(time, name, desc, shalatName =''){
         systemPrayer = "";
         systemState = "countdown";
 
-        // lanjutkan ke jadwal shalat berikutnya
+        // lanjut ke jadwal shalat berikutnya
         nextSchedule();
 
     }, durasi);
