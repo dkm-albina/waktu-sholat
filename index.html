@@ -771,7 +771,7 @@ document.addEventListener("visibilitychange", function(){
 		lazyLoad:false,
 		autoplay:true,
 		autoplayHoverPause:false,
-		touchDrag:false,
+		touchDrag:true,
 		mouseDrag:false,
 		smartSpeed:1000, // jangan terlalu lama transisinya, bisa CPU spike
 		autoplayTimeout:setting.slideInterval,
@@ -921,30 +921,87 @@ function countdownShalat(time, name, desc, shalatName =''){
 
             }else if(name=='iqomah'){
 
-                // overlay shalat berlangsung
-                showOverlay("SHALAT","SEDANG BERLANGSUNG","");
+    // ================================
+    // MODE : SHALAT BERLANGSUNG
+    // ================================
+    // Setelah countdown iqomah selesai,
+    // sistem masuk ke mode shalat berjamaah.
 
-                $('.owl-carousel').trigger('stop.owl.autoplay');
+    showOverlay("SHALAT","SEDANG BERLANGSUNG","");
 
-                // tutup overlay setelah durasi shalat
-				var durasi = setting.shalatDuration[shalatName] || 600000;
+    // hentikan autoplay slide agar layar fokus ke informasi shalat
+    $('.owl-carousel').trigger('stop.owl.autoplay');
 
-                // gunakan stopTimer supaya semua timer bersih
-                stopTimer();
 
-                shalatTimer = setTimeout(function(){
+    // ================================
+    // AMBIL DURASI SHALAT
+    // ================================
+    // durasi diambil dari setting masing-masing shalat
+    // contoh:
+    // SUBUH : 10 menit
+    // ZHUHUR : 10 menit
+    // dll
+    // jika tidak ada di setting maka default = 10 menit
 
-                    hideOverlay();
+    var durasi = setting.shalatDuration[shalatName] || 600000;
 
-                    $('.owl-carousel').trigger('play.owl.autoplay');
-	
-		    // reset state agar nextSchedule diizinkan
-                    systemPrayer = "";
-                    systemState = "countdown";
 
-                    nextSchedule();
+    // ================================
+    // BERSIHKAN TIMER SEBELUMNYA
+    // ================================
+    // penting agar countdown lama tidak bentrok
 
-                }, durasi);
+    stopTimer();
+
+
+    // ================================
+    // BUAT COUNTDOWN SHALAT
+    // ================================
+    // ini yang sebelumnya tidak ada di script Anda
+    // sehingga countdown dan jam terlihat berhenti
+
+    countdownShalat(
+
+        // target waktu selesai shalat
+        moment().add(durasi,'ms').unix(),
+
+        // state baru
+        'shalat',
+
+        // teks yang tampil di layar
+        'SEDANG SHALAT ' + shalatName,
+
+        // nama shalat
+        shalatName
+
+    );
+
+
+    // ================================
+    // TIMER SELESAI SHALAT
+    // ================================
+    // setelah durasi selesai:
+    // - overlay ditutup
+    // - slideshow jalan lagi
+    // - sistem kembali ke mode jadwal berikutnya
+
+    shalatTimer = setTimeout(function(){
+
+        // tutup overlay
+        hideOverlay();
+
+        // aktifkan kembali slideshow
+        $('.owl-carousel').trigger('play.owl.autoplay');
+
+        // reset state sistem
+        systemPrayer = "";
+        systemState = "countdown";
+
+        // lanjut ke jadwal berikutnya
+        nextSchedule();
+
+    }, durasi);
+
 
             }else{
 
