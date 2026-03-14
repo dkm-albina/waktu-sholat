@@ -354,7 +354,9 @@
 .message-box{
     color:#fff;
     font-weight:bold;
-	/*transform: translateY(-80px); /*posisi sedikit lebih ke atas*/
+	/* alternatif posisi untuk lebih ke atas:
+       transform: translateY(-80px);
+    */
 	margin-top:-80px; /*lebih stabil ini untuk tv box*/
 }
 
@@ -545,6 +547,7 @@ var shalatTimer = null;
 var watchdogLastTick = Date.now();
 var bilalLogger = null;
 var bilalLoggerStopper = null;
+var slideCache = []; // cache gambar slideshow
 
 // BilalApp Logger
 function startLogger(){
@@ -770,7 +773,7 @@ document.addEventListener("visibilitychange", function(){
 		autoplayHoverPause:false,
 		touchDrag:false,
 		mouseDrag:false,
-		smartSpeed:800, // jangan terlalu lama transisinya, bisa CPU spike
+		smartSpeed:900, // jangan terlalu lama transisinya, bisa CPU spike
 		autoplayTimeout:setting.slideInterval,
 		slideTransition:'ease-in-out'
 	});
@@ -1082,6 +1085,8 @@ function preloadSlides(){
 
             const img = new Image();
 
+            img.src = "www/public/Bilal/img/slide/"+i+".JPG";
+
             img.onload = function(){
 
                 // decode bitmap lebih awal supaya tidak freeze saat slide tampil
@@ -1091,9 +1096,9 @@ function preloadSlides(){
 
             };
 
-            img.src = "www/public/Bilal/img/slide/"+i+".JPG";
+            slideCache.push(img); // simpan agar tidak di-GC
 
-        }, i*800); // delay 800ms tiap image
+        }, i*800);
 
     }
 
