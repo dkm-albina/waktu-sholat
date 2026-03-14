@@ -773,9 +773,9 @@ document.addEventListener("visibilitychange", function(){
 		autoplayHoverPause:false,
 		touchDrag:false,
 		mouseDrag:false,
-		smartSpeed:900, // jangan terlalu lama transisinya, bisa CPU spike
+		smartSpeed:1000, // jangan terlalu lama transisinya, bisa CPU spike
 		autoplayTimeout:setting.slideInterval,
-		slideTransition:'ease-in-out'
+		// slideTransition:'ease-in-out' dihapus karena dianggap tidak perlu
 	});
 
 	// FIX FEATURE auto refresh jadwal setiap hari (OFFLINE SAFE)
