@@ -968,6 +968,9 @@ function countdownShalat(time, name, desc, shalatName =''){
 
     },1000);
 
+	// ⬇ tambahkan ini agar carousel tetap berhenti
+    $('.owl-carousel').trigger('stop.owl.autoplay');
+
     shalatTimer = setTimeout(function(){
 
         stopTimer();
