@@ -944,6 +944,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 
                 // gunakan stopTimer supaya semua timer bersih
                 stopTimer();
+				mycountdown = setInterval(updateClockDisplay,1000);
 
                 shalatTimer = setTimeout(function(){
 
