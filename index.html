@@ -588,7 +588,8 @@ var watchdogLastTick = Date.now();
 var bilalLogger = null;
 var bilalLoggerStopper = null;
 var slideCache = []; // cache gambar slideshow
-
+var slidesPreloaded = false;
+	
 // BilalApp Logger
 function startLogger(){
 
@@ -630,8 +631,8 @@ var todayDate = moment().format("YYYY-MM-DD");
 function startApp(){
 
 	stopTimer(); // FIX edge case midnight timer
+    startAppOnce();
 	
-
     var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
 	var now = new Date(); // today
 	
@@ -743,6 +744,7 @@ $(function(){
 		}
     },60000);
 
+	startAppOnce();
 	preloadSlides(); // DOWNLOAD semua file images di awal
 
 	//running text
@@ -1273,6 +1275,7 @@ setTimeout(function(){
                     setTimeout(function(){
                         $('.layer').fadeOut(500);
                     },500);
+					slidesPreloaded = true;
 
                 }
 
