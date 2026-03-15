@@ -1202,6 +1202,17 @@ function hideOverlay(){
     $('.message-overlay').hide();
 }
 
+var appStarted = false;
+
+function startAppOnce(){
+
+    if(appStarted) return;
+
+    appStarted = true;
+    startApp();
+
+}
+	
 function preloadSlides(){
 
     // total jumlah slide yang akan dipreload
@@ -1226,6 +1237,13 @@ function preloadSlides(){
         setTimeout(function(){
 
             const img = new Image();
+
+	// fallback jika browser tidak memicu onerror/onload
+setTimeout(function(){
+    if(img.complete === false){
+        img.onerror();
+    }
+},10000);
 
             // ketika gambar berhasil dimuat ATAU gagal dimuat
             img.onload = img.onerror = function(){
