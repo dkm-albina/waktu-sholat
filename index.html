@@ -551,10 +551,10 @@ var setting = {
 	runningTextFile: "www/public/Bilal/text/runningtext.txt",
 	runningTextSpeed: 15000,
 
-	slideInterval: 18000,
+	slideInterval: 19000,
 	slideImageCount: 21,
 
-	adzanTime: 240000, // 4 menit lama tulisan adzan
+	adzanTime: 270000, // 4 menit 30 detik lama tulisan adzan
 	iqomahTime: 30000, // 30 detik lama waktu tulisan iqomah
 	shalatSunnahTime: 600000, //10 menit lama waktu tulisan sholat sunnah
 	shalatSunnahTimeSubuh:900000, // 15 menit lama waktu sholat sunnah subuh
@@ -946,7 +946,7 @@ function countdownShalat(time, name, desc, shalatName =''){
 
                 beep();
 
-                showOverlay("IQOMAH","Luruskan dan Rapatkan","Shaf");
+                showOverlay("IQOMAH","Luruskan dan Rapatkan Shaf","Silent/Matikan Gadget");
 
                 countdownShalat(
                     moment().add(setting.iqomahTime).unix(),
@@ -977,7 +977,7 @@ function countdownShalat(time, name, desc, shalatName =''){
     // =========================================
 
     // tampilkan overlay besar
-    showOverlay("SHALAT","SEDANG BERLANGSUNG","");
+    showOverlay("SHALAT" + shalatName,"SEDANG BERLANGSUNG","");
 
     // hentikan slideshow selama shalat
     $('.owl-carousel').trigger('stop.owl.autoplay');
