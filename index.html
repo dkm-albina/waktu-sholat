@@ -987,6 +987,10 @@ function countdownShalat(time, name, desc, shalatName =''){
     // hentikan slideshow selama shalat
     $('.owl-carousel').trigger('stop.owl.autoplay');
 
+	// hentikan running text selama shalat
+	$('.running-text').marquee('pause');
+
+
     // ambil durasi shalat dari setting (default 10 menit)
     var durasi = setting.shalatDuration[shalatName] || 600000;
 
@@ -1037,6 +1041,9 @@ function countdownShalat(time, name, desc, shalatName =''){
 
         // hidupkan kembali slideshow
         $('.owl-carousel').trigger('play.owl.autoplay');
+
+		// hidupkan kembali running text
+		$('.running-text').marquee('resume');
 
         // reset state sistem
         systemPrayer = "";
