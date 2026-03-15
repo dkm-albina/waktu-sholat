@@ -57,6 +57,8 @@
         align-items:center;
         justify-content:center;
         flex-direction:column;
+
+		box-shadow:0 2px 8px rgba(0,0,0,0.35);
 	}
 
 	.col2{ 
@@ -84,6 +86,8 @@
 		background-color: #2e7d32; /* hijau tua */
 		padding:5px 0;
 		height:100px;
+
+		box-shadow:0 4px 10px rgba(0,0,0,0.35);
 	}
 
 	.first .middle1{ /*nama masjid*/
@@ -204,6 +208,8 @@
 		margin-bottom:1px;
 		border-radius: 4px;
 		font-weight:bold;
+
+		box-shadow:0 2px 4px rgba(0,0,0,0.3);
 	}
 
 	.super-block{ /*background*/
@@ -221,6 +227,8 @@
 		background-color: #6d4c41; /* coklat medium */
 		border-radius: 4px;
 		font-weight:bold;
+
+		box-shadow:0 2px 6px rgba(0,0,0,0.35);
 	}
 
 	.clear{
@@ -256,6 +264,8 @@
 		-webkit-transition: all .2s ease-in-out;
 		-o-transition: all .2s ease-in-out;
 		transition: all .2s ease-in-out;
+
+		box-shadow:0 6px 18px rgba(0,0,0,0.4);
 		
 	}
 
@@ -775,7 +785,7 @@ document.addEventListener("visibilitychange", function(){
 		mouseDrag:false,
 		smartSpeed:1000, // jangan terlalu lama transisinya, bisa CPU spike
 		autoplayTimeout:setting.slideInterval,
-		// slideTransition:'ease-in-out' dihapus karena dianggap tidak perlu
+		slideTransition:'ease-in-out' // bisa dihapus jika dianggap tidak perlu
 	});
 
 	// FIX FEATURE auto refresh jadwal setiap hari (OFFLINE SAFE)
