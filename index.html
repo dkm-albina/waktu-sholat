@@ -744,6 +744,9 @@ $(function(){
 		watchdogLastTick = Date.now(); // FIX BUG watchdog tick setiap aktivitas, termasuk heartbeat
     },60000);
 
+	// anti freeze timer
+	setInterval(function(){},30000); // FIX BUG timer freeze, dengan interval kosong yang berjalan setiap 30 detik untuk menjaga event loop tetap aktif
+
 	preloadSlides(); // DOWNLOAD semua file images di awal
 
 	//running text
