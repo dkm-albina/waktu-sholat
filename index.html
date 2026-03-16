@@ -602,7 +602,7 @@ var app = {
 
 //general setting
 var setting = {
-	nama: 'MASJID AL - BINA',
+	nama: '🕌 MASJID AL - BINA',
 	alamat: 'Casablanca East Residences',
 
 	//settingan latitude longitude altitude timezone jika app.autoLocation=false atau jika browser tidak support HTML5 Geolocation
@@ -990,7 +990,7 @@ if(name=='shalat_sunnah' && distance <= 90){
     // tampilkan overlay sekali saja
     if(!iqomahCountdownActive){
 
-        showOverlay("SEBENTAR LAGI IQOMAH","","[Pastikan Gadget Dimatikan (Off) / Silent]");
+        showOverlay("SEBENTAR LAGI IQOMAH","","[Pastikan Gadget Dimatikan (Off) 📵 / Silent 🔕]");
 
         iqomahCountdownActive = true;
     }
@@ -1049,7 +1049,7 @@ if(name=='shalat_sunnah' && distance <= 90){
 
                 beep();
 
-                showOverlay("IQOMAH","Luruskan dan Rapatkan Shaf","[Silent / Matikan (Off) Gadget]");
+                showOverlay("IQOMAH","Luruskan dan Rapatkan Shaf","🔕 Silent / 📵 Matikan (Off) Gadget");
 
                 countdownShalat(
                     moment().add(setting.iqomahTime).unix(),
@@ -1063,7 +1063,7 @@ if(name=='shalat_sunnah' && distance <= 90){
 
                 beep();
 
-                showOverlay("ADZAN","Telah Masuk Waktu","Shalat " + name);
+                showOverlay("📢 ADZAN","Telah Masuk Waktu","Shalat " + name);
 
                 countdownShalat(
                     moment().add(setting.adzanTime).unix(),
@@ -1080,7 +1080,7 @@ if(name=='shalat_sunnah' && distance <= 90){
     // =========================================
 
     // tampilkan overlay besar
-    showOverlay("SHALAT " + shalatName,"SEDANG BERLANGSUNG","");
+    showOverlay("SHALAT " + shalatName,"SEDANG BERLANGSUNG","🕋");
 
     // hentikan slideshow selama shalat
     $('.owl-carousel').trigger('stop.owl.autoplay');
