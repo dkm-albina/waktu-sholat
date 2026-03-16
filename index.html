@@ -585,6 +585,8 @@ var systemState = "countdown";
 var systemPrayer = "";
 var shalatTimer = null;
 var watchdogLastTick = Date.now();
+var internetFailCount = 0;
+var internetFailTolerance = 10; // toleransi gagal cek internet sebelum dianggap offline (default 10 kali)
 var bilalLogger = null;
 var bilalLoggerStopper = null;
 var slideCache = []; // cache gambar slideshow
@@ -725,7 +727,7 @@ $(function(){
     updateNetworkStatus();
 
     // pastikan update lagi setelah DOM stabil
-    setTimeout(updateNetworkStatus,500);
+    setTimeout(updateNetworkStatus,600);
 
     // cek jika status berubah
     window.addEventListener('online', updateNetworkStatus);
@@ -1169,6 +1171,8 @@ function checkInternet(){
 fetch(setting.runningTextFile, {method:'HEAD'})
 .then(function(){
 
+	internetFailCount = 0; // reset jika berhasil
+
     $('.net-status, .net-status-header')
     .text("ONLINE")
     .removeClass('net-offline')
@@ -1177,10 +1181,17 @@ fetch(setting.runningTextFile, {method:'HEAD'})
 })
 .catch(function(){
 
+	internetFailCount++;
+
+	console.log("Internet check failed | count: ", internetFailCount);
+
+	if(internetFailCount >= internetFailTolerance){
+
     $('.net-status, .net-status-header')
     .text("OFFLINE")
     .removeClass('net-online')
     .addClass('net-offline');
+	}
 
 });
 
