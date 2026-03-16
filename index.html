@@ -980,10 +980,10 @@ function countdownShalat(time, name, desc, shalatName =''){
 
         var distance = finalTime - now;
 
-		// ========================================
+// ========================================
 // COUNTDOWN IQOMAH 60 DETIK TERAKHIR
 // ========================================
-if(name=='shalat_sunnah' && distance <= 60){
+if(name=='shalat_sunnah' && distance <= 90){
 
     var sec = Math.max(0, distance);
 
@@ -1000,7 +1000,7 @@ if(name=='shalat_sunnah' && distance <= 60){
 
         iqomahLastSecond = sec;
 
-        $('.msg2').text(sec.toString().padStart(2,'0'));
+        $('.msg2').text(moment.utc(sec*1000).format("mm:ss"));
     }
 }
 
