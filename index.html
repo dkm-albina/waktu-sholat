@@ -14,13 +14,6 @@
 		margin:0;
 	}
 
-	html, body{
-margin:0;
-padding:0;
-height:100%;
-background:#4e342e; /* coklat tua, sebagai warna dasar jika gambar tidak muncul */
-}
-
 	body, body *{
 		font-family: Arial, Helvetica, sans-serif !important;
 	}
@@ -77,7 +70,7 @@ background:#4e342e; /* coklat tua, sebagai warna dasar jika gambar tidak muncul 
 
 	.col7{ /*jadwal dan nama sholat*/
 		float:left;
-		margin-top: -5px; /*naikkan sedikit agar lebih rapat*/
+		margin-top: -6px; /*naikkan sedikit agar lebih rapat*/
 		width: 12.2857%;
 		margin-left: 1%;
 		margin-right: 1%;
@@ -95,7 +88,7 @@ background:#4e342e; /* coklat tua, sebagai warna dasar jika gambar tidak muncul 
 		/*background-color: #013505;*/
 		/*background-color: #006699;*/
 		background-color: #2e7d32; /* hijau tua */
-		padding:5px 5px;
+		padding:5px 0;
 		height:96px; /*awalnya 100px, dikurangi agar lebih proporsional*/
 		
 		box-shadow:0 4px 10px rgba(0,0,0,0.35);
@@ -135,8 +128,7 @@ background:#4e342e; /* coklat tua, sebagai warna dasar jika gambar tidak muncul 
 	.second{ /*bawah header box shol n jamshol*/
 		box-sizing: border-box;
 		padding:6px 10px 1px 10px;
-		margin-top: 3px;
-		margin-bottom:23px;
+		margin-bottom:20px;
 		height:56px;
         border-bottom:1px solid transparent;
 	}
@@ -146,38 +138,29 @@ background:#4e342e; /* coklat tua, sebagai warna dasar jika gambar tidak muncul 
 	}
 
 	.four{ /*slide bawah foot*/
-		min-height:12px; 
-		background:linear-gradient(
-		to top,
-		rgba(0,0,0,0.35),
-		rgba(0,0,0,0.15),
-		transparent
-		); 
-	} /* gradient untuk efek fade pada bagian bawah layar, agar teks footer lebih terbaca tanpa mengganggu keseluruhan tampilan */
+		height:8px; /*awalnya 12px*/
+	}
 
 	.four .footer1{ /*versi*/
 		/*color:#000000;*/
-		color:darkgoldenrod; /* emas gelap */
+		color:#2E7D32; /* hijau muda */
 		float:left;
-		font-size:9px; /*10px*/
-        margin-left:19px;
+		font-size:8px; /*10px*/
+        margin-left:16px;
 		text-shadow:
-		text-shadow:
-		0 2px 4px rgba(0,0,0,0.9),
-		0 4px 8px rgba(0,0,0,0.7);
-		-webkit-text-stroke:0.4px rgba(0,0,0,0.6);
+		0 2px 4px rgba(0,0,0,0.7),
+		0 0 2px rgba(255,200,120,0.6);
 	}
 
 	.four .footer2{ /*bilal app*/
 		/*color:#000000;*/
-		color:darkolivegreen; /* hijau zaitun gelap */
+		color:#2E7D32; /* hijau muda */
 		float:right;
-		font-size:9px; /*10px*/
-        margin-right:19px;
+		font-size:8px; /*10px*/
+        margin-right:16px;
 		text-shadow:
-		0 2px 4px rgba(0,0,0,0.9),
-		0 4px 8px rgba(0,0,0,0.7);
-		-webkit-text-stroke:0.4px rgba(0,0,0,0.6);
+		0 2px 4px rgba(0,0,0,0.7),
+		0 0 2px rgba(255,200,120,0.6);
 	}
 
     .first,
@@ -231,7 +214,7 @@ background:#4e342e; /* coklat tua, sebagai warna dasar jika gambar tidak muncul 
 		font-size:56px; /*60px*/
 		font-weight:bold;
 		/*color:#ccff00;*/
-		color:#ffe082 !important; /*#aed581; hijau muda diganti dengan warna yang lebih terang = highlight */
+		color:#aed581; /* hijau muda */
         /*text-shadow:0 2px 4px rgba(0,0,0,0.6);*/
 		text-shadow:
 		0 2px 4px rgba(0,0,0,0.7),
@@ -239,25 +222,11 @@ background:#4e342e; /* coklat tua, sebagai warna dasar jika gambar tidak muncul 
 		0 0 6px rgba(255,215,100,0.6);
 	}
 
-	.highlight{
-		/*color: yellow !important;*/
-		/*color:#ff4500 !important;*/
-		color:#ffe082 !important; /* #ffd54f coklat keemasan, ganti light gold */
-
-		text-shadow:
-		0 2px 4px rgba(0,0,0,0.7),
-		0 0 8px rgba(255,224,130,0.9);
-
-		
-		font-weight:bold;
-		
-	}
-
     .masehi,
     .countdown-event{
         font-variant-numeric: tabular-nums;
 		font-feature-settings: "tnum";
-		letter-spacing:0.8px;
+		letter-spacing:1px;
         line-height:1;
         margin-bottom:3px;
         font-weight: 700;
@@ -345,10 +314,9 @@ pointer-events:none;
 		background-repeat:no-repeat;
 		/*background-color: #124653;*/
 		background-color: #2e7d32; /* hijau tua */
-		height: calc(100dvh - 186px); /*100vh - 196px*/
-		max-height: calc(100vh - 186px);
-		border: 3px solid #4e342e; /* coklat tua */
-		border-radius: 2px; /*awalnya 4px*/
+		height: calc(100vh - 186px); /*100vh - 196px*/
+		border: 2px solid #4e342e; /* coklat tua */
+		border-radius: 1px; /*awalnya 4px*/
 		-webkit-transition: all .2s ease-in-out;
 		-o-transition: all .2s ease-in-out;
 		transition: all .2s ease-in-out;
@@ -379,22 +347,15 @@ pointer-events:none;
 
     /* background */
     /* sebelumnya: #2c0f0082; */
-    background: rgba(78, 52, 46, 0.77); /* coklat semi transparan */
+    background: rgba(78, 52, 46, 0.7); /* coklat semi transparan */
 
     /* color */
     /* sebelumnya: #F5EC6D; */
-    color: #dcedc8; /* hijau sangat muda */
-
-	/* text-shadow:
-	0 1px 2px rgba(0,0,0,0.8),
-	0 0 2px #2193b0; */
+    color: #c5e1a5;      /* hijau muda, sesuai tema */
 
 	text-shadow:
-	0 2px 4px rgba(0,0,0,0.9), 
-	/* 0 4px 10px rgba(0,0,0,0.7), */
-	0 0 6px rgba(255,255,200,0.3),
-	/* 0 0 6px rgba(255,215,120,0.4); */
-	-webkit-text-stroke:0.5px rgba(0,0,0,0.6);
+	0 1px 2px rgba(0,0,0,0.8),
+	0 0 2px #2193b0;
 
     font-size: 27px;      /* sebelumnya 27px */
     white-space: nowrap;   /* tetap satu baris */
@@ -402,7 +363,19 @@ pointer-events:none;
 }
 		
 	
-	
+	.highlight{
+		/*color: yellow !important;*/
+		/*color:#ff4500 !important;*/
+		color:#ffe082 !important; /* #ffd54f coklat keemasan, ganti light gold */
+
+		text-shadow:
+		0 2px 4px rgba(0,0,0,0.7),
+		0 0 8px rgba(255,224,130,0.9);
+
+		
+		font-weight:bold;
+		
+	}
 
 	.prayer-time.IMSAK{
 	opacity: 0.60;
@@ -417,7 +390,7 @@ pointer-events:none;
 		
 		padding:4px 0;
 		color:#ffd54f;
-		letter-spacing:normal;
+
 		text-shadow:
 		0 1px 2px rgba(0,0,0,0.7),
 		0 0 4px rgba(215,204,200,0.5);
@@ -481,7 +454,7 @@ pointer-events:none;
 
 .msg1,.msg2,.msg3{
 color:#ffffff;
-letter-spacing:1.6px;
+letter-spacing:2px;
 line-height:1.2;
 
 text-shadow:
@@ -496,7 +469,7 @@ text-shadow:
 }
 
 .msg2{
-    font-size:64px;
+    font-size:60px;
     margin-bottom:20px;
 }
 
@@ -629,7 +602,7 @@ var app = {
 
 //general setting
 var setting = {
-	nama: 'MASJID AL - BINA',
+	nama: '🕌 MASJID AL - BINA',
 	alamat: 'Casablanca East Residences',
 
 	//settingan latitude longitude altitude timezone jika app.autoLocation=false atau jika browser tidak support HTML5 Geolocation
