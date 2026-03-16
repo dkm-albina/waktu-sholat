@@ -565,11 +565,11 @@ var setting = {
 	shalatSunnahTimeSubuh:900000, // 15 menit lama waktu sholat sunnah subuh
 
     shalatDuration:{
-    SUBUH: 600000, // 10 menit
+    SUBUH: 540000,
     ZHUHUR: 540000,
     ASHAR: 540000,
     MAGHRIB: 540000,
-    ISYA: 600000 // 10 menit
+    ISYA: 540000
     }, //9 menit lama untuk Shalat
     
 	aliasName: ['IMSAK', 'SUBUH', 'SYURUQ', 'ZHUHUR', 'ASHAR', 'MAGHRIB', 'ISYA']
@@ -588,9 +588,7 @@ var watchdogLastTick = Date.now();
 var bilalLogger = null;
 var bilalLoggerStopper = null;
 var slideCache = []; // cache gambar slideshow
-var slidesPreloaded = false;
-var appStarted = false;	
-	
+
 // BilalApp Logger
 function startLogger(){
 
@@ -632,11 +630,8 @@ var todayDate = moment().format("YYYY-MM-DD");
 function startApp(){
 
 	stopTimer(); // FIX edge case midnight timer
-    
-	window.addEventListener("load", function(){
-    startAppOnce();
-    });
 	
+
     var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
 	var now = new Date(); // today
 	
@@ -684,7 +679,7 @@ setInterval(function(){
     var diff = now - watchdogLastTick;
 
     // jika lebih dari 2 menit tidak ada aktivitas
-    if(diff > 120000 && !mycountdown){
+    if(diff > 150000 && !mycountdown){
 
     if(systemState == "countdown"){
         console.log("Watchdog restart triggered");
@@ -741,19 +736,12 @@ $(function(){
 
 	// heartbeat agar kiosk tahu JS masih hidup
     setInterval(function(){
-
-		watchdogLastTick = Date.now(); // update heartbeat
         if(Math.random()<0.1){
  		console.log("Bilal heartbeat", Date.now());
 		}
+		watchdogLastTick = Date.now(); // FIX BUG watchdog tick setiap aktivitas, termasuk heartbeat
     },60000);
 
-	window.addEventListener("load", function(){
-
-    startAppOnce();
-
-    });
-	
 	preloadSlides(); // DOWNLOAD semua file images di awal
 
 	//running text
@@ -1078,7 +1066,8 @@ function countdownShalat(time, name, desc, shalatName =''){
 
     	nextSchedule();
     	return;
-				}else if(name=='SYURUQ'){   // ← TAMBAHAN UNTUK SYURUQ 
+
+	}else if(name=='SYURUQ'){   // ← TAMBAHAN UNTUK SYURUQ
 
     	nextSchedule();
     	return;
@@ -1105,7 +1094,6 @@ function nextSchedule(){
 // nextSchedule hanya boleh berjalan saat mode countdown
 // ========================================
 
-watchdogLastTick = Date.now(); // update heartbeat
 console.log("nextSchedule called | state:",systemState);
 
 if(systemState !== "countdown" && systemState !== "iqomah"){
@@ -1178,7 +1166,7 @@ function updateNetworkStatus(){
 // CHECK koneksi INTERNET real time, bukan sekedar adanya WIFI 
 function checkInternet(){
 
-fetch(setting.runningTextFile + "?t=" + Date.now(), {method:'HEAD'})
+fetch(setting.runningTextFile, {method:'HEAD'})
 .then(function(){
 
     $('.net-status, .net-status-header')
@@ -1213,85 +1201,30 @@ function hideOverlay(){
     $('.message-overlay').hide();
 }
 
-function startAppOnce(){
-
-    if(appStarted) return;
-
-    appStarted = true;
-    startApp();
-
-}
-	
 function preloadSlides(){
 
-    // total jumlah slide yang akan dipreload
-    var total = setting.slideImageCount;
+    for(let i=1;i<=setting.slideImageCount;i++){
 
-    // menghitung berapa gambar yang sudah selesai dimuat
-    var loaded = 0;
-
-    // tampilkan layer loading di layar
-    $('.layer').show().html(
-        '<div style="text-align:center;margin-top:40vh;font-size:40px;">' +
-        'Memuat Slide Gambar<br>' +
-        '<span id="preload-progress">0 / '+total+'</span><br>' +
-        '<div style="font-size:24px;margin-top:10px;">Mohon Tunggu...</div>' +
-        '</div>'
-    );
-
-    // loop untuk preload semua gambar
-    for(let i=1;i<=total;i++){
-
-        // gunakan timeout agar preload tidak menabrak CPU sekaligus
         setTimeout(function(){
 
             const img = new Image();
 
-	// fallback jika browser tidak memicu onerror/onload
-setTimeout(function(){
-    if(img.complete === false){
-        img.onerror();
-    }
-},10000);
+            img.src = "www/public/Bilal/img/slide/"+i+".JPG";
 
-            // ketika gambar berhasil dimuat ATAU gagal dimuat
-            img.onload = img.onerror = function(){
+            img.onload = function(){
 
-                // tambah jumlah gambar yang selesai diproses
-                loaded++;
-
-                // update progress di layar
-                $('#preload-progress').text(loaded + " / " + total);
-
-                // decode bitmap lebih awal agar slide tidak freeze saat tampil
+                // decode bitmap lebih awal supaya tidak freeze saat slide tampil
                 if(img.decode){
                     img.decode().catch(function(){});
                 }
 
-                // simpan ke cache agar tidak dihapus oleh garbage collector
-                if(slideCache.length < setting.slideImageCount){
-                    slideCache.push(img);
-                }
-
-                // jika semua gambar sudah selesai
-                if(loaded === total){
-
-                    console.log("All slides preloaded");
-
-                    // sembunyikan layer loading setelah 0.5 detik
-                    setTimeout(function(){
-                        $('.layer').fadeOut(500);
-                    },500);
-					slidesPreloaded = true;
-
-                }
-
             };
 
-            // mulai load gambar
-            img.src = "www/public/Bilal/img/slide/"+i+".JPG";
-
-        }, i*800); // jeda antar preload agar CPU stabil
+			if(slideCache.length < setting.slideImageCount){
+    			slideCache.push(img); // simpan agar tidak di-GC
+			}
+            
+        }, i*800);
 
     }
 
