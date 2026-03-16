@@ -257,13 +257,15 @@ pointer-events:none;
 		/*background-image: linear-gradient(#2e7d32, #4e342e, #a1887f); /* hijau + coklat */
 		/*background-image: linear-gradient(#2e7d32,#4e342e,#203161);*/
 		background-image: linear-gradient(
-		180deg,
-		#2e7d32 0%,
-		#4e342e 35%,
-		#203161 60%,
-		#2c7873 80%,
-		#6dd5ed 100%
-		);
+180deg,
+#2e7d32 0%,
+#2c7873 12%,
+#6dd5ed 28%,
+#203161 45%,
+#2c7873 65%,
+#2e7d32 82%,
+#4e342e 100%
+);
 	}
 
 	.prayer-time{ /*waktu sholat*/
@@ -426,6 +428,7 @@ pointer-events:none;
     /*height:calc(100vh - 196px);*/
 	height:100%;
     background:rgba(0,0,0,0.85);
+	backdrop-filter: blur(3px);
     display:none;
     align-items:center;
     justify-content:center;
@@ -444,6 +447,17 @@ pointer-events:none;
 	0 2px 4px rgba(0,0,0,0.9),
 	0 4px 10px rgba(0,0,0,0.7),
 	0 0 8px rgba(0,0,0,0.6);
+}
+
+.msg1,.msg2,.msg3{
+color:#ffffff;
+letter-spacing:2px;
+line-height:1.2;
+
+text-shadow:
+0 3px 6px rgba(0,0,0,0.9),
+0 6px 18px rgba(0,0,0,0.7),
+0 0 10px rgba(33,147,176,0.6);
 }
 
 .msg1{
