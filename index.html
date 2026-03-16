@@ -239,6 +239,17 @@
 		box-shadow:0 2px 4px rgba(0,0,0,0.3);
 	}
 
+.wallpaper::after{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.18); /* overlay gelap untuk meningkatkan kontras teks */
+pointer-events:none;
+}
+
 	.super-block{ /*background*/
 		/*background-color:#178B9A;*/
 		/*background-image: linear-gradient(#203161, #178B9A);*/
