@@ -589,6 +589,7 @@ var bilalLogger = null;
 var bilalLoggerStopper = null;
 var slideCache = []; // cache gambar slideshow
 var slidesPreloaded = false;
+var appStarted = false;	
 	
 // BilalApp Logger
 function startLogger(){
@@ -631,7 +632,10 @@ var todayDate = moment().format("YYYY-MM-DD");
 function startApp(){
 
 	stopTimer(); // FIX edge case midnight timer
+    
+	window.addEventListener("load", function(){
     startAppOnce();
+    });
 	
     var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
 	var now = new Date(); // today
@@ -744,7 +748,12 @@ $(function(){
 		}
     },60000);
 
-	startAppOnce();
+	window.addEventListener("load", function(){
+
+    startAppOnce();
+
+    });
+	
 	preloadSlides(); // DOWNLOAD semua file images di awal
 
 	//running text
@@ -1203,8 +1212,6 @@ function showOverlay(msg1,msg2,msg3){
 function hideOverlay(){
     $('.message-overlay').hide();
 }
-
-var appStarted = false;
 
 function startAppOnce(){
 
