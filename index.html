@@ -148,7 +148,7 @@
 		font-size:8px; /*10px*/
         margin-left:16px;
 		text-shadow:
-		0 1px 2px rgba(0,0,0,0.7),
+		0 2px 4px rgba(0,0,0,0.7),
 		0 0 2px rgba(255,200,120,0.6);
 	}
 
@@ -159,7 +159,7 @@
 		font-size:8px; /*10px*/
         margin-right:16px;
 		text-shadow:
-		0 1px 2px rgba(0,0,0,0.7),
+		0 2px 4px rgba(0,0,0,0.7),
 		0 0 2px rgba(255,200,120,0.6);
 	}
 
@@ -653,6 +653,8 @@ var internetFailTolerance = 10; // toleransi gagal cek internet sebelum dianggap
 var bilalLogger = null;
 var bilalLoggerStopper = null;
 var slideCache = []; // cache gambar slideshow
+var iqomahCountdownActive = false;
+var iqomahLastSecond = -1;
 
 // BilalApp Logger
 function startLogger(){
@@ -978,6 +980,30 @@ function countdownShalat(time, name, desc, shalatName =''){
 
         var distance = finalTime - now;
 
+		// ========================================
+// COUNTDOWN IQOMAH 60 DETIK TERAKHIR
+// ========================================
+if(name=='shalat_sunnah' && distance <= 60){
+
+    var sec = Math.max(0, distance);
+
+    // tampilkan overlay sekali saja
+    if(!iqomahCountdownActive){
+
+        showOverlay("IQOMAH DALAM","","[Pastikan Gadget Dimatikan (Off) / Silent]",);
+
+        iqomahCountdownActive = true;
+    }
+
+    // update hanya jika detik berubah (anti flicker)
+    if(sec !== iqomahLastSecond){
+
+        iqomahLastSecond = sec;
+
+        $('.msg2').text(sec.toString().padStart(2,'0'));
+    }
+}
+
         // =========================
         // COUNTDOWN DISPLAY
 		// FIX BUG countdown negative time
@@ -998,6 +1024,9 @@ function countdownShalat(time, name, desc, shalatName =''){
             if(name=='adzan'){
 
                 showOverlay("Laksanakan","Shalat Sunnah","Sebelum Iqomah");
+
+				iqomahCountdownActive = false;
+    			iqomahLastSecond = -1;
 
                 if(shalatName=='SUBUH'){
                     countdownShalat(
