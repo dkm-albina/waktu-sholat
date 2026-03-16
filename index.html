@@ -58,7 +58,10 @@
         justify-content:center;
         flex-direction:column;
 
-		box-shadow:0 2px 8px rgba(0,0,0,0.35);
+		/*box-shadow:0 2px 8px rgba(0,0,0,0.35);*/
+		box-shadow:
+		0 2px 8px rgba(0,0,0,0.35),
+		0 0 6px rgba(33,147,176,0.35);
 	}
 
 	.col2{ 
@@ -93,7 +96,9 @@
 
 	.first .middle1{ /*nama masjid*/
 		margin-top: 0px; /*turun atau naikkan sedikit agar lebih rapat*/
-		color: #fff;
+		/*color: #fff;
+		/*color:#F5EC6D; /* kuning muda */
+		color: #dcdcdc; /* abu-abu muda */
 		font-size:45px; /*40px*/
 		font-weight:bolder;
 		font-weight: 900;
@@ -172,7 +177,11 @@
 		text-transform: uppercase;
 		/*color:#66ffff;*/
 		color:#aed581; /* hijau muda */
-        text-shadow:0 2px 4px rgba(0,0,0,0.6);
+        /*text-shadow:0 2px 4px rgba(0,0,0,0.6);*/
+		text-shadow:
+		0 2px 4px rgba(0,0,0,0.6),
+		0 0 8px #66ffff,
+		0 0 14px #2193b0;
 	}
 
 	.hijriah{ /*hari skrg*/
@@ -197,9 +206,13 @@
 		/*color:#ccff00;*/
 		color:#ffcc80; /* coklat keemasan */
         /* text-shadow:0 0 8px rgba(255,204,128,0.6); */
+		/*text-shadow:
+		0 2px 4px rgba(0,0,0,0.6),
+		0 0 6px rgba(255,204,128,0.6);*/
+
 		text-shadow:
 		0 2px 4px rgba(0,0,0,0.6),
-		0 0 6px rgba(255,204,128,0.6);
+		0 0 10px #6dd5ed;
 	}
 
     .masehi,
@@ -230,7 +243,8 @@
 		/*background-color:#178B9A;*/
 		/*background-image: linear-gradient(#203161, #178B9A);*/
 		/*background-image: linear-gradient(#2193b0, #6dd5ed, #f8f1e5);*/
-		background-image: linear-gradient(#2e7d32, #4e342e, #a1887f); /* hijau + coklat */
+		/*background-image: linear-gradient(#2e7d32, #4e342e, #a1887f); /* hijau + coklat */
+		background-image: (#2e7d32,#4e342e,#203161);
 	}
 
 	.prayer-time{ /*waktu sholat*/
@@ -311,6 +325,10 @@
     /* sebelumnya: #F5EC6D; */
     color: #c5e1a5;      /* hijau muda, sesuai tema */
 
+	text-shadow:
+	0 1px 3px rgba(0,0,0,0.8),
+	0 0 6px #2193b0;
+
     font-size: 27px;      /* sebelumnya 27px */
     white-space: nowrap;   /* tetap satu baris */
     box-sizing: border-box; /* padding dihitung dalam lebar */
@@ -322,9 +340,14 @@
 		/*color:#ff4500 !important;*/
 		color:#ffe082 !important; /* #ffd54f coklat keemasan, ganti light gold */
 
+		/*text-shadow:
+		0 2px 4px rgba(0,0,0,0.7),
+		0 0 8px rgba(255,224,130,0.9);*/
+
 		text-shadow:
 		0 2px 4px rgba(0,0,0,0.7),
-		0 0 8px rgba(255,224,130,0.9);
+		0 0 8px #66ffff,
+		0 0 14px #2193b0;
 
 		font-weight:bold;
 		
