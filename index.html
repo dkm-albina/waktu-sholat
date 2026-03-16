@@ -139,28 +139,37 @@
 
 	.four{ /*slide bawah foot*/
 		height:8px; /*awalnya 12px*/
-	}
+		background:linear-gradient(
+		to top,
+		rgba(0,0,0,0.35),
+		rgba(0,0,0,0.15),
+		transparent
+		); 
+	} /* gradient untuk efek fade pada bagian bawah layar, agar teks footer lebih terbaca tanpa mengganggu keseluruhan tampilan */
 
 	.four .footer1{ /*versi*/
 		/*color:#000000;*/
-		color:#2E7D32; /* hijau muda */
+		color:#dcedc8; /* hijau sangat muda */
 		float:left;
 		font-size:8px; /*10px*/
         margin-left:16px;
 		text-shadow:
-		0 2px 4px rgba(0,0,0,0.7),
-		0 0 2px rgba(255,200,120,0.6);
+		text-shadow:
+		0 2px 4px rgba(0,0,0,0.9),
+		0 4px 10px rgba(0,0,0,0.7);
+		-webkit-text-stroke:0.4px rgba(0,0,0,0.6);
 	}
 
 	.four .footer2{ /*bilal app*/
 		/*color:#000000;*/
-		color:#2E7D32; /* hijau muda */
+		color:#dcedc8; /* hijau sangat muda */
 		float:right;
 		font-size:8px; /*10px*/
         margin-right:16px;
 		text-shadow:
-		0 2px 4px rgba(0,0,0,0.7),
-		0 0 2px rgba(255,200,120,0.6);
+		0 2px 4px rgba(0,0,0,0.9),
+		0 4px 10px rgba(0,0,0,0.7);
+		-webkit-text-stroke:0.4px rgba(0,0,0,0.6);
 	}
 
     .first,
@@ -347,15 +356,22 @@ pointer-events:none;
 
     /* background */
     /* sebelumnya: #2c0f0082; */
-    background: rgba(78, 52, 46, 0.7); /* coklat semi transparan */
+    background: rgba(78, 52, 46, 0.77); /* coklat semi transparan */
 
     /* color */
     /* sebelumnya: #F5EC6D; */
     color: #c5e1a5;      /* hijau muda, sesuai tema */
 
-	text-shadow:
+	/* text-shadow:
 	0 1px 2px rgba(0,0,0,0.8),
-	0 0 2px #2193b0;
+	0 0 2px #2193b0; */
+
+	text-shadow:
+	0 2px 4px rgba(0,0,0,0.9),
+	0 4px 10px rgba(0,0,0,0.7),
+	0 0 6px rgba(0,0,0,0.8),
+	0 0 6px rgba(255,215,120,0.4);
+	-webkit-text-stroke:0.5px rgba(0,0,0,0.6);
 
     font-size: 27px;      /* sebelumnya 27px */
     white-space: nowrap;   /* tetap satu baris */
