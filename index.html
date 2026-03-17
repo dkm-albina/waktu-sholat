@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -598,7 +597,7 @@ text-shadow:
 
 //app setting
 var app = {
-	version: '1.2.8', // FIX BUG + auto refresh daily + stability fix (09/03/2026) by Andryan Nugraha
+	version: '1.2.9', // FIX BUG + auto refresh daily + stability fix + owl fix (18/03/2026) by Andryan Nugraha
 	name: 'Bilal App',
 	autoLocation: false // SET true, jika anda ingin menggunakan autolocation, setelah memilih opsi enable GPS pada browser, lalukan refresh pada browser. Fitur ini hanya berfungsi jika device terkoneksi dengan internet saja.
 };
@@ -655,9 +654,11 @@ var internetFailCount = 0;
 var internetFailTolerance = 10; // toleransi gagal cek internet sebelum dianggap offline (default 10 kali)
 var bilalLogger = null;
 var bilalLoggerStopper = null;
-var slideCache = []; // cache gambar slideshow
 var iqomahCountdownActive = false;
 var iqomahLastSecond = -1;
+var owlRunning = false;
+var owlReady = false;
+var owlResetTimer = null;
 
 // BilalApp Logger
 function startLogger(){
@@ -701,7 +702,6 @@ function startApp(){
 
 	stopTimer(); // FIX edge case midnight timer
 	
-
     var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
 	var now = new Date(); // today
 	
@@ -714,6 +714,7 @@ function startApp(){
 	
 	masterTime = [times.imsak, times.fajr, times.sunrise, times.dhuhr, times.asr, times.maghrib, times.isha];
 	masterName = setting.aliasName;
+	
 	// FIX BUG reference array (harus copy bukan reference)
 	tempShalat = masterTime.slice();
 	
@@ -733,6 +734,8 @@ function startApp(){
 	$('.middle2').text(setting.alamat);
 	$('.version').text(app.version);
 	$('.appname').text(app.name);
+
+	safeResetOwl(); // ← khusus owl, agar tidak error jika jadwal berubah saat slide show berjalan
 
 	nextSchedule();
 }
@@ -815,8 +818,7 @@ $(function(){
 	// anti freeze timer
 	setInterval(function(){},30000); // FIX BUG timer freeze, dengan interval kosong yang berjalan setiap 30 detik untuk menjaga event loop tetap aktif
 
-	preloadSlides(); // DOWNLOAD semua file images di awal
-
+	
 	//running text
 	$.ajax({
 	url: setting.runningTextFile,
@@ -882,7 +884,7 @@ document.addEventListener("visibilitychange", function(){
 		loop:true,
 		items:1,
 		dots:false,
-		lazyLoad:false,
+		lazyLoad:false, 
 		autoplay:true,
 		autoplayHoverPause:false,
 		touchDrag:true,
@@ -891,6 +893,10 @@ document.addEventListener("visibilitychange", function(){
 		autoplayTimeout:setting.slideInterval,
 		slideTransition:'ease-in-out' // bisa dihapus jika dianggap tidak perlu
 	});
+
+//INIT OWL CAROUSEL SETTING
+owlReady = true;
+owlRunning = true;
 
 	// FIX FEATURE auto refresh jadwal setiap hari (OFFLINE SAFE)
 	// tidak menggunakan reload agar tetap berjalan walaupun tanpa internet
@@ -1088,7 +1094,7 @@ if(name=='shalat_sunnah' && distance <= 90){
     showOverlay("🕋","SHALAT " + shalatName,"SEDANG BERLANGSUNG");
 
     // hentikan slideshow selama shalat
-    $('.owl-carousel').trigger('stop.owl.autoplay');
+    stopOwl();
 
 	// hentikan running text selama shalat
 	$('.running-text').marquee('pause');
@@ -1146,7 +1152,7 @@ if(name=='shalat_sunnah' && distance <= 90){
         hideOverlay();
 
         // hidupkan kembali slideshow
-        $('.owl-carousel').trigger('play.owl.autoplay');
+        safeResetOwl();
 
 		// hidupkan kembali running text
 		$('.running-text').marquee('resume');
@@ -1160,7 +1166,9 @@ if(name=='shalat_sunnah' && distance <= 90){
         systemState = "countdown";
 
         // lanjut ke jadwal shalat berikutnya
-        nextSchedule();
+        setTimeout(function(){
+    		nextSchedule();
+		}, 300);
 
     }, durasi);
 
@@ -1312,35 +1320,50 @@ function hideOverlay(){
     $('.message-overlay').hide();
 }
 
-function preloadSlides(){
 
-    for(let i=1;i<=setting.slideImageCount;i++){
+function startOwl(){
+    if(!owlReady) return; // <-- PROTEKSI
 
-        setTimeout(function(){
-
-            const img = new Image();
-
-            img.src = "www/public/Bilal/img/slide/"+i+".JPG";
-
-            img.onload = function(){
-
-                // decode bitmap lebih awal supaya tidak freeze saat slide tampil
-                if(img.decode){
-                    img.decode().catch(function(){});
-                }
-
-            };
-
-			if(slideCache.length < setting.slideImageCount){
-    			slideCache.push(img); // simpan agar tidak di-GC
-			}
-            
-        }, i*800);
-
+    if(!owlRunning){
+        $('.owl-carousel').trigger('play.owl.autoplay', [setting.slideInterval]);
+        owlRunning = true;
+        console.log("Owl started");
     }
-
 }
 
+function stopOwl(){
+    if(!owlReady) return; // <-- PROTEKSI
+
+    if(owlRunning){
+        $('.owl-carousel').trigger('stop.owl.autoplay');
+        owlRunning = false;
+        console.log("Owl stopped");
+    }
+}
+
+function safeResetOwl(){
+
+    if(!owlReady){
+        console.log("Owl not ready, skip reset");
+        return;
+    }
+
+    // batalkan reset sebelumnya (ANTI NUMPUK)
+    if(owlResetTimer){
+        clearTimeout(owlResetTimer);
+    }
+
+    if(owlRunning){
+    stopOwl();
+}
+
+    owlResetTimer = setTimeout(function(){
+		// $('.owl-carousel').trigger('refresh.owl.carousel'); // optional, untuk device dengan RAM besar agar tetap segar, tapi bisa menyebabkan CPU spike di device dengan RAM kecil	
+        $('.owl-carousel').trigger('to.owl.carousel', [0, 0]);
+        startOwl();
+        owlResetTimer = null;
+    }, 100);
+}
 
 </script>
 </body>
