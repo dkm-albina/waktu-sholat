@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -89,7 +88,7 @@
 		/*background-color: #013505;*/
 		/*background-color: #006699;*/
 		background-color: #2e7d32; /* hijau tua */
-		padding:5px 6px;
+		padding:5px 10px;
 		height:96px; /*awalnya 100px, dikurangi agar lebih proporsional*/
 		
 		box-shadow:0 4px 10px rgba(0,0,0,0.35);
@@ -388,9 +387,7 @@ pointer-events:none;
 	opacity: 0.75;
 	}
 
-
 	.desc-container{ /*pad menjelang*/
-		
 		padding:4px 0;
 		color:#ffd54f;
 
@@ -1174,12 +1171,14 @@ if(name=='shalat_sunnah' && distance <= 90){
     }, durasi);
 
 	}else if(name=='IMSAK'){   // ← TAMBAHAN UNTUK IMSAK
-
+        systemState = "countdown"; // langsung kembali normal
+	
     	nextSchedule();
     	return;
 
 	}else if(name=='SYURUQ'){   // ← TAMBAHAN UNTUK SYURUQ
-
+        systemState = "countdown"; // langsung kembali normal
+		
     	nextSchedule();
     	return;
 
