@@ -89,7 +89,7 @@
 		/*background-color: #013505;*/
 		/*background-color: #006699;*/
 		background-color: #2e7d32; /* hijau tua */
-		padding:5px 2px;
+		padding:5px 6px;
 		height:96px; /*awalnya 100px, dikurangi agar lebih proporsional*/
 		
 		box-shadow:0 4px 10px rgba(0,0,0,0.35);
@@ -219,8 +219,8 @@
         /*text-shadow:0 2px 4px rgba(0,0,0,0.6);*/
 		text-shadow:
 		0 2px 4px rgba(0,0,0,0.7),
-		0 0 4px #66ffff,
-		0 0 6px rgba(255,215,100,0.6);
+		0 0 4px #66ffff;
+		/* 0 0 6px rgba(255,215,100,0.6); */
 	}
 
     .masehi,
@@ -434,7 +434,7 @@ pointer-events:none;
     /*height:calc(100vh - 196px);*/
 	height:100%;
     background:rgba(0,0,0,0.85);
-	backdrop-filter: blur(3px);
+	/* backdrop-filter: blur(3px); */ /* efek blur untuk latar belakang, bisa dicoba jika performa perangkat cukup baik */  
     display:none;
     align-items:center;
     justify-content:center;
@@ -450,9 +450,9 @@ pointer-events:none;
     */
 	margin-top:-80px; /*lebih stabil ini untuk tv box*/
 	text-shadow:
-	0 2px 4px rgba(0,0,0,0.9),
-	0 4px 10px rgba(0,0,0,0.7),
-	0 0 8px rgba(0,0,0,0.6);
+	0 2px 4px rgba(0,0,0,0.9);
+	/* 0 4px 10px rgba(0,0,0,0.7), */
+	/* 0 0 8px rgba(0,0,0,0.6); */
 }
 
 .msg1,.msg2,.msg3{
@@ -462,7 +462,7 @@ line-height:1.2;
 
 text-shadow:
 0 3px 6px rgba(0,0,0,0.9),
-0 6px 18px rgba(0,0,0,0.7),
+/* 0 6px 18px rgba(0,0,0,0.7), */
 0 0 10px rgba(33,147,176,0.6);
 }
 
@@ -817,7 +817,7 @@ $(function(){
     },60000);
 
 	// anti freeze timer
-	setInterval(function(){},30000); // FIX BUG timer freeze, dengan interval kosong yang berjalan setiap 30 detik untuk menjaga event loop tetap aktif
+	// setInterval(function(){},30000); // FIX BUG timer freeze, dengan interval kosong yang berjalan setiap 30 detik untuk menjaga event loop tetap aktif
 
 	
 	//running text
