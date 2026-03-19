@@ -44,8 +44,7 @@
         .col4 {
             /* menjelang*/
             width: 27%;
-            /*color:#ff4500;*/
-            /*color:#8d6e63;  diganti coklat medium */
+            /*color:#8d6e63;  kalau mau diganti coklat medium */
             color: #ffe082;
             /* diganti emas muda */
             font-size: 14px;
@@ -54,10 +53,7 @@
         .first .mybox {
             /*panel waktu 4*/
             background-color: #4e342e;
-            /* coklat tua (tetap) */
-            /*background-color: #005577;*/
-            /*background-color: #003366;*/
-            /*color: #ECF42F;*/
+            /* coklat tua */
             text-align: center;
             border-radius: 4px;
             font-weight: bold;
@@ -99,8 +95,6 @@
 
         .first {
             /*header*/
-            /*background-color: #013505;*/
-            /*background-color: #006699;*/
             background-color: #2e7d32;
             /* hijau tua */
             padding: 5px 12px;
@@ -114,7 +108,6 @@
             /*nama masjid*/
             margin-top: 0px;
             /*turun atau naikkan sedikit agar lebih rapat*/
-            /*color: #fff;*/
             /*color:#F5EC6D; kuning muda */
             color: #F5F5F5;
             /* putih terang, agar lebih kontras dengan latar belakang hijau tua */
@@ -129,11 +122,9 @@
 
         .first .middle2 {
             /*alamat masjid*/
-            /*color: #F5EC6D;*/
             color: #c5e1a5;
             /* hijau muda */
             font-size: 23px;
-            /*20px*/
             font-weight: bold;
             text-shadow:
                 0 1px 0 #1b5e20,
@@ -151,7 +142,7 @@
         }
 
         .second {
-            /*bawah header box shol n jamshol*/
+            /*bawah header box nama sholat n jam sholat*/
             box-sizing: border-box;
             padding: 6px 10px 1px 10px;
             margin-bottom: 20px;
@@ -223,11 +214,8 @@
             /*color:#66ffff;*/
             color: #ffcc80;
             /* coklat keemasan */
-            /* text-shadow:0 0 8px rgba(255,204,128,0.6); */
-            /*text-shadow:
-		0 2px 4px rgba(0,0,0,0.6),
-		0 0 6px rgba(255,204,128,0.6);*/
 
+            /* text-shadow:0 0 8px rgba(255,204,128,0.6); */
             text-shadow:
                 0 2px 4px rgba(0, 0, 0, 0.7),
                 0 0 6px rgba(255, 200, 120, 0.6);
@@ -238,7 +226,6 @@
             /*hari skrg*/
             padding: 5px 0px;
             font-weight: bold;
-            /*color:#dcdcdc;*/
             color: #d7ccc8;
             /* coklat muda */
             font-size: 12px;
@@ -262,11 +249,17 @@
             /*color:#ccff00;*/
             color: #aed581;
             /* hijau muda */
+
             /*text-shadow:0 2px 4px rgba(0,0,0,0.6);*/
             text-shadow:
                 0 2px 4px rgba(0, 0, 0, 0.7),
                 0 0 4px #66ffff;
-            /* 0 0 6px rgba(255,215,100,0.6); */
+            /* 0 0 6px rgba(255,215,100,0.6); bisa nambah berat di TV Box*/
+        }
+
+        .masehi:empty::after {
+            content: "00:00:00";
+            opacity: 0.3;
         }
 
         .masehi,
@@ -284,8 +277,6 @@
             font-size: 20px;
             padding: 0px;
             text-align: center;
-            /*background-color: #81600F;*/
-            /*background-color: #004d47;*/
             background-color: #5d4037;
             /* coklat tua */
             margin-bottom: 1px;
@@ -310,10 +301,6 @@
         .super-block {
             /*background*/
             /*background-color:#178B9A;*/
-            /*background-image: linear-gradient(#203161, #178B9A);*/
-            /*background-image: linear-gradient(#2193b0, #6dd5ed, #f8f1e5);*/
-            /*background-image: linear-gradient(#2e7d32, #4e342e, #a1887f); /* hijau + coklat */
-            /*background-image: linear-gradient(#2e7d32,#4e342e,#203161);*/
             background-image: linear-gradient(180deg,
                     #2e7d32 0%,
                     #2f7a30 12%,
@@ -434,15 +421,12 @@
 
 
         .highlight {
-            /*color: yellow !important;*/
-            /*color:#ff4500 !important;*/
             color: #ffe082 !important;
             /* #ffd54f coklat keemasan, ganti light gold */
 
             text-shadow:
                 0 2px 4px rgba(0, 0, 0, 0.7),
                 0 0 8px rgba(255, 224, 130, 0.9);
-
 
             font-weight: bold;
 
@@ -464,9 +448,6 @@
             text-shadow:
                 0 1px 2px rgba(0, 0, 0, 0.7),
                 0 0 4px rgba(215, 204, 200, 0.5);
-            /*text-shadow:
-        0 1px 2px rgba(0,0,0,0.6),
-        0 0 6px rgba(215,204,200,0.8);*/
         }
 
         .layer {
@@ -515,8 +496,8 @@
             color: #fff;
             font-weight: bold;
             /* alternatif posisi untuk lebih ke atas:
-       transform: translateY(-80px);
-    */
+            transform: translateY(-80px);
+            */
             margin-top: -80px;
             /*lebih stabil ini untuk tv box*/
             text-shadow:
@@ -747,6 +728,7 @@
         var lastStabilityCheck = Date.now();
         var lastMinuteCheck = Date.now();
         var lastWatchdogCheck = Date.now();
+        var appStarted = false;
 
 
         // FIX STABILITY TV BOX MODE
@@ -878,10 +860,15 @@
 
         }
 
-
-
         // with FIX BUG geolocation async
         function startApp() {
+
+            if (appStarted) {
+                console.log("startApp skipped (already started)");
+                return;
+            }
+
+            appStarted = true;
 
             stopTimer(); // FIX edge case midnight timer
 
@@ -946,46 +933,11 @@
             // FIX FEATURE auto refresh daily tracking
             todayDate = moment().format("YYYY-MM-DD");
 
+            updateClockDisplay(); // 🔥 langsung tampil
             startHeartbeat(); // mulai heartbeat BilalApp untuk stabilitas TV Box mode
             startLogger(); // mulai BilalApp logger untuk 5 menit di awal saja
 
-
-            // cek saat pertama load
-            updateNetworkStatus();
-
-            // pastikan update lagi setelah DOM stabil
-            setTimeout(updateNetworkStatus, 600);
-
-            // cek jika status berubah
-            window.addEventListener('online', updateNetworkStatus);
-            window.addEventListener('offline', updateNetworkStatus);
-
-            //running text
-            $.ajax({
-                url: setting.runningTextFile,
-                success: function (d) {
-                    $('.running-text').text(d);
-                },
-                error: function () {
-                    $('.running-text').text("Selamat datang di " + setting.nama);
-                },
-                complete: function () {
-                    $('.running-text').marquee({
-                        duration: setting.runningTextSpeed,
-                        gap: 50
-                    });
-                }
-            });
-
-            //CHECK Visibility
-            document.addEventListener("visibilitychange", function () {
-
-                if (document.visibilityState === "visible") {
-                    watchdogLastTick = Date.now();
-                }
-
-            });
-
+            // Karena ada fungsistartApp(); // 🔥 maka geolocation async, jangan tunggu di bawah
             // FIX BUG geolocation async
             if (app.autoLocation && "geolocation" in navigator) {
 
@@ -1016,28 +968,68 @@
 
             }
 
+            // cek saat pertama load
+            updateNetworkStatus();
+
+            // pastikan update lagi setelah DOM stabil
+            setTimeout(updateNetworkStatus, 600);
+
+            // cek jika status berubah
+            window.addEventListener('online', updateNetworkStatus);
+            window.addEventListener('offline', updateNetworkStatus);
+
+           
+            //running text
+            $.ajax({
+                url: setting.runningTextFile,
+                success: function (d) {
+                    $('.running-text').text(d);
+                },
+                error: function () {
+                    $('.running-text').text("Selamat datang di " + setting.nama);
+                },
+                complete: function () {
+                    $('.running-text').marquee({
+                        duration: setting.runningTextSpeed,
+                        gap: 50
+                    });
+                }
+            });
+
+            //CHECK Visibility
+            document.addEventListener("visibilitychange", function () {
+
+                if (document.visibilityState === "visible") {
+                    watchdogLastTick = Date.now();
+                }
+
+            });
+
+
+
             //slide wallpaper
             for (var a = 1; a <= setting.slideImageCount; a++) { // FIX BUG global variable
                 $('.slide-container').append('<div class="item" style="background-image: url(\'www/public/Bilal/img/slide/' + a + '.JPG\')"></div>');
             }
 
-            $('.owl-carousel').owlCarousel({
-                loop: true,
-                items: 1,
-                dots: false,
-                lazyLoad: false,
-                autoplay: true,
-                autoplayHoverPause: false,
-                touchDrag: true,
-                mouseDrag: false,
-                smartSpeed: 1000, // jangan terlalu lama transisinya, bisa CPU spike
-                autoplayTimeout: setting.slideInterval,
-                slideTransition: 'ease-in-out' // bisa dihapus jika dianggap tidak perlu
-            });
-            //INIT OWL CAROUSEL SETTING
-            owlReady = true;
-            owlRunning = true;
-
+            setTimeout(function () {
+                $('.owl-carousel').owlCarousel({
+                    loop: true,
+                    items: 1,
+                    dots: false,
+                    lazyLoad: false,
+                    autoplay: true,
+                    autoplayHoverPause: false,
+                    touchDrag: true,
+                    mouseDrag: false,
+                    smartSpeed: 1000, // jangan terlalu lama transisinya, bisa CPU spike
+                    autoplayTimeout: setting.slideInterval,
+                    slideTransition: 'ease-in-out' // bisa dihapus jika dianggap tidak perlu
+                });
+                //INIT OWL CAROUSEL SETTING
+                owlReady = true;
+                owlRunning = true;
+            }, 300);
 
         });
 
@@ -1091,7 +1083,7 @@
 
             mycountdown = setInterval(function () {
 
-                
+
                 // =========================
                 // OPTIMASI MOMENT
                 // =========================
