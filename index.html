@@ -1,1370 +1,1478 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8">
-    
-	<title>Jadwal Shalat</title>
-	<link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css" />
-	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css" />
-	<link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.theme.default.min.css" />
-	<link rel="icon" href="data:,">
-	<style>
-	*{
-		padding:0;
-		margin:0;
-	}
+    <meta charset="utf-8">
 
-	body, body *{
-		font-family: Arial, Helvetica, sans-serif !important;
-	}
+    <title>Jadwal Shalat</title>
+    <link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css" />
+    <link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.theme.default.min.css" />
+    <link rel="icon" href="data:,">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
 
-    body{
-         /*-webkit-font-smoothing: antialiased;*/
-        /*-moz-osx-font-smoothing: grayscale;*/
-        text-rendering: optimizeLegibility;
-        font-weight: bolder;
-        font-synthesis: style;
-        font-synthesis-weight: auto;
-		overflow:hidden; /* cegah scroll bar muncul */
-	}
+        body,
+        body * {
+            font-family: Arial, Helvetica, sans-serif !important;
+        }
 
-	.row{
-		box-sizing:border-box;
-	}
+        body {
+            /*-webkit-font-smoothing: antialiased;*/
+            /*-moz-osx-font-smoothing: grayscale;*/
+            text-rendering: optimizeLegibility;
+            font-weight: bolder;
+            font-synthesis: style;
+            font-synthesis-weight: auto;
+            overflow: hidden;
+            /* cegah scroll bar muncul */
+        }
 
-	.col{ /*mengatur letak nama masjid dll (yg ada di header)*/
-		float:left;
-		box-sizing:border-box;
-	}
+        .row {
+            box-sizing: border-box;
+        }
 
-	.col4{ /* menjelang*/
-		width:27%;
-		/*color:#ff4500;*/
-		/*color:#8d6e63;  diganti coklat medium */
-        color: #ffe082;  /* diganti emas muda */
-		font-size:14px;
-	}
+        .col {
+            /*mengatur letak nama masjid dll (yg ada di header)*/
+            float: left;
+            box-sizing: border-box;
+        }
 
-	.first .mybox{ /*panel waktu 4*/
-		background-color: #4e342e; /* coklat tua (tetap) */
-		/*background-color: #005577;*/
-		/*background-color: #003366;*/
-		/*color: #ECF42F;*/
-		text-align:center;
-		border-radius:4px;
-		font-weight:bold;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        flex-direction:column;
+        .col4 {
+            /* menjelang*/
+            width: 27%;
+            /*color:#ff4500;*/
+            /*color:#8d6e63;  diganti coklat medium */
+            color: #ffe082;
+            /* diganti emas muda */
+            font-size: 14px;
+        }
 
-		/*box-shadow:0 2px 8px rgba(0,0,0,0.35);*/
-		box-shadow:
-		0 2px 8px rgba(0,0,0,0.35),
-		0 0 6px rgba(33,147,176,0.35);
-	}
+        .first .mybox {
+            /*panel waktu 4*/
+            background-color: #4e342e;
+            /* coklat tua (tetap) */
+            /*background-color: #005577;*/
+            /*background-color: #003366;*/
+            /*color: #ECF42F;*/
+            text-align: center;
+            border-radius: 4px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
 
-	.col2{ 
-		width:46%;
-	}
+            /*box-shadow:0 2px 8px rgba(0,0,0,0.35);*/
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.35),
+                0 0 6px rgba(33, 147, 176, 0.35);
+        }
 
-	.col7{ /*jadwal dan nama sholat*/
-		float:left;
-		margin-top: -6px; /*naikkan sedikit agar lebih rapat*/
-		width: 12.2857%;
-		margin-left: 1%;
-		margin-right: 1%;
-	}
+        .col2 {
+            width: 46%;
+        }
 
-	.p-0{padding:0;}
-	.mycontainer{
-	    width:100%;
-	    height:100vh;
-	    padding:1vh 1.05vw;
-	    box-sizing:border-box;
-    }
+        .col7 {
+            /*jadwal dan nama sholat*/
+            float: left;
+            margin-top: -6px;
+            /*naikkan sedikit agar lebih rapat*/
+            width: 12.2857%;
+            margin-left: 1%;
+            margin-right: 1%;
+        }
 
-	.first{ /*header*/
-		/*background-color: #013505;*/
-		/*background-color: #006699;*/
-		background-color: #2e7d32; /* hijau tua */
-		padding:5px 10px;
-		height:96px; /*awalnya 100px, dikurangi agar lebih proporsional*/
-		
-		box-shadow:0 4px 10px rgba(0,0,0,0.35);
-	}
+        .p-0 {
+            padding: 0;
+        }
 
-	.first .middle1{ /*nama masjid*/
-		margin-top: 0px; /*turun atau naikkan sedikit agar lebih rapat*/
-		/*color: #fff;*/
-		/*color:#F5EC6D; kuning muda */
-		color: #F5F5F5; /* putih terang, agar lebih kontras dengan latar belakang hijau tua */
-		font-size:45px; /*40px*/
-		font-weight:bolder;
-		font-weight: 900;
-        text-shadow:
-        0 2px 5px rgba(0,0,0,0.7),
-        0 0 8px rgba(197,225,165,0.6);
-	}
+        .mycontainer {
+            width: 100%;
+            height: 100vh;
+            padding: 1vh 1.05vw;
+            box-sizing: border-box;
+        }
 
-	.first .middle2{ /*alamat masjid*/
-		/*color: #F5EC6D;*/
-		color: #c5e1a5; /* hijau muda */
-		font-size:23px; /*20px*/
-		font-weight:bold;
-        text-shadow:
-        0 1px 0 #1b5e20,
-        0 2px 2px rgba(0,0,0,0.5);
-		margin-top: -4px; /*naikkan sedikit agar lebih rapat dengan nama masjid*/
-	}
+        .first {
+            /*header*/
+            /*background-color: #013505;*/
+            /*background-color: #006699;*/
+            background-color: #2e7d32;
+            /* hijau tua */
+            padding: 5px 12px;
+            height: 96px;
+            /*awalnya 100px, dikurangi agar lebih proporsional*/
 
-	.first .middle3{ /*longitudinal masjid*/
-		color: #fff;
-		font-size:11px;
-		font-weight:bold;
-		margin-top: -1px;
-	}
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+        }
 
-	.second{ /*bawah header box shol n jamshol*/
-		box-sizing: border-box;
-		padding:6px 10px 1px 10px;
-		margin-bottom:20px;
-		height:56px;
-        border-bottom:1px solid transparent;
-	}
+        .first .middle1 {
+            /*nama masjid*/
+            margin-top: 0px;
+            /*turun atau naikkan sedikit agar lebih rapat*/
+            /*color: #fff;*/
+            /*color:#F5EC6D; kuning muda */
+            color: #F5F5F5;
+            /* putih terang, agar lebih kontras dengan latar belakang hijau tua */
+            font-size: 45px;
+            /*40px*/
+            font-weight: bolder;
+            font-weight: 900;
+            text-shadow:
+                0 2px 5px rgba(0, 0, 0, 0.7),
+                0 0 8px rgba(197, 225, 165, 0.6);
+        }
 
-	.third{ /*slide*/
-		padding:0 16px; /*20px*/
-	}
+        .first .middle2 {
+            /*alamat masjid*/
+            /*color: #F5EC6D;*/
+            color: #c5e1a5;
+            /* hijau muda */
+            font-size: 23px;
+            /*20px*/
+            font-weight: bold;
+            text-shadow:
+                0 1px 0 #1b5e20,
+                0 2px 2px rgba(0, 0, 0, 0.5);
+            margin-top: -4px;
+            /*naikkan sedikit agar lebih rapat dengan nama masjid*/
+        }
 
-	.four{ /*slide bawah foot*/
-		height:8px; /*awalnya 12px*/
-	}
+        .first .middle3 {
+            /*longitudinal masjid*/
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: -1px;
+        }
 
-	.four .footer1{ /*versi*/
-		/*color:#000000;*/
-		color:#2E7D32; /* hijau muda */
-		float:left;
-		font-size:8px; /*10px*/
-        margin-left:16px;
-		text-shadow:
-		0 2px 4px rgba(0,0,0,0.7),
-		0 0 2px rgba(255,200,120,0.6);
-	}
+        .second {
+            /*bawah header box shol n jamshol*/
+            box-sizing: border-box;
+            padding: 6px 10px 1px 10px;
+            margin-bottom: 20px;
+            height: 56px;
+            border-bottom: 1px solid transparent;
+        }
 
-	.four .footer2{ /*bilal app*/
-		/*color:#000000;*/
-		color:#2E7D32; /* hijau muda */
-		float:right;
-		font-size:8px; /*10px*/
-        margin-right:16px;
-		text-shadow:
-		0 2px 4px rgba(0,0,0,0.7),
-		0 0 2px rgba(255,200,120,0.6);
-	}
+        .third {
+            /*slide*/
+            padding: 0 16px;
+            /*20px*/
+        }
 
-    .first,
-    .second,
-    .third{
-    transform:translateZ(0);
-    }
+        .four {
+            /*slide bawah foot*/
+            height: 8px;
+            /*awalnya 12px*/
+        }
 
-	.myprayer{ /*jadwal*/
-		color: #fff;
-		float:left;
-		font-weight:bold;
-	}
+        .four .footer1 {
+            /*versi*/
+            /*color:#000000;*/
+            color: #2E7D32;
+            /* hijau muda */
+            float: left;
+            font-size: 8px;
+            /*10px*/
+            margin-left: 16px;
+            text-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.7),
+                0 0 2px rgba(255, 200, 120, 0.6);
+        }
 
-	.masehi{ /*jam skrg */
-		font-size:56px; /*dari 50px */
-		font-weight:bold;
-		margin:0 auto 5px auto;
-		padding: 0px 0px;
-		text-transform: uppercase;
-		/*color:#66ffff;*/
-		color:#ffcc80; /* coklat keemasan */
-        /* text-shadow:0 0 8px rgba(255,204,128,0.6); */
-		/*text-shadow:
+        .four .footer2 {
+            /*bilal app*/
+            /*color:#000000;*/
+            color: #2E7D32;
+            /* hijau muda */
+            float: right;
+            font-size: 8px;
+            /*10px*/
+            margin-right: 16px;
+            text-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.7),
+                0 0 2px rgba(255, 200, 120, 0.6);
+        }
+
+        .first,
+        .second,
+        .third {
+            transform: translateZ(0);
+        }
+
+        .myprayer {
+            /*jadwal*/
+            color: #fff;
+            float: left;
+            font-weight: bold;
+        }
+
+        .masehi {
+            /*jam skrg */
+            font-size: 56px;
+            /*dari 50px */
+            font-weight: bold;
+            margin: 0 auto 5px auto;
+            padding: 0px 0px;
+            text-transform: uppercase;
+            /*color:#66ffff;*/
+            color: #ffcc80;
+            /* coklat keemasan */
+            /* text-shadow:0 0 8px rgba(255,204,128,0.6); */
+            /*text-shadow:
 		0 2px 4px rgba(0,0,0,0.6),
 		0 0 6px rgba(255,204,128,0.6);*/
 
-		text-shadow:
-		0 2px 4px rgba(0,0,0,0.7),
-		0 0 6px rgba(255,200,120,0.6);
-		
-	}
+            text-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.7),
+                0 0 6px rgba(255, 200, 120, 0.6);
 
-	.hijriah{ /*hari skrg*/
-		padding: 5px 0px;
-		font-weight:bold;
-		/*color:#dcdcdc;*/
-		color:#d7ccc8; /* coklat muda */
-		font-size:12px; /*dari 14px */
-        line-height: 1.1;
-        
-	}
+        }
 
-	.countdown-event{ /*margin countdown*/
-		margin-bottom: 2px;
-	}
+        .hijriah {
+            /*hari skrg*/
+            padding: 5px 0px;
+            font-weight: bold;
+            /*color:#dcdcdc;*/
+            color: #d7ccc8;
+            /* coklat muda */
+            font-size: 12px;
+            /*dari 14px */
+            line-height: 1.1;
 
-	.countdown-event{ /*waktu mundur*/
-		margin:0 auto 5px auto;
-		padding: 0px 0px;
-		font-size:56px; /*60px*/
-		font-weight:bold;
-		/*color:#ccff00;*/
-		color:#aed581; /* hijau muda */
-        /*text-shadow:0 2px 4px rgba(0,0,0,0.6);*/
-		text-shadow:
-		0 2px 4px rgba(0,0,0,0.7),
-		0 0 4px #66ffff;
-		/* 0 0 6px rgba(255,215,100,0.6); */
-	}
+        }
 
-    .masehi,
-    .countdown-event{
-        font-variant-numeric: tabular-nums;
-		font-feature-settings: "tnum";
-		letter-spacing:1px;
-        line-height:1;
-        margin-bottom:3px;
-        font-weight: 700;
-    }
+        .countdown-event {
+            /*margin countdown*/
+            margin-bottom: 2px;
+        }
 
-	.prayer-title{ /*judul sholat*/
-		font-size: 20px;
-		padding:0px;
-		text-align:center;
-		/*background-color: #81600F;*/
-		/*background-color: #004d47;*/
-		background-color: #5d4037; /* coklat tua */
-		margin-bottom:1px;
-		border-radius: 4px;
-		font-weight:bold;
+        .countdown-event {
+            /*waktu mundur*/
+            margin: 0 auto 5px auto;
+            padding: 0px 0px;
+            font-size: 56px;
+            /*60px*/
+            font-weight: bold;
+            /*color:#ccff00;*/
+            color: #aed581;
+            /* hijau muda */
+            /*text-shadow:0 2px 4px rgba(0,0,0,0.6);*/
+            text-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.7),
+                0 0 4px #66ffff;
+            /* 0 0 6px rgba(255,215,100,0.6); */
+        }
 
-		box-shadow:0 2px 6px rgba(0,0,0,0.3);
-	}
+        .masehi,
+        .countdown-event {
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: "tnum";
+            letter-spacing: 1px;
+            line-height: 1;
+            margin-bottom: 3px;
+            font-weight: 700;
+        }
 
-.wallpaper::after{
-content:"";
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.18); /* overlay gelap untuk meningkatkan kontras teks */
-pointer-events:none;
-}
+        .prayer-title {
+            /*judul sholat*/
+            font-size: 20px;
+            padding: 0px;
+            text-align: center;
+            /*background-color: #81600F;*/
+            /*background-color: #004d47;*/
+            background-color: #5d4037;
+            /* coklat tua */
+            margin-bottom: 1px;
+            border-radius: 4px;
+            font-weight: bold;
 
-	.super-block{ /*background*/
-		/*background-color:#178B9A;*/
-		/*background-image: linear-gradient(#203161, #178B9A);*/
-		/*background-image: linear-gradient(#2193b0, #6dd5ed, #f8f1e5);*/
-		/*background-image: linear-gradient(#2e7d32, #4e342e, #a1887f); /* hijau + coklat */
-		/*background-image: linear-gradient(#2e7d32,#4e342e,#203161);*/
-		background-image: linear-gradient(
-180deg,
-#2e7d32 0%,
-#2f7a30 12%,
-#34752e 28%,
-#3b6b2d 45%,
-#3f5e2d 65%,
-#444a2e 82%,
-#4e342e 100%
-);
-	}
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
 
-	.prayer-time{ /*waktu sholat*/
-		font-size: 44px;
-		padding:0px;
-		text-align:center;
-		/*background-color: #1E5F95;*/
-		background-color: #6d4c41; /* coklat medium */
-		border-radius: 4px;
-		font-weight:bold;
+        .wallpaper::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.18);
+            /* overlay gelap untuk meningkatkan kontras teks */
+            pointer-events: none;
+        }
 
-		box-shadow:0 2px 6px rgba(0,0,0,0.35);
-	}
+        .super-block {
+            /*background*/
+            /*background-color:#178B9A;*/
+            /*background-image: linear-gradient(#203161, #178B9A);*/
+            /*background-image: linear-gradient(#2193b0, #6dd5ed, #f8f1e5);*/
+            /*background-image: linear-gradient(#2e7d32, #4e342e, #a1887f); /* hijau + coklat */
+            /*background-image: linear-gradient(#2e7d32,#4e342e,#203161);*/
+            background-image: linear-gradient(180deg,
+                    #2e7d32 0%,
+                    #2f7a30 12%,
+                    #34752e 28%,
+                    #3b6b2d 45%,
+                    #3f5e2d 65%,
+                    #444a2e 82%,
+                    #4e342e 100%);
+        }
 
-	.clear{
-		clear:both;
-	}
+        .prayer-time {
+            /*waktu sholat*/
+            font-size: 44px;
+            padding: 0px;
+            text-align: center;
+            /*background-color: #1E5F95;*/
+            background-color: #6d4c41;
+            /* coklat medium */
+            border-radius: 4px;
+            font-weight: bold;
 
-	.text-center{
-		text-align:center;
-	}
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+        }
 
-	.wallpaper-container{
-	position:relative;	
-	}
+        .clear {
+            clear: both;
+        }
 
-    .wallpaper{
-    position:relative;
-    }
+        .text-center {
+            text-align: center;
+        }
+
+        .wallpaper-container {
+            position: relative;
+        }
+
+        .wallpaper {
+            position: relative;
+        }
 
 
-	.wallpaper .item{ /*wallpaper slide*/
-		box-sizing: border-box;
-		will-change: transform; /*perhalus render transisi image*/
-		width:100%;
-		/*background-image: url("img/img1.jpg");*/
-		background-size:100% 100%;
-		background-position:center;
-		background-repeat:no-repeat;
-		/*background-color: #124653;*/
-		background-color: #2e7d32; /* hijau tua */
-		height: calc(100vh - 186px); /*100vh - 196px*/
-		border: 2px solid #4e342e; /* coklat tua */
-		border-radius: 1px; /*awalnya 4px*/
-		-webkit-transition: all .2s ease-in-out;
-		-o-transition: all .2s ease-in-out;
-		transition: all .2s ease-in-out;
+        .wallpaper .item {
+            /*wallpaper slide*/
+            box-sizing: border-box;
+            will-change: transform;
+            /*perhalus render transisi image*/
+            width: 100%;
+            /*background-image: url("img/img1.jpg");*/
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            /*background-color: #124653;*/
+            background-color: #2e7d32;
+            /* hijau tua */
+            height: calc(100vh - 186px);
+            /*100vh - 196px*/
+            border: 2px solid #4e342e;
+            /* coklat tua */
+            border-radius: 1px;
+            /*awalnya 4px*/
+            -webkit-transition: all .2s ease-in-out;
+            -o-transition: all .2s ease-in-out;
+            transition: all .2s ease-in-out;
 
-		box-shadow:0 6px 18px rgba(0,0,0,0.4);
-		
-	}
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
 
-	.second-block{
-		margin: 0px auto;
-	}
+        }
 
-.running-container { /* contain text */
-    position: absolute;
-    bottom: 14px;        /* jarak dari bawah layar */
-    left: 1%;            /* sebelumnya 2% */
-    width: 98%;          /* sebelumnya 98% */
-    z-index: 99999999;
-}
+        .second-block {
+            margin: 0px auto;
+        }
 
-.running-text .js-marquee {
-    /* Kosong, tapi tetap disiapkan untuk JS */
-}
+        .running-container {
+            /* contain text */
+            position: absolute;
+            bottom: 12px;
+            /* jarak dari bawah layar */
+            left: 1%;
+            /* sebelumnya 2% */
+            width: 98%;
+            /* sebelumnya 98% */
+            z-index: 99999999;
+        }
 
-.running-text { /* teks berjalan */
-    padding: 2px;        /* sebelumnya 2px */
-    overflow: hidden;
+        .running-text .js-marquee {
+            /* Kosong, tapi tetap disiapkan untuk JS */
+        }
 
-    /* background */
-    /* sebelumnya: #2c0f0082; */
-    background: rgba(78, 52, 46, 0.7); /* coklat semi transparan */
+        .running-text {
+            /* teks berjalan */
+            padding: 2px;
+            /* sebelumnya 2px */
+            overflow: hidden;
 
-    /* color */
-    /* sebelumnya: #F5EC6D; */
-    color: #c5e1a5;      /* hijau muda, sesuai tema */
+            /* background */
+            /* sebelumnya: #2c0f0082; */
+            background: rgba(78, 52, 46, 0.7);
+            /* coklat semi transparan */
 
-	/* text-shadow:*/
-	/* 0 1px 2px rgba(0,0,0,0.8),*/
-	/* 0 0 2px #2193b0; pakai ini di Android 6 TV Box bergetar textnya */ 
+            /* color */
+            /* sebelumnya: #F5EC6D; */
+            color: #c5e1a5;
+            /* hijau muda, sesuai tema */
 
-	/* text-shadow: 0 1px 1px rgba(0,0,0,0.5); shadow halus untuk meningkatkan keterbacaan tanpa membuat teks terlalu berkilau */ 
+            /* text-shadow:*/
+            /* 0 1px 2px rgba(0,0,0,0.8),*/
+            /* 0 0 2px #2193b0; pakai ini di Android 6 TV Box bergetar textnya */
 
-    font-size: 27px;      /* sebelumnya 27px */
-    white-space: nowrap;   /* tetap satu baris */
-    box-sizing: border-box; /* padding dihitung dalam lebar */
-}
-		
-	
-	.highlight{
-		/*color: yellow !important;*/
-		/*color:#ff4500 !important;*/
-		color:#ffe082 !important; /* #ffd54f coklat keemasan, ganti light gold */
+            /* text-shadow: 0 1px 1px rgba(0,0,0,0.5); shadow halus untuk meningkatkan keterbacaan tanpa membuat teks terlalu berkilau */
 
-		text-shadow:
-		0 2px 4px rgba(0,0,0,0.7),
-		0 0 8px rgba(255,224,130,0.9);
+            font-size: 27px;
+            /* sebelumnya 27px */
+            white-space: nowrap;
+            /* tetap satu baris */
+            box-sizing: border-box;
+            /* padding dihitung dalam lebar */
+        }
 
-		
-		font-weight:bold;
-		
-	}
 
-	.prayer-time.IMSAK{
-	opacity: 0.60;
-	}
+        .highlight {
+            /*color: yellow !important;*/
+            /*color:#ff4500 !important;*/
+            color: #ffe082 !important;
+            /* #ffd54f coklat keemasan, ganti light gold */
 
-	.prayer-time.SYURUQ{
-	opacity: 0.75;
-	}
+            text-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.7),
+                0 0 8px rgba(255, 224, 130, 0.9);
 
-	.desc-container{ /*pad menjelang*/
-		padding:4px 0;
-		color:#ffd54f;
 
-		text-shadow:
-		0 1px 2px rgba(0,0,0,0.7),
-		0 0 4px rgba(215,204,200,0.5);
-        /*text-shadow:
+            font-weight: bold;
+
+        }
+
+        .prayer-time.IMSAK {
+            opacity: 0.60;
+        }
+
+        .prayer-time.SYURUQ {
+            opacity: 0.75;
+        }
+
+        .desc-container {
+            /*pad menjelang*/
+            padding: 4px 0;
+            color: #ffd54f;
+
+            text-shadow:
+                0 1px 2px rgba(0, 0, 0, 0.7),
+                0 0 4px rgba(215, 204, 200, 0.5);
+            /*text-shadow:
         0 1px 2px rgba(0,0,0,0.6),
         0 0 6px rgba(215,204,200,0.8);*/
-	}
+        }
 
-	.layer{
-		width:100%;
-		height:100vh;
-		background-color: #000;
-		position:fixed;
-		left:0;
-		top:0;
-		display:none;
-		color:#fff;
-		font-size:20px; /*20px*/
-        z-index:10000;
-	}
+        .layer {
+            width: 100%;
+            height: 100vh;
+            background-color: #000;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: none;
+            color: #fff;
+            font-size: 20px;
+            /*20px*/
+            z-index: 10000;
+        }
 
-.net-online{
-    color:#c5e1a5;
-    font-weight:bold;
-}
+        .net-online {
+            color: #c5e1a5;
+            font-weight: bold;
+        }
 
-.net-offline{
-    color:#ff5252;
-    font-weight:bold;
-    animation: blinkOffline 1.5s infinite;
-}
+        .net-offline {
+            color: #ff5252;
+            font-weight: bold;
+            animation: blinkOffline 1.5s infinite;
+        }
 
-.message-overlay{
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    /*height:calc(100vh - 196px);*/
-	height:100%;
-    background:rgba(0,0,0,0.85);
-	/* backdrop-filter: blur(3px); */ /* efek blur untuk latar belakang, bisa dicoba jika performa perangkat cukup baik */  
-    display:none;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    z-index:9999;
-}
+        .message-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            /*height:calc(100vh - 196px);*/
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            /* backdrop-filter: blur(3px); */
+            /* efek blur untuk latar belakang, bisa dicoba jika performa perangkat cukup baik */
+            display: none;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 9999;
+        }
 
-.message-box{
-    color:#fff;
-    font-weight:bold;
-	/* alternatif posisi untuk lebih ke atas:
+        .message-box {
+            color: #fff;
+            font-weight: bold;
+            /* alternatif posisi untuk lebih ke atas:
        transform: translateY(-80px);
     */
-	margin-top:-80px; /*lebih stabil ini untuk tv box*/
-	text-shadow:
-	0 2px 4px rgba(0,0,0,0.9);
-	/* 0 4px 10px rgba(0,0,0,0.7), */
-	/* 0 0 8px rgba(0,0,0,0.6); */
-}
+            margin-top: -80px;
+            /*lebih stabil ini untuk tv box*/
+            text-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.9);
+            /* 0 4px 10px rgba(0,0,0,0.7), */
+            /* 0 0 8px rgba(0,0,0,0.6); */
+        }
 
-.msg1,.msg2,.msg3{
-color:#ffffff;
-letter-spacing:2px;
-line-height:1.2;
+        .msg1,
+        .msg2,
+        .msg3 {
+            color: #ffffff;
+            letter-spacing: 2px;
+            line-height: 1.2;
 
-text-shadow:
-0 3px 6px rgba(0,0,0,0.9),
-/* 0 6px 18px rgba(0,0,0,0.7), */
-0 0 10px rgba(33,147,176,0.6);
-}
+            text-shadow:
+                0 3px 6px rgba(0, 0, 0, 0.9),
+                /* 0 6px 18px rgba(0,0,0,0.7), */
+                0 0 10px rgba(33, 147, 176, 0.6);
+        }
 
-.msg1{
-    font-size:70px;
-    margin-bottom:20px;
-}
+        .msg1 {
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
 
-.msg2{
-    font-size:60px;
-    margin-bottom:20px;
-}
+        .msg2 {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
 
-.msg3{
-    font-size:50px;
-}
+        .msg3 {
+            font-size: 50px;
+        }
 
-@keyframes blinkOffline {
-    0% { opacity: 1; }
-    50% { opacity: 0.25; }
-    100% { opacity: 1; }
-}
+        @keyframes blinkOffline {
+            0% {
+                opacity: 1;
+            }
 
-</style>
+            50% {
+                opacity: 0.25;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
 
 </head>
-<body>
-	<div class="mycontainer p-0">
-		<div class="row first">
-			<div class="col col4">
-				<div class="masehi mybox"></div>
-				<div class="hijriah mybox"></div>
-			</div>
-			<div class="col col2 text-center">
-				<div class="middle1"></div>
-				<div class="middle2"></div>
-				<div class="middle3">
-	                TZ: <span class="tz-offset"></span> | 
-	                LAT: <span class="latitude"></span> | 
-	                LNG: <span class="longitude"></span> | 
-	                ALT: <span class="altitude"></span> | 
-	                STATUS: <span class="net-status-header"></span>
-                </div>
-			</div>
-			<div class="col col4">
-				<div class="countdown-event mybox"></div>
-				<div class="mybox desc-container"><span class="desc"></span></div>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="row super-block">
-			<div class="row second">
-				<div class="second-block">
-					<div class="col7 myprayer">
-						<div class="prayer-title">IMSAK</div>
-						<div class="prayer-time IMSAK"></div>
-					</div>
-					<div class="col7 myprayer">
-						<div class="prayer-title">SUBUH</div>
-						<div class="prayer-time SUBUH"></div>
-					</div>
-					<div class="col7 myprayer">
-						<div class="prayer-title">SYURUQ</div>
-						<div class="prayer-time SYURUQ"></div>
-					</div>
-					<div class="col7 myprayer">
-						<div class="prayer-title">ZHUHUR</div>
-						<div class="prayer-time ZHUHUR"></div>
-					</div>
-					<div class="col7 myprayer">
-						<div class="prayer-title">ASHAR</div>
-						<div class="prayer-time ASHAR"></div>
-					</div>
-					<div class="col7 myprayer">
-						<div class="prayer-title">MAGHRIB</div>
-						<div class="prayer-time MAGHRIB"></div>
-					</div>
-					<div class="col7 myprayer">
-						<div class="prayer-title">ISYA</div>
-						<div class="prayer-time ISYA"></div>
-					</div>
-					<div class="clear"></div>
-				</div>
-			</div>
 
-			<div class="row third">
-				<div class="wallpaper">
-					<div class="slide-container owl-carousel owl-theme">
-					</div>
-					<div class="running-container">
-						<div class="running-text"></div>
-					</div>
-                     <div class="message-overlay">
+<body>
+    <div class="mycontainer p-0">
+        <div class="row first">
+            <div class="col col4">
+                <div class="masehi mybox"></div>
+                <div class="hijriah mybox"></div>
+            </div>
+            <div class="col col2 text-center">
+                <div class="middle1"></div>
+                <div class="middle2"></div>
+                <div class="middle3">
+                    TZ: <span class="tz-offset"></span> |
+                    LAT: <span class="latitude"></span> |
+                    LNG: <span class="longitude"></span> |
+                    ALT: <span class="altitude"></span> |
+                    STATUS: <span class="net-status-header"></span>
+                </div>
+            </div>
+            <div class="col col4">
+                <div class="countdown-event mybox"></div>
+                <div class="mybox desc-container"><span class="desc"></span></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="row super-block">
+            <div class="row second">
+                <div class="second-block">
+                    <div class="col7 myprayer">
+                        <div class="prayer-title">IMSAK</div>
+                        <div class="prayer-time IMSAK"></div>
+                    </div>
+                    <div class="col7 myprayer">
+                        <div class="prayer-title">SUBUH</div>
+                        <div class="prayer-time SUBUH"></div>
+                    </div>
+                    <div class="col7 myprayer">
+                        <div class="prayer-title">SYURUQ</div>
+                        <div class="prayer-time SYURUQ"></div>
+                    </div>
+                    <div class="col7 myprayer">
+                        <div class="prayer-title">ZHUHUR</div>
+                        <div class="prayer-time ZHUHUR"></div>
+                    </div>
+                    <div class="col7 myprayer">
+                        <div class="prayer-title">ASHAR</div>
+                        <div class="prayer-time ASHAR"></div>
+                    </div>
+                    <div class="col7 myprayer">
+                        <div class="prayer-title">MAGHRIB</div>
+                        <div class="prayer-time MAGHRIB"></div>
+                    </div>
+                    <div class="col7 myprayer">
+                        <div class="prayer-title">ISYA</div>
+                        <div class="prayer-time ISYA"></div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+            <div class="row third">
+                <div class="wallpaper">
+                    <div class="slide-container owl-carousel owl-theme">
+                    </div>
+                    <div class="running-container">
+                        <div class="running-text"></div>
+                    </div>
+                    <div class="message-overlay">
                         <div class="message-box">
                             <div class="msg1"></div>
                             <div class="msg2"></div>
                             <div class="msg3"></div>
                         </div>
                     </div>
-				</div>
-            </div>    
-				
-				<div class="row four">
-					<div class="row">
-						<div class="footer1">Versi : <span class="version"></span></div>
-						<div class="footer2">
-                            <span class="appname">Nama Aplikasi</span> 
-                            <span class="net-status" style="margin-left:6px;"></span>
-                        </div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="layer"></div>
-	
-	<!--fix problem : google chrome update will not autoplay audio/video-->
-	<iframe src="www/public/Bilal/audio/silence.mp3" allow="autoplay" id="audio" style="display:none"></iframe>
-	<audio id="player"  >
-		<source src="www/public/Bilal/audio/beep.mp3" type="audio/mp3">
-	</audio>
-	
-	
-	<script src="www/public/Bilal/js/jquery-3.3.1.min.js"></script>
-<script src="www/public/Bilal/js/moment-with-locales.min.js"></script>
-<script src="www/public/Bilal/js/moment-hijri.js"></script>
+                </div>
+            </div>
 
-<script src="www/public/Bilal/js/PrayTimes.js"></script>
-<script src="www/public/Bilal/js/jquery.marquee.min.js"></script>
-<script src="www/public/Bilal/js/owlcarousel/owl.carousel.min.js"></script>
+            <div class="row four">
+                <div class="row">
+                    <div class="footer1">Versi : <span class="version"></span></div>
+                    <div class="footer2">
+                        <span class="appname">Nama Aplikasi</span>
+                        <span class="net-status" style="margin-left:6px;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="layer"></div>
 
-<script>
-
-//app setting
-var app = {
-	version: '1.2.9', // FIX BUG + auto refresh daily + stability fix + owl fix (18/03/2026) by Andryan Nugraha
-	name: 'Bilal App',
-	autoLocation: false // SET true, jika anda ingin menggunakan autolocation, setelah memilih opsi enable GPS pada browser, lalukan refresh pada browser. Fitur ini hanya berfungsi jika device terkoneksi dengan internet saja.
-};
-
-//general setting
-var setting = {
-	nama: 'MASJID AL - BINA',
-	alamat: 'Casablanca East Residences',
-
-	//settingan latitude longitude altitude timezone jika app.autoLocation=false atau jika browser tidak support HTML5 Geolocation
-	latitude: -6.223723,
-	longitude:106.897179,
-	altitude:100,
-	timezoneOffset:7,
-
-	methodCalc:'Kemenag', //metode perhitungan adzan
-	dst: 'auto',
-
-	tune: {imsak: +3, fajr: +3, sunrise: +6, dhuhr: +3, asr: +3, sunset: +3, maghrib:+3, isha:+1, midnight:+3},
-
-	runningTextFile: "www/public/Bilal/text/runningtext.txt",
-	runningTextSpeed: 15000,
-
-	slideInterval: 19000,
-	slideImageCount: 21,
-
-	adzanTime: 270000, // 4 menit 30 detik lama tulisan adzan
-	iqomahTime: 30000, // 30 detik lama waktu tulisan iqomah
-	shalatSunnahTime: 600000, //10 menit lama waktu tulisan sholat sunnah
-	shalatSunnahTimeSubuh:900000, // 15 menit lama waktu sholat sunnah subuh
-
-    shalatDuration:{
-    SUBUH: 600000, // 10 menit lama untuk shalat subuh, karena biasanya lebih panjang dari shalat lain, terutama jika ada shalat sunnah subuh
-    ZHUHUR: 540000,
-    ASHAR: 540000,
-    MAGHRIB: 540000,
-    ISYA: 600000 // 10 menit lama untuk shalat isya, karena biasanya lebih panjang dari shalat lain, terutama jika ada shalat tarawih
-    }, //9 menit lama untuk Shalat
-    
-	aliasName: ['IMSAK', 'SUBUH', 'SYURUQ', 'ZHUHUR', 'ASHAR', 'MAGHRIB', 'ISYA']
-}
-
-// FIX BUG global variable
-var mycountdown;
-var finalTime;
-var masterTime;
-var masterName;
-var tempShalat;
-var systemState = "countdown";
-var systemPrayer = "";
-var shalatTimer = null;
-var watchdogLastTick = Date.now();
-var internetFailCount = 0;
-var internetFailTolerance = 10; // toleransi gagal cek internet sebelum dianggap offline (default 10 kali)
-var bilalLogger = null;
-var bilalLoggerStopper = null;
-var iqomahCountdownActive = false;
-var iqomahLastSecond = -1;
-var owlRunning = false;
-var owlReady = false;
-var owlResetTimer = null;
-
-// BilalApp Logger
-function startLogger(){
-
-    // cegah logger ganda
-    if(bilalLogger) clearInterval(bilalLogger);
-    if(bilalLoggerStopper) clearTimeout(bilalLoggerStopper);
-
-    console.log("Bilal App started at",moment().format("YYYY-MM-DD HH:mm:ss"));
-
-    bilalLogger = setInterval(function(){
-
-        console.log(
-        "Bilal Status |",
-        "Time:",moment().format("HH:mm:ss"),
-        "| State:",systemState,
-        "| Prayer:",systemPrayer,
-        "| Internet:",navigator.onLine
-        );
-
-    },60000);
-
-    // stop setelah 5 menit
-    bilalLoggerStopper = setTimeout(function(){
-
-        clearInterval(bilalLogger);
-        bilalLogger = null;
-
-        console.log("Bilal Logger stopped after 5 minutes");
-
-    },300000);
-
-}
-
-// FIX FEATURE auto refresh daily tracking
-var todayDate = moment().format("YYYY-MM-DD");
+    <!--fix problem : google chrome update will not autoplay audio/video-->
+    <iframe src="www/public/Bilal/audio/silence.mp3" allow="autoplay" id="audio" style="display:none"></iframe>
+    <audio id="player">
+        <source src="www/public/Bilal/audio/beep.mp3" type="audio/mp3">
+    </audio>
 
 
-// with FIX BUG geolocation async
-function startApp(){
+    <script src="www/public/Bilal/js/jquery-3.3.1.min.js"></script>
+    <script src="www/public/Bilal/js/moment-with-locales.min.js"></script>
+    <script src="www/public/Bilal/js/moment-hijri.js"></script>
 
-	stopTimer(); // FIX edge case midnight timer
-	
-    var offsetIcon = setting.timezoneOffset>0?'+':(setting.timezoneOffset==0)?'':'-';
-	var now = new Date(); // today
-	
-	watchdogLastTick = Date.now();
+    <script src="www/public/Bilal/js/PrayTimes.js"></script>
+    <script src="www/public/Bilal/js/jquery.marquee.min.js"></script>
+    <script src="www/public/Bilal/js/owlcarousel/owl.carousel.min.js"></script>
 
-	prayTimes.setMethod(setting.methodCalc);
-	prayTimes.tune(setting.tune);
-	
-	var times = prayTimes.getTimes(now, [setting.latitude, setting.longitude], setting.timezoneOffset, setting.dst);
-	
-	masterTime = [times.imsak, times.fajr, times.sunrise, times.dhuhr, times.asr, times.maghrib, times.isha];
-	masterName = setting.aliasName;
-	
-	// FIX BUG reference array (harus copy bukan reference)
-	tempShalat = masterTime.slice();
-	
-	$('.IMSAK').text(times.imsak);
-	$('.SUBUH').text(times.fajr);
-	$('.SYURUQ').text(times.sunrise);
-	$('.ZHUHUR').text(times.dhuhr);
-	$('.ASHAR').text(times.asr);
-	$('.MAGHRIB').text(times.maghrib);
-	$('.ISYA').text(times.isha);
-	
-	$('.tz-offset').text(offsetIcon+setting.timezoneOffset);
-	$('.latitude').text(parseFloat(setting.latitude).toFixed(4));
-    $('.longitude').text(parseFloat(setting.longitude).toFixed(4));
-	$('.altitude').text(setting.altitude);
-	$('.middle1').text(setting.nama);
-	$('.middle2').text(setting.alamat);
-	$('.version').text(app.version);
-	$('.appname').text(app.name);
+    <script>
 
-	safeResetOwl(); // ← khusus owl, agar tidak error jika jadwal berubah saat slide show berjalan
+        //app setting
+        var app = {
+            version: '1.2.9', // FIX BUG + auto refresh daily + stability fix + owl fix + normalize heartbeat (19/03/2026) by Andryan Nugraha
+            name: 'Bilal App',
+            autoLocation: false // SET true, jika anda ingin menggunakan autolocation, setelah memilih opsi enable GPS pada browser, lalukan refresh pada browser. Fitur ini hanya berfungsi jika device terkoneksi dengan internet saja.
+        };
 
-	nextSchedule();
-}
+        //general setting
+        var setting = {
+            nama: 'MASJID AL - BINA',
+            alamat: 'Casablanca East Residences',
 
-// ===============================
-// WATCHDOG DISPLAY SYSTEM
-// menjaga sistem tetap hidup 24 jam
-// ===============================
+            //settingan latitude longitude altitude timezone jika app.autoLocation=false atau jika browser tidak support HTML5 Geolocation
+            latitude: -6.223723,
+            longitude: 106.897179,
+            altitude: 100,
+            timezoneOffset: 7,
 
+            methodCalc: 'Kemenag', //metode perhitungan adzan
+            dst: 'auto',
 
-setInterval(function(){
+            tune: { imsak: +3, fajr: +3, sunrise: +6, dhuhr: +3, asr: +3, sunset: +3, maghrib: +3, isha: +1, midnight: +3 },
 
-    var now = Date.now();
-    var diff = now - watchdogLastTick;
+            runningTextFile: "www/public/Bilal/text/runningtext.txt",
+            runningTextSpeed: 15000,
 
-    // jika lebih dari 2 menit tidak ada aktivitas
-    if(diff > 150000 && !mycountdown){
+            slideInterval: 19000,
+            slideImageCount: 21,
 
-    if(systemState == "countdown"){
-        console.log("Watchdog restart triggered");
+            adzanTime: 270000, // 4 menit 30 detik lama tulisan adzan
+            iqomahTime: 30000, // 30 detik lama waktu tulisan iqomah
+            shalatSunnahTime: 600000, //10 menit lama waktu tulisan sholat sunnah
+            shalatSunnahTimeSubuh: 900000, // 15 menit lama waktu sholat sunnah subuh
 
-        try{
-            startApp();
-        }catch(e){
-            console.log("Watchdog error:",e);
+            shalatDuration: {
+                SUBUH: 600000, // 10 menit lama untuk shalat subuh, karena biasanya lebih panjang dari shalat lain, terutama jika ada shalat sunnah subuh
+                ZHUHUR: 540000,
+                ASHAR: 540000,
+                MAGHRIB: 540000,
+                ISYA: 600000 // 10 menit lama untuk shalat isya, karena biasanya lebih panjang dari shalat lain, terutama jika ada shalat tarawih
+            }, //9 menit lama untuk Shalat
+
+            aliasName: ['IMSAK', 'SUBUH', 'SYURUQ', 'ZHUHUR', 'ASHAR', 'MAGHRIB', 'ISYA']
         }
 
-    }else{
-        console.log("Watchdog skipped (ritual phase)");
-    }
-
-    watchdogLastTick = Date.now();
-
-    }
-
-},300000); // cek setiap 5 menit
-
-
-// FIX BUG audio autoplay
-function beep(){
-	if($('#player')[0]){
-		$('#player')[0].play().catch(()=>{});
-	}
-}
-
-// FIX BUG inArray
-function inArray(needle, haystack) {
-    for(var i=0;i<haystack.length;i++){
-        if(haystack[i]==needle) return true;
-    }
-    return false;
-}
-
-$(function(){
-
-    startLogger(); // mulai BilalApp logger untuk 5 menit di awal saja
-	moment.locale('id'); 
-
-     // cek saat pertama load
-    updateNetworkStatus();
-
-    // pastikan update lagi setelah DOM stabil
-    setTimeout(updateNetworkStatus,600);
-
-    // cek jika status berubah
-    window.addEventListener('online', updateNetworkStatus);
-    window.addEventListener('offline', updateNetworkStatus);
-
-    // fallback check setiap 10 menit
-    setInterval(updateNetworkStatus,600000);
-
-	// heartbeat agar kiosk tahu JS masih hidup
-    setInterval(function(){
-        if(Math.random()<0.1){
- 		console.log("Bilal heartbeat", Date.now());
-		}
-		watchdogLastTick = Date.now(); // FIX BUG watchdog tick setiap aktivitas, termasuk heartbeat
-    },60000);
-
-	// anti freeze timer
-	// setInterval(function(){},30000); // FIX BUG timer freeze, dengan interval kosong yang berjalan setiap 30 detik untuk menjaga event loop tetap aktif
-
-	
-	//running text
-	$.ajax({
-	url: setting.runningTextFile,
-	success:function(d){
-    $('.running-text').text(d);
-	},
-	error:function(){
-    $('.running-text').text("Selamat datang di " + setting.nama);
-	},
-	complete:function(){
-    $('.running-text').marquee({
-        duration: setting.runningTextSpeed,
-        gap:50
-    });
-}
-});
-
-//CHECK Visibility
-document.addEventListener("visibilitychange", function(){
-
-    if(document.visibilityState === "visible"){
-        watchdogLastTick = Date.now();
-    }
-
-});
-
-	// FIX BUG geolocation async
-	if(app.autoLocation && "geolocation" in navigator){
-
-		navigator.geolocation.getCurrentPosition(function(position){
-
-			setting.latitude = position.coords.latitude;
-			setting.longitude = position.coords.longitude;
-
-			// FIX BUG altitude undefined pada beberapa browser
-			if(position.coords.altitude !== null && position.coords.altitude !== undefined){
-				setting.altitude = position.coords.altitude;
-			}
-
-			// FIX BUG timezone
-			setting.timezoneOffset = Math.round(moment().utcOffset()/60);
-
-			startApp();
-
-		},
-		function error(){
-			startApp(); // fallback jika GPS gagal
-		},
-		{maximumAge:10000, timeout:3000, enableHighAccuracy:true});
-
-	}else{
-
-		startApp();
-
-	}
-
-	//slide wallpaper
-	for(var a=1;a<=setting.slideImageCount;a++){ // FIX BUG global variable
-		$('.slide-container').append('<div class="item" style="background-image: url(\'www/public/Bilal/img/slide/'+a+'.JPG\')"></div>');
-	}
-
-	$('.owl-carousel').owlCarousel({
-		loop:true,
-		items:1,
-		dots:false,
-		lazyLoad:false, 
-		autoplay:true,
-		autoplayHoverPause:false,
-		touchDrag:true,
-		mouseDrag:false,
-		smartSpeed:1000, // jangan terlalu lama transisinya, bisa CPU spike
-		autoplayTimeout:setting.slideInterval,
-		slideTransition:'ease-in-out' // bisa dihapus jika dianggap tidak perlu
-	});
-
-//INIT OWL CAROUSEL SETTING
-owlReady = true;
-owlRunning = true;
-
-	// FIX FEATURE auto refresh jadwal setiap hari (OFFLINE SAFE)
-	// tidak menggunakan reload agar tetap berjalan walaupun tanpa internet
-	setInterval(function(){
-
-	var currentDate = moment().format("YYYY-MM-DD");
-
-	if(currentDate !== todayDate && systemState == "countdown"){
-
-		todayDate = currentDate; // update hari
-		startApp(); // hitung ulang jadwal shalat tanpa reload halaman
-
-	}
-
-},60000);
-
-	// FIX STABILITY TV BOX MODE
-	// tidak reload halaman karena bisa gagal jika internet mati
-	// hanya refresh jadwal dan countdown
-
-	setInterval(function(){
-
-console.log("Bilal App stability refresh");
-
-if(systemState == "countdown"){
-    startApp(); // refresh jadwal tanpa reload halaman
-}else{
-    console.log("Refresh skipped (ritual phase)");
-}
-
-},21600000); // 6 jam
-
-});
-
-//stop timer
-function stopTimer(){
-	if(mycountdown){
-		clearInterval(mycountdown);
-		mycountdown = null;
-	}
-
-	if(shalatTimer){
-		clearTimeout(shalatTimer);
-		shalatTimer = null;
-	}
-}
-
-// =========================
-// UPDATE CLOCK DISPLAY
-// agar kode jam tidak duplikat
-// =========================
-function updateClockDisplay(){
-
-    var nowMoment = moment();
-
-    $('.masehi').text(nowMoment.format('HH:mm:ss'));
-
-    $('.hijriah').text(
-        nowMoment.format('ddd, DD/MM/YYYY') +
-        ' - ' +
-        nowMoment.format('iD iMMMM iYYYY [H]')
-    );
-
-}
-
-function countdownShalat(time, name, desc, shalatName =''){
-
-    stopTimer(); // FIX BUG memory leak, pastikan semua timer bersih
-    systemState = name;
-    systemPrayer = shalatName;
-
-    $('.myprayer').removeClass('highlight');
-
-    // FIX BUG highlight event adzan/iqomah
-    var highlightName = shalatName ? shalatName : name;
-    $('.'+ highlightName).closest('.myprayer').addClass('highlight');
-
-    $('.desc').text(desc);
-
-    finalTime = time;
-
-    mycountdown = setInterval(function() {
-
-        watchdogLastTick = Date.now(); // FIX BUG watchdog tick
-
-        // =========================
-        // OPTIMASI MOMENT
-        // =========================
-        var now = moment().unix();
-
-        var distance = finalTime - now;
-
-// ========================================
-// COUNTDOWN IQOMAH 60 DETIK TERAKHIR
-// ========================================
-if(name=='shalat_sunnah' && distance <= 90){
-
-    var sec = Math.max(0, distance);
-
-    // tampilkan overlay sekali saja
-    if(!iqomahCountdownActive){
-
-        showOverlay("SEBENTAR LAGI IQOMAH","","📵 Pastikan Gadget Off / 🔕 Silent");
-
-        iqomahCountdownActive = true;
-    }
-
-    // update hanya jika detik berubah (anti flicker)
-    if(sec !== iqomahLastSecond){
-
-        iqomahLastSecond = sec;
-
-       	/* $('.msg2').text(moment.utc(sec*1000).format("mm:ss"));*/
-		/* $('.msg2').text(sec.toString().padStart(2,'0'));*/
-		$('.msg2').text(sec);
-    }
-}
-
-        // =========================
-        // COUNTDOWN DISPLAY
-		// FIX BUG countdown negative time
-        // =========================
-        if(distance > 0){
-            $(".countdown-event").text(moment.utc(distance*1000).format("HH:mm:ss"));
-        }else{
-            $(".countdown-event").text("00:00:00");
-        }
-
-        // =========================
-        // TRANSISI EVENT
-        // =========================
-        if(distance <= 0){
-
-            stopTimer();
-
-            if(name=='adzan'){
-
-                showOverlay("Laksanakan","Shalat Sunnah","Sebelum Iqomah");
-
-				iqomahCountdownActive = false;
-    			iqomahLastSecond = -1;
-
-                if(shalatName=='SUBUH'){
-                    countdownShalat(
-                        moment().add(setting.shalatSunnahTimeSubuh).unix(),
-                        'shalat_sunnah',
-                        'MENJELANG IQOMAH ' + shalatName,
-                        shalatName
-                    );
-                }else{
-                    countdownShalat(
-                        moment().add(setting.shalatSunnahTime).unix(),
-                        'shalat_sunnah',
-                        'MENJELANG IQOMAH ' + shalatName,
-                        shalatName
-                    );
+        // FIX BUG global variable
+        var mycountdown;
+        var finalTime;
+        var masterTime;
+        var masterName;
+        var tempShalat;
+        var systemState = "countdown";
+        var systemPrayer = "";
+        var shalatTimer = null;
+        var watchdogLastTick = Date.now();
+        var internetFailCount = 0;
+        var internetFailTolerance = 10; // toleransi gagal cek internet sebelum dianggap offline (default 10 kali)
+        var bilalLogger = null;
+        var bilalLoggerStopper = null;
+        var iqomahCountdownActive = false;
+        var iqomahLastSecond = -1;
+        var owlRunning = false;
+        var owlReady = false;
+        var owlResetTimer = null;
+        var heartbeatInterval = null;
+        var heartbeatTick = 0;
+        var currentDate;
+        var todayDate;
+        var lastStabilityCheck = Date.now();
+        var lastMinuteCheck = Date.now();
+        var lastWatchdogCheck = Date.now();
+
+
+        // FIX STABILITY TV BOX MODE
+        // tidak reload halaman karena bisa gagal jika internet mati
+        // hanya refresh jadwal dan countdown
+        function startHeartbeat() {
+
+            if (heartbeatInterval) {
+                clearInterval(heartbeatInterval);
+            }
+
+            heartbeatInterval = setInterval(function () {
+
+                heartbeatTick++;
+                var now = Date.now();
+
+                // =========================
+                // 1. BASIC TICK (SETIAP DETIK)
+                // =========================
+                if (systemState === "countdown") {
+                    watchdogLastTick = now;
                 }
-				return;
 
-            }else if(name=='shalat_sunnah'){
+                // update jam (tanpa tunggu countdown)
+                updateClockDisplay();
 
-                beep();
+                // =========================
+                // 2. 1 MENIT TASK
+                // =========================
+                if (now - lastMinuteCheck > 60000) {
+                    lastMinuteCheck = now;
 
-                showOverlay("IQOMAH","Luruskan dan Rapatkan Shaf","🔕 Silent / 📵 Matikan (Off) Gadget");
+                    // random log (hemat CPU)
+                    if (Math.random() < 0.1) {
+                        console.log("Bilal heartbeat", Date.now());
+                    }
 
-                countdownShalat(
-                    moment().add(setting.iqomahTime).unix(),
-                    'iqomah',
-                    'IQOMAH '+shalatName,
-                    shalatName
-                );
-				return;
+                    // cek pergantian hari
+                    currentDate = moment().format("YYYY-MM-DD");
 
-            }else if(inArray(name, ['SUBUH','ZHUHUR','ASHAR','MAGHRIB','ISYA'])){
+                    if (currentDate !== todayDate && systemState == "countdown") {
+                        todayDate = currentDate;
+                        console.log("Daily refresh triggered");
+                        startApp();
+                    }
 
-                beep();
-
-                showOverlay("📢 ADZAN","Telah Masuk Waktu","Shalat " + name);
-
-                countdownShalat(
-                    moment().add(setting.adzanTime).unix(),
-                    'adzan',
-                    'ADZAN '+name,
-                    name
-                );
-				return;
-
-            }else if(name=='iqomah'){
-
-    // =========================================
-    // MODE : SHALAT BERLANGSUNG
-    // =========================================
-
-    // tampilkan overlay besar
-    showOverlay("🕋","SHALAT " + shalatName,"SEDANG BERLANGSUNG");
-
-    // hentikan slideshow selama shalat
-    stopOwl();
-
-	// hentikan running text selama shalat
-	$('.running-text').marquee('pause');
-
-	// sembunyikan running text
-	$('.running-container').hide();
+                    // cek network
+                    updateNetworkStatus();
+                }
 
 
-    // ambil durasi shalat dari setting (default 10 menit)
-    var durasi = setting.shalatDuration[shalatName] || 600000;
+                // =========================
+                // 3. 5 MENIT WATCHDOG
+                // =========================
+                if (now - lastWatchdogCheck > 300000) {
 
-    // update text di header kanan
-    $('.desc').text('SEDANG SHALAT ' + shalatName);
+                    lastWatchdogCheck = now;
 
-    // -----------------------------------------
-    // hentikan timer sebelumnya (iqomah timer)
-    // -----------------------------------------
-    // stopTimer();
+                    var diff = now - watchdogLastTick;
 
-    // -----------------------------------------
-    // hitung waktu selesai shalat
-    // menggunakan timestamp agar stabil
-    // -----------------------------------------
-    finalTime = Math.floor((Date.now() + durasi) / 1000);
+                    if (diff > 150000) {
 
-    // -----------------------------------------
-    // countdown DURASI SHALAT
-    // -----------------------------------------
-    mycountdown = setInterval(function(){
+                        if (systemState === "countdown") {
 
-        watchdogLastTick = Date.now();
+                            console.log("Watchdog restart (heartbeat)");
 
-        var now = Math.floor(Date.now()/1000);
-        var distance = finalTime - now;
+                            try {
+                                startApp();
+                            } catch (e) {
+                                console.log("Watchdog error:", e);
+                            }
 
-        if(distance > 0){
-            $(".countdown-event").text(moment.utc(distance*1000).format("HH:mm:ss"));
-        }else{
-            $(".countdown-event").text("00:00:00");
+                        } else {
+                            console.log("Watchdog skipped (ritual)");
+                        }
+
+                    }
+
+                }
+
+                // =========================
+                // 4. 6 JAM STABILITY REFRESH
+                // =========================
+
+
+                if (now - lastStabilityCheck > 21600000) {
+                    lastStabilityCheck = now;
+
+                    console.log("Stability refresh (heartbeat)");
+
+                    if (systemState == "countdown") {
+                        startApp();
+                    }
+                }
+
+            }, 1000);
         }
 
-        updateClockDisplay();
+        // BilalApp Logger
+        function startLogger() {
 
-    },1000);
+            // cegah logger ganda
+            if (bilalLogger) clearInterval(bilalLogger);
+            if (bilalLoggerStopper) clearTimeout(bilalLoggerStopper);
 
-    // -----------------------------------------
-    // timer akhir shalat
-    // -----------------------------------------
-    shalatTimer = setTimeout(function(){
+            console.log("Bilal App started at", moment().format("YYYY-MM-DD HH:mm:ss"));
 
-        // hentikan countdown shalat
-        stopTimer();
+            bilalLogger = setInterval(function () {
 
-        // tutup overlay
-        hideOverlay();
+                console.log(
+                    "Bilal Status |",
+                    "Time:", moment().format("HH:mm:ss"),
+                    "| State:", systemState,
+                    "| Prayer:", systemPrayer,
+                    "| Internet:", navigator.onLine
+                );
 
-        // hidupkan kembali slideshow
-        safeResetOwl();
+            }, 60000);
 
-		// hidupkan kembali running text
-		$('.running-text').marquee('resume');
+            // stop setelah 5 menit
+            bilalLoggerStopper = setTimeout(function () {
 
-		// sembunyikan running text
-		$('.running-container').show();
+                clearInterval(bilalLogger);
+                bilalLogger = null;
+
+                console.log("Bilal Logger stopped after 5 minutes");
+
+            }, 300000);
+
+        }
 
 
-        // reset state sistem
-        systemPrayer = "";
-        systemState = "countdown";
 
-        // lanjut ke jadwal shalat berikutnya
-        setTimeout(function(){
-    		nextSchedule();
-		}, 300);
+        // with FIX BUG geolocation async
+        function startApp() {
 
-    }, durasi);
+            stopTimer(); // FIX edge case midnight timer
 
-	}else if(name=='IMSAK'){   // ← TAMBAHAN UNTUK IMSAK
-        systemState = "countdown"; // langsung kembali normal
-	
-    	nextSchedule();
-    	return;
+            var offsetIcon = setting.timezoneOffset > 0 ? '+' : (setting.timezoneOffset == 0) ? '' : '-';
+            var now = new Date(); // today
 
-	}else if(name=='SYURUQ'){   // ← TAMBAHAN UNTUK SYURUQ
-        systemState = "countdown"; // langsung kembali normal
-		
-    	nextSchedule();
-    	return;
+            // watchdogLastTick = Date.now(); // Sengaja dihapus saja agar tidak mengganggu proses loading jadwal, karena jika loading jadwal lama (misal karena metode perhitungan yang kompleks), maka bisa menyebabkan watchdog restart yang tidak perlu
 
-	}else{
+            prayTimes.setMethod(setting.methodCalc);
+            prayTimes.tune(setting.tune);
 
-                nextSchedule();
+            var times = prayTimes.getTimes(now, [setting.latitude, setting.longitude], setting.timezoneOffset, setting.dst);
+
+            masterTime = [times.imsak, times.fajr, times.sunrise, times.dhuhr, times.asr, times.maghrib, times.isha];
+            masterName = setting.aliasName;
+
+            // FIX BUG reference array (harus copy bukan reference)
+            tempShalat = masterTime.slice();
+
+            $('.IMSAK').text(times.imsak);
+            $('.SUBUH').text(times.fajr);
+            $('.SYURUQ').text(times.sunrise);
+            $('.ZHUHUR').text(times.dhuhr);
+            $('.ASHAR').text(times.asr);
+            $('.MAGHRIB').text(times.maghrib);
+            $('.ISYA').text(times.isha);
+
+            $('.tz-offset').text(offsetIcon + setting.timezoneOffset);
+            $('.latitude').text(parseFloat(setting.latitude).toFixed(4));
+            $('.longitude').text(parseFloat(setting.longitude).toFixed(4));
+            $('.altitude').text(setting.altitude);
+            $('.middle1').text(setting.nama);
+            $('.middle2').text(setting.alamat);
+            $('.version').text(app.version);
+            $('.appname').text(app.name);
+
+            safeResetOwl(); // ← khusus owl, agar tidak error jika jadwal berubah saat slide show berjalan
+
+            nextSchedule();
+        }
+
+
+
+        // FIX BUG audio autoplay
+        function beep() {
+            if ($('#player')[0]) {
+                $('#player')[0].play().catch(() => { });
+            }
+        }
+
+        // FIX BUG inArray
+        function inArray(needle, haystack) {
+            for (var i = 0; i < haystack.length; i++) {
+                if (haystack[i] == needle) return true;
+            }
+            return false;
+        }
+
+        $(function () {
+
+            moment.locale('id');
+            // FIX FEATURE auto refresh daily tracking
+            todayDate = moment().format("YYYY-MM-DD");
+
+            startHeartbeat(); // mulai heartbeat BilalApp untuk stabilitas TV Box mode
+            startLogger(); // mulai BilalApp logger untuk 5 menit di awal saja
+
+
+            // cek saat pertama load
+            updateNetworkStatus();
+
+            // pastikan update lagi setelah DOM stabil
+            setTimeout(updateNetworkStatus, 600);
+
+            // cek jika status berubah
+            window.addEventListener('online', updateNetworkStatus);
+            window.addEventListener('offline', updateNetworkStatus);
+
+            //running text
+            $.ajax({
+                url: setting.runningTextFile,
+                success: function (d) {
+                    $('.running-text').text(d);
+                },
+                error: function () {
+                    $('.running-text').text("Selamat datang di " + setting.nama);
+                },
+                complete: function () {
+                    $('.running-text').marquee({
+                        duration: setting.runningTextSpeed,
+                        gap: 50
+                    });
+                }
+            });
+
+            //CHECK Visibility
+            document.addEventListener("visibilitychange", function () {
+
+                if (document.visibilityState === "visible") {
+                    watchdogLastTick = Date.now();
+                }
+
+            });
+
+            // FIX BUG geolocation async
+            if (app.autoLocation && "geolocation" in navigator) {
+
+                navigator.geolocation.getCurrentPosition(function (position) {
+
+                    setting.latitude = position.coords.latitude;
+                    setting.longitude = position.coords.longitude;
+
+                    // FIX BUG altitude undefined pada beberapa browser
+                    if (position.coords.altitude !== null && position.coords.altitude !== undefined) {
+                        setting.altitude = position.coords.altitude;
+                    }
+
+                    // FIX BUG timezone
+                    setting.timezoneOffset = Math.round(moment().utcOffset() / 60);
+
+                    startApp();
+
+                },
+                    function error() {
+                        startApp(); // fallback jika GPS gagal
+                    },
+                    { maximumAge: 10000, timeout: 3000, enableHighAccuracy: true });
+
+            } else {
+
+                startApp();
 
             }
 
+            //slide wallpaper
+            for (var a = 1; a <= setting.slideImageCount; a++) { // FIX BUG global variable
+                $('.slide-container').append('<div class="item" style="background-image: url(\'www/public/Bilal/img/slide/' + a + '.JPG\')"></div>');
+            }
+
+            $('.owl-carousel').owlCarousel({
+                loop: true,
+                items: 1,
+                dots: false,
+                lazyLoad: false,
+                autoplay: true,
+                autoplayHoverPause: false,
+                touchDrag: true,
+                mouseDrag: false,
+                smartSpeed: 1000, // jangan terlalu lama transisinya, bisa CPU spike
+                autoplayTimeout: setting.slideInterval,
+                slideTransition: 'ease-in-out' // bisa dihapus jika dianggap tidak perlu
+            });
+            //INIT OWL CAROUSEL SETTING
+            owlReady = true;
+            owlRunning = true;
+
+
+        });
+
+
+        //stop timer
+        function stopTimer() {
+            if (mycountdown) {
+                clearInterval(mycountdown);
+                mycountdown = null;
+            }
+
+            if (shalatTimer) {
+                clearTimeout(shalatTimer);
+                shalatTimer = null;
+            }
         }
 
         // =========================
-        // UPDATE JAM & TANGGAL
+        // UPDATE CLOCK DISPLAY
+        // agar kode jam tidak duplikat
         // =========================
-       updateClockDisplay();
-    },1000);
-}
+        function updateClockDisplay() {
 
-function nextSchedule(){
+            var nowMoment = moment();
 
-// ========================================
-// PROTEKSI RITUAL PHASE
-// nextSchedule hanya boleh berjalan saat mode countdown
-// ========================================
+            $('.masehi').text(nowMoment.format('HH:mm:ss'));
 
-console.log("nextSchedule called | state:",systemState);
+            $('.hijriah').text(
+                nowMoment.format('ddd, DD/MM/YYYY') +
+                ' - ' +
+                nowMoment.format('iD iMMMM iYYYY [H]')
+            );
 
-if(systemState !== "countdown" && systemState !== "iqomah"){
+        }
 
-    console.log(
-        "nextSchedule blocked (ritual phase)",
-        "| state:",systemState,
-        "| prayer:",systemPrayer,
-        "| time:",moment().format("HH:mm:ss")
-    );
+        function countdownShalat(time, name, desc, shalatName = '') {
 
-    return;
-}
+            stopTimer(); // FIX BUG memory leak, pastikan semua timer bersih
+            systemState = name;
+            systemPrayer = shalatName;
 
-	var found=false;
-    systemState = "countdown";
+            $('.myprayer').removeClass('highlight');
 
-    if(systemPrayer==""){
-        hideOverlay();
-    }
+            // FIX BUG highlight event adzan/iqomah
+            var highlightName = shalatName ? shalatName : name;
+            $('.' + highlightName).closest('.myprayer').addClass('highlight');
 
-	var now = moment().unix(); // lebih aman diletakkan di luar loop
-	for(let a=0;a<tempShalat.length;a++){ // FIX BUG global variable
-		
-		
-		var splt = tempShalat[a].split(':');
-		var next = moment().hour(splt[0]).minute(splt[1]).second(0).unix();
-		
-		if(now < next){
-			
-			countdownShalat(next, masterName[a],'MENJELANG '+masterName[a]);
-			
-			found=true;
-			return false;
-			
-		}
-	}
+            $('.desc').text(desc);
 
-	var splt = tempShalat[0].split(':');
-	
-	var next = moment().add(1,'day').hour(splt[0]).minute(splt[1]).second(0).unix();
-	
-	if(!found){
-		countdownShalat(next, masterName[0],'MENJELANG '+masterName[0]);
-	}
-}
+            finalTime = time;
 
-// =========================================
-// NETWORK STATUS DETECTOR
-// =========================================
+            mycountdown = setInterval(function () {
 
-function updateNetworkStatus(){
+                
+                // =========================
+                // OPTIMASI MOMENT
+                // =========================
+                // var now = moment().unix(); berat di Android 6.0 TV Box, ganti dengan Date.now() yang lebih ringan, karena kita hanya butuh detik saja
+                var now = Math.floor(Date.now() / 1000);
 
-    if(!navigator.onLine){
+                var distance = finalTime - now;
 
-        $('.net-status, .net-status-header')
-        .text("OFFLINE")
-        .removeClass('net-online')
-        .addClass('net-offline');
+                // ========================================
+                // COUNTDOWN IQOMAH 60 DETIK TERAKHIR
+                // ========================================
+                if (name == 'shalat_sunnah' && distance <= 90) {
 
-        return;
+                    var sec = Math.max(0, distance);
 
-    }
+                    // tampilkan overlay sekali saja
+                    if (!iqomahCountdownActive) {
 
-    // jika WIFI ada, cek benar internet hidup
-    checkInternet();
+                        showOverlay("SEBENTAR LAGI IQOMAH", "", "📵 Pastikan Gadget Off / 🔕 Silent");
 
-}
+                        iqomahCountdownActive = true;
+                    }
 
-// CHECK koneksi INTERNET real time, bukan sekedar adanya WIFI 
-function checkInternet(){
+                    // update hanya jika detik berubah (anti flicker)
+                    if (sec !== iqomahLastSecond) {
 
-fetch(setting.runningTextFile, {method:'HEAD'})
-.then(function(){
+                        iqomahLastSecond = sec;
 
-	internetFailCount = 0; // reset jika berhasil
+                        /* $('.msg2').text(moment.utc(sec*1000).format("mm:ss"));*/
+                        /* $('.msg2').text(sec.toString().padStart(2,'0'));*/
+                        $('.msg2').text(sec);
+                    }
+                }
 
-    $('.net-status, .net-status-header')
-    .text("ONLINE")
-    .removeClass('net-offline')
-    .addClass('net-online');
+                // =========================
+                // COUNTDOWN DISPLAY
+                // FIX BUG countdown negative time
+                // =========================
+                if (distance > 0) {
+                    $(".countdown-event").text(moment.utc(distance * 1000).format("HH:mm:ss"));
+                } else {
+                    $(".countdown-event").text("00:00:00");
+                }
 
-})
-.catch(function(){
+                // =========================
+                // TRANSISI EVENT
+                // =========================
+                if (distance <= 0) {
 
-	internetFailCount++;
+                    stopTimer();
 
-	console.log("Internet check failed | count: ", internetFailCount);
+                    if (name == 'adzan') {
 
-	if(internetFailCount >= internetFailTolerance){
+                        showOverlay("Laksanakan", "Shalat Sunnah", "Sebelum Iqomah");
 
-    $('.net-status, .net-status-header')
-    .text("OFFLINE")
-    .removeClass('net-online')
-    .addClass('net-offline');
-	}
+                        iqomahCountdownActive = false;
+                        iqomahLastSecond = -1;
 
-});
+                        if (shalatName == 'SUBUH') {
+                            countdownShalat(
+                                moment().add(setting.shalatSunnahTimeSubuh).unix(),
+                                'shalat_sunnah',
+                                'MENJELANG IQOMAH ' + shalatName,
+                                shalatName
+                            );
+                        } else {
+                            countdownShalat(
+                                moment().add(setting.shalatSunnahTime).unix(),
+                                'shalat_sunnah',
+                                'MENJELANG IQOMAH ' + shalatName,
+                                shalatName
+                            );
+                        }
+                        return;
 
-}
+                    } else if (name == 'shalat_sunnah') {
+
+                        beep();
+
+                        showOverlay("IQOMAH", "Luruskan dan Rapatkan Shaf", "🔕 Silent / 📵 Matikan (Off) Gadget");
+
+                        countdownShalat(
+                            moment().add(setting.iqomahTime).unix(),
+                            'iqomah',
+                            'IQOMAH ' + shalatName,
+                            shalatName
+                        );
+                        return;
+
+                    } else if (inArray(name, ['SUBUH', 'ZHUHUR', 'ASHAR', 'MAGHRIB', 'ISYA'])) {
+
+                        beep();
+
+                        showOverlay("📢 ADZAN", "Telah Masuk Waktu", "Shalat " + name);
+
+                        countdownShalat(
+                            moment().add(setting.adzanTime).unix(),
+                            'adzan',
+                            'ADZAN ' + name,
+                            name
+                        );
+                        return;
+
+                    } else if (name == 'iqomah') {
+
+                        // =========================================
+                        // MODE : SHALAT BERLANGSUNG
+                        // =========================================
+
+                        // tampilkan overlay besar
+                        showOverlay("🕋", "SHALAT " + shalatName, "SEDANG BERLANGSUNG");
+
+                        // hentikan slideshow selama shalat
+                        stopOwl();
+
+                        // hentikan running text selama shalat
+                        $('.running-text').marquee('pause');
+
+                        // sembunyikan running text
+                        $('.running-container').hide();
 
 
-// Gunakan Overlay
-function showOverlay(msg1,msg2,msg3){
+                        // ambil durasi shalat dari setting (default 10 menit)
+                        var durasi = setting.shalatDuration[shalatName] || 600000;
 
-    $('.msg1').text(msg1);
-    $('.msg2').text(msg2);
-    $('.msg3').text(msg3);
+                        // update text di header kanan
+                        $('.desc').text('SEDANG SHALAT ' + shalatName);
 
-    $('.message-overlay').css('display','flex');
-}
+                        // -----------------------------------------
+                        // hitung waktu selesai shalat
+                        // menggunakan timestamp agar stabil
+                        // -----------------------------------------
+                        finalTime = Math.floor((Date.now() + durasi) / 1000);
 
-function hideOverlay(){
-    $('.message-overlay').hide();
-}
+                        // -----------------------------------------
+                        // countdown DURASI SHALAT
+                        // -----------------------------------------
+                        mycountdown = setInterval(function () {
+
+                            var now = Math.floor(Date.now() / 1000);
+                            var distance = finalTime - now;
+
+                            if (distance > 0) {
+                                $(".countdown-event").text(moment.utc(distance * 1000).format("HH:mm:ss"));
+                            } else {
+                                $(".countdown-event").text("00:00:00");
+                            }
 
 
-function startOwl(){
-    if(!owlReady) return; // <-- PROTEKSI
+                        }, 1000);
 
-    if(!owlRunning){
-        $('.owl-carousel').trigger('play.owl.autoplay', [setting.slideInterval]);
-        owlRunning = true;
-        console.log("Owl started");
-    }
-}
+                        // -----------------------------------------
+                        // timer akhir shalat
+                        // -----------------------------------------
+                        shalatTimer = setTimeout(function () {
 
-function stopOwl(){
-    if(!owlReady) return; // <-- PROTEKSI
+                            // hentikan countdown shalat
+                            stopTimer();
 
-    if(owlRunning){
-        $('.owl-carousel').trigger('stop.owl.autoplay');
-        owlRunning = false;
-        console.log("Owl stopped");
-    }
-}
+                            // tutup overlay
+                            hideOverlay();
 
-function safeResetOwl(){
+                            // hidupkan kembali slideshow
+                            safeResetOwl();
 
-    if(!owlReady){
-        console.log("Owl not ready, skip reset");
-        return;
-    }
+                            // hidupkan kembali running text
+                            $('.running-text').marquee('resume');
 
-    // batalkan reset sebelumnya (ANTI NUMPUK)
-    if(owlResetTimer){
-        clearTimeout(owlResetTimer);
-    }
+                            // sembunyikan running text
+                            $('.running-container').show();
 
-    if(owlRunning){
-    stopOwl();
-}
 
-    owlResetTimer = setTimeout(function(){
-		// $('.owl-carousel').trigger('refresh.owl.carousel'); // optional, untuk device dengan RAM besar agar tetap segar, tapi bisa menyebabkan CPU spike di device dengan RAM kecil	
-        $('.owl-carousel').trigger('to.owl.carousel', [0, 0]);
-        startOwl();
-        owlResetTimer = null;
-    }, 100);
-}
+                            // reset state sistem
+                            systemPrayer = "";
+                            systemState = "countdown";
 
-</script>
+                            // lanjut ke jadwal shalat berikutnya
+                            setTimeout(function () {
+                                nextSchedule();
+                            }, 300);
+
+                        }, durasi);
+
+                    } else if (name == 'IMSAK') {   // ← TAMBAHAN UNTUK IMSAK
+                        systemState = "countdown"; // langsung kembali normal
+
+                        nextSchedule();
+                        return;
+
+                    } else if (name == 'SYURUQ') {   // ← TAMBAHAN UNTUK SYURUQ
+                        systemState = "countdown"; // langsung kembali normal
+
+                        nextSchedule();
+                        return;
+
+                    } else {
+
+                        nextSchedule();
+
+                    }
+
+                }
+
+                // =========================
+                // UPDATE JAM & TANGGAL
+                // =========================
+                //updateClockDisplay();
+            }, 1000);
+        }
+
+        function nextSchedule() {
+
+            // ========================================
+            // PROTEKSI RITUAL PHASE
+            // nextSchedule hanya boleh berjalan saat mode countdown
+            // ========================================
+
+            console.log("nextSchedule called | state:", systemState);
+
+            if (systemState !== "countdown" && systemState !== "iqomah") {
+
+                console.log(
+                    "nextSchedule blocked (ritual phase)",
+                    "| state:", systemState,
+                    "| prayer:", systemPrayer,
+                    "| time:", moment().format("HH:mm:ss")
+                );
+
+                return;
+            }
+
+            var found = false;
+            systemState = "countdown";
+
+            if (systemPrayer == "") {
+                hideOverlay();
+            }
+
+            // var now = moment().unix(); // lebih aman diletakkan di luar loop
+            var now = Math.floor(Date.now() / 1000);
+            for (var a = 0; a < tempShalat.length; a++) { // FIX BUG global variable
+
+                var splt = tempShalat[a].split(':');
+                var next = moment().hour(splt[0]).minute(splt[1]).second(0).unix();
+
+                if (now < next) {
+
+                    countdownShalat(next, masterName[a], 'MENJELANG ' + masterName[a]);
+
+                    found = true;
+                    return false;
+
+                }
+            }
+
+            var splt = tempShalat[0].split(':');
+
+            var next = moment().add(1, 'day').hour(splt[0]).minute(splt[1]).second(0).unix();
+
+            if (!found) {
+                countdownShalat(next, masterName[0], 'MENJELANG ' + masterName[0]);
+            }
+        }
+
+        // =========================================
+        // NETWORK STATUS DETECTOR
+        // =========================================
+
+        function updateNetworkStatus() {
+
+            if (!navigator.onLine) {
+
+                $('.net-status, .net-status-header')
+                    .text("OFFLINE")
+                    .removeClass('net-online')
+                    .addClass('net-offline');
+
+                return;
+
+            }
+
+            // jika WIFI ada, cek benar internet hidup
+            checkInternet();
+
+        }
+
+        // CHECK koneksi INTERNET real time, bukan sekedar adanya WIFI 
+        function checkInternet() {
+
+            $.ajax({
+                url: setting.runningTextFile,
+                method: 'HEAD',
+                timeout: 3000,
+                success: function () {
+
+                    internetFailCount = 0; // reset jika berhasil
+
+                    $('.net-status, .net-status-header')
+                        .text("ONLINE")
+                        .removeClass('net-offline')
+                        .addClass('net-online');
+
+                },
+                error: function () {
+
+                    internetFailCount++;
+
+                    console.log("Internet check failed | count:", internetFailCount);
+
+                    if (internetFailCount >= internetFailTolerance) {
+
+                        $('.net-status, .net-status-header')
+                            .text("OFFLINE")
+                            .removeClass('net-online')
+                            .addClass('net-offline');
+                    }
+                }
+            });
+
+        }
+
+
+        // Gunakan Overlay
+        function showOverlay(msg1, msg2, msg3) {
+
+            $('.msg1').text(msg1);
+            $('.msg2').text(msg2);
+            $('.msg3').text(msg3);
+
+            $('.message-overlay').css('display', 'flex');
+        }
+
+        function hideOverlay() {
+            $('.message-overlay').hide();
+        }
+
+
+        function startOwl() {
+            if (!owlReady) return; // <-- PROTEKSI
+
+            if (!owlRunning) {
+                $('.owl-carousel').trigger('play.owl.autoplay', [setting.slideInterval]);
+                owlRunning = true;
+                console.log("Owl started");
+            }
+        }
+
+        function stopOwl() {
+            if (!owlReady) return; // <-- PROTEKSI
+
+            if (owlRunning) {
+                $('.owl-carousel').trigger('stop.owl.autoplay');
+                owlRunning = false;
+                console.log("Owl stopped");
+            }
+        }
+
+        function safeResetOwl() {
+
+            if (!owlReady) {
+                console.log("Owl not ready, skip reset");
+                return;
+            }
+
+            // batalkan reset sebelumnya (ANTI NUMPUK)
+            if (owlResetTimer) {
+                clearTimeout(owlResetTimer);
+            }
+
+            if (owlRunning) {
+                stopOwl();
+            }
+
+            owlResetTimer = setTimeout(function () {
+                $('.owl-carousel').trigger('to.owl.carousel', [0, 0]);
+                startOwl();
+                owlResetTimer = null;
+            }, 100);
+        }
+
+    </script>
 </body>
+
 </html>
