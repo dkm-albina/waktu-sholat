@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-  
+
     <title>Jadwal Shalat</title>
     <link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css" />
     <link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css" />
@@ -337,10 +337,22 @@
             position: relative;
         }
 
-        .wallpaper {
-            position: relative;
+
+        .slide-container {
+            min-height: calc(100vh - 186px);
         }
 
+       
+        .wallpaper {
+            position: relative;
+            min-height: calc(100vh - 186px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .wallpaper.ready {
+            opacity: 1;
+        }
 
         .wallpaper .item {
             /*wallpaper slide*/
@@ -1067,6 +1079,9 @@
                 //INIT OWL CAROUSEL SETTING
                 owlReady = true;
                 owlRunning = true;
+
+                // 🔥 tampilkan setelah siap
+                $('.wallpaper').addClass('ready');
             }, 300);
 
         });
