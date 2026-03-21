@@ -342,7 +342,7 @@
             min-height: calc(100vh - 186px);
         }
 
-       
+
         .wallpaper {
             position: relative;
             min-height: calc(100vh - 186px);
@@ -1060,8 +1060,10 @@
             }
 
             setTimeout(function () {
-                if ($('.owl-carousel').data('owl.carousel')) {
-                    $('.owl-carousel').owlCarousel('destroy');
+                var $owl = $('.owl-carousel');
+
+                if ($owl.data('owl.carousel')) {
+                    $owl.owlCarousel('destroy');
                 } // jika ada instance owl sebelumnya, hancurkan dulu agar tidak duplikat
                 $('.owl-carousel').owlCarousel({
                     loop: true,
@@ -1072,7 +1074,7 @@
                     autoplayHoverPause: false,
                     touchDrag: true,
                     mouseDrag: false,
-                    smartSpeed: 1000, // jangan terlalu lama transisinya, bisa CPU spike
+                    smartSpeed: 500, // jangan terlalu lama transisinya, bisa CPU spike
                     autoplayTimeout: setting.slideInterval,
                     slideTransition: 'ease-in-out' // bisa dihapus jika dianggap tidak perlu
                 });
@@ -1452,9 +1454,8 @@
                 testUrls.push(location.origin); // tambahkan origin sendiri untuk cek koneksi ke server lokal (jika ada)
             }
 
-            var success = false;
             var checked = 0;
-            var done = false;
+            var done = false; // success flag untuk mencegah multiple callback
 
             testUrls.forEach(function (url) {
 
@@ -1464,7 +1465,7 @@
                     url: url,
                     method: 'GET',
                     cache: false,
-                    timeout: 3000,
+                    timeout: 4500, // timeout 4.5 detik untuk respons, jika lebih dari ini dianggap gagal
 
                     success: function () {
 
