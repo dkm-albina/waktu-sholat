@@ -729,6 +729,7 @@
         var lastMinuteCheck = Date.now();
         var lastWatchdogCheck = Date.now();
         var appStarted = false;
+	var HIJRI_OFFSET = -1;
 
 
         // FIX STABILITY TV BOX MODE
@@ -1060,7 +1061,7 @@
             $('.hijriah').text(
                 nowMoment.format('ddd, DD/MM/YYYY') +
                 ' - ' +
-                nowMoment.format('iD iMMMM iYYYY [H]')
+                nowMoment.clone().add(HIJRI_OFFSET, 'iDate').format('iD iMMMM iYYYY [H]')
             );
 
         }
