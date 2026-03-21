@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-
+  
     <title>Jadwal Shalat</title>
     <link rel="stylesheet" href="www/public/Bilal/css/normalize.min.css" />
     <link rel="stylesheet" href="www/public/Bilal/js/owlcarousel/assets/owl.carousel.min.css" />
@@ -97,7 +97,7 @@
             /*header*/
             background-color: #2e7d32;
             /* hijau tua */
-            padding: 5px 16px;
+            padding: 5px 12px;
             height: 96px;
             /*awalnya 100px, dikurangi agar lebih proporsional*/
 
@@ -637,7 +637,7 @@
             </div>
         </div>
     </div>
-    </div>
+
     <div class="layer"></div>
 
     <!--fix problem : google chrome update will not autoplay audio/video-->
@@ -729,100 +729,107 @@
         var lastMinuteCheck = Date.now();
         var lastWatchdogCheck = Date.now();
         var appStarted = false;
-	var HIJRI_OFFSET = -1;
+        var HIJRI_OFFSET = -1;
 
 
         // FIX STABILITY TV BOX MODE
         // tidak reload halaman karena bisa gagal jika internet mati
         // hanya refresh jadwal dan countdown
-        function startHeartbeat() {
+        // =============================
+        // HEARTBEAT 1 MENIT TASK (Midnight + Daily Refresh Safe)
+        // =============================
+        var lastMinuteCheck = Date.now();
+        var todayDate = moment().format("YYYY-MM-DD");
+        var lastMidnightTrigger = null; // flag tambahan untuk midnight
 
-            if (heartbeatInterval) {
-                clearInterval(heartbeatInterval);
+        function heartbeatOneMinuteTask() {
+
+            var now = Date.now();
+
+            // hanya eksekusi jika sudah > 60 detik sejak terakhir
+            if (now - lastMinuteCheck < 60000) return;
+
+            lastMinuteCheck = now;
+
+            var nowMoment = moment();
+            var currentDateStr = nowMoment.format("YYYY-MM-DD");
+
+            var shouldRefresh = false;
+
+            // =========================
+            // 1. Daily refresh: cek pergantian hari
+            // =========================
+            if (currentDateStr !== todayDate && systemState === "countdown") {
+                todayDate = currentDateStr;
+                shouldRefresh = true;
+                console.log("Daily refresh triggered:", currentDateStr);
             }
+
+            // =========================
+            // 2. Midnight refresh: cek jam 00:00
+            // - Gunakan lastMidnightTrigger agar tidak ganda
+            // =========================
+            if (
+                nowMoment.hour() === 0 &&
+                nowMoment.minute() === 0 &&
+                lastMidnightTrigger !== currentDateStr
+            ) {
+                shouldRefresh = true;
+                lastMidnightTrigger = currentDateStr;
+                console.log("Midnight refresh triggered:", currentDateStr);
+            }
+
+            // =========================
+            // 3. Jalankan startApp sekali jika ada trigger aktif
+            // =========================
+            if (shouldRefresh) {
+                startApp(true); // force restart
+            }
+
+            // =========================
+            // 4. Cek status jaringan
+            // =========================
+            updateNetworkStatus();
+
+            // =========================
+            // Opsional: log ringan untuk debugging
+            // =========================
+            if (Math.random() < 0.1) {
+                console.log("Heartbeat 1-min tick:", nowMoment.format("HH:mm:ss"));
+            }
+        }
+
+        // =============================
+        // INTEGRASI DENGAN HEARTBEAT INTERVAL UTAMA
+        // =============================
+        function startHeartbeat() {
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
 
             heartbeatInterval = setInterval(function () {
 
-                heartbeatTick++;
-                var now = Date.now();
-
-                // =========================
-                // 1. BASIC TICK (SETIAP DETIK)
-                // =========================
+                // 1. BASIC TICK SETIAP DETIK
                 if (systemState === "countdown") {
-                    watchdogLastTick = now;
+                    watchdogLastTick = Date.now();
                 }
-
-                // update jam (tanpa tunggu countdown)
                 updateClockDisplay();
 
-                // =========================
-                // 2. 1 MENIT TASK
-                // =========================
-                if (now - lastMinuteCheck > 60000) {
-                    lastMinuteCheck = now;
+                // 2. HEARTBEAT 1 MENIT TASK
+                heartbeatOneMinuteTask();
 
-                    // random log (hemat CPU)
-                    if (Math.random() < 0.1) {
-                        console.log("Bilal heartbeat", Date.now());
+                // 3. WATCHDOG 5 MENIT
+                if (Date.now() - lastWatchdogCheck > 300000) {
+                    lastWatchdogCheck = Date.now();
+                    if (Date.now() - watchdogLastTick > 150000 && systemState === "countdown") {
+                        console.log("Watchdog restart (heartbeat)");
+                        try { startApp(true); } catch (e) { console.log("Watchdog error:", e); }
                     }
-
-                    // cek pergantian hari
-                    currentDate = moment().format("YYYY-MM-DD");
-
-                    if (currentDate !== todayDate && systemState == "countdown") {
-                        todayDate = currentDate;
-                        console.log("Daily refresh triggered");
-                        startApp();
-                    }
-
-                    // cek network
-                    updateNetworkStatus();
                 }
 
-
-                // =========================
-                // 3. 5 MENIT WATCHDOG
-                // =========================
-                if (now - lastWatchdogCheck > 300000) {
-
-                    lastWatchdogCheck = now;
-
-                    var diff = now - watchdogLastTick;
-
-                    if (diff > 150000) {
-
-                        if (systemState === "countdown") {
-
-                            console.log("Watchdog restart (heartbeat)");
-
-                            try {
-                                startApp();
-                            } catch (e) {
-                                console.log("Watchdog error:", e);
-                            }
-
-                        } else {
-                            console.log("Watchdog skipped (ritual)");
-                        }
-
-                    }
-
-                }
-
-                // =========================
-                // 4. 6 JAM STABILITY REFRESH
-                // =========================
-
-
-                if (now - lastStabilityCheck > 21600000) {
-                    lastStabilityCheck = now;
-
+                // 4. STABILITY REFRESH 6 JAM
+                if (Date.now() - lastStabilityCheck > 21600000) {
+                    lastStabilityCheck = Date.now();
                     console.log("Stability refresh (heartbeat)");
-
-                    if (systemState == "countdown") {
-                        startApp();
-                    }
+                    if (systemState == "countdown") startApp(true);
                 }
 
             }, 1000);
@@ -862,11 +869,19 @@
         }
 
         // with FIX BUG geolocation async
-        function startApp() {
+        function startApp(force = false) {
 
-            if (appStarted) {
+            if (appStarted && !force) {
                 console.log("startApp skipped (already started)");
                 return;
+            }
+
+
+            if (force) {
+                console.log("Force restart app");
+
+                systemState = "countdown";
+                systemPrayer = "";
             }
 
             appStarted = true;
@@ -885,6 +900,20 @@
 
             masterTime = [times.imsak, times.fajr, times.sunrise, times.dhuhr, times.asr, times.maghrib, times.isha];
             masterName = setting.aliasName;
+
+            masterSchedule = masterTime.map(function (t, i) {
+                var splt = t.split(':');
+
+                return {
+                    name: masterName[i],
+                    timeStr: t,
+                    timestamp: moment().hour(splt[0]).minute(splt[1]).second(0).unix()
+                };
+            });
+
+            masterSchedule.sort(function (a, b) {
+                return a.timestamp - b.timestamp;
+            });
 
             // FIX BUG reference array (harus copy bukan reference)
             tempShalat = masterTime.slice();
@@ -955,17 +984,17 @@
                     // FIX BUG timezone
                     setting.timezoneOffset = Math.round(moment().utcOffset() / 60);
 
-                    startApp();
+                    startApp(true);
 
                 },
                     function error() {
-                        startApp(); // fallback jika GPS gagal
+                        startApp(true); // fallback jika GPS gagal
                     },
                     { maximumAge: 10000, timeout: 3000, enableHighAccuracy: true });
 
             } else {
 
-                startApp();
+                startApp(true); // langsung mulai tanpa geolocation
 
             }
 
@@ -979,10 +1008,11 @@
             window.addEventListener('online', updateNetworkStatus);
             window.addEventListener('offline', updateNetworkStatus);
 
-           
+
             //running text
             $.ajax({
                 url: setting.runningTextFile,
+                timeout: 3000,
                 success: function (d) {
                     $('.running-text').text(d);
                 },
@@ -990,11 +1020,15 @@
                     $('.running-text').text("Selamat datang di " + setting.nama);
                 },
                 complete: function () {
+                    if ($('.running-text').data('marquee')) {
+                        $('.running-text').marquee('destroy');
+                    } // jika ada instance marquee sebelumnya, hancurkan dulu agar tidak duplikat
                     $('.running-text').marquee({
                         duration: setting.runningTextSpeed,
                         gap: 50
                     });
                 }
+
             });
 
             //CHECK Visibility
@@ -1014,6 +1048,9 @@
             }
 
             setTimeout(function () {
+                if ($('.owl-carousel').data('owl.carousel')) {
+                    $('.owl-carousel').owlCarousel('destroy');
+                } // jika ada instance owl sebelumnya, hancurkan dulu agar tidak duplikat
                 $('.owl-carousel').owlCarousel({
                     loop: true,
                     items: 1,
@@ -1299,9 +1336,7 @@
 
             // ========================================
             // PROTEKSI RITUAL PHASE
-            // nextSchedule hanya boleh berjalan saat mode countdown
             // ========================================
-
             console.log("nextSchedule called | state:", systemState);
 
             if (systemState !== "countdown" && systemState !== "iqomah") {
@@ -1323,32 +1358,50 @@
                 hideOverlay();
             }
 
-            // var now = moment().unix(); // lebih aman diletakkan di luar loop
             var now = Math.floor(Date.now() / 1000);
-            for (var a = 0; a < tempShalat.length; a++) { // FIX BUG global variable
 
-                var splt = tempShalat[a].split(':');
-                var next = moment().hour(splt[0]).minute(splt[1]).second(0).unix();
+            // ========================================
+            // LOOP MASTER SCHEDULE (SUDAH DISORT)
+            // ========================================
+            for (var i = 0; i < masterSchedule.length; i++) {
 
-                if (now < next) {
+                if (now < masterSchedule[i].timestamp) {
 
-                    countdownShalat(next, masterName[a], 'MENJELANG ' + masterName[a]);
+                    countdownShalat(
+                        masterSchedule[i].timestamp,
+                        masterSchedule[i].name,
+                        'MENJELANG ' + masterSchedule[i].name,
+                        masterSchedule[i].name
+                    );
 
                     found = true;
                     return false;
-
                 }
             }
 
-            var splt = tempShalat[0].split(':');
-
-            var next = moment().add(1, 'day').hour(splt[0]).minute(splt[1]).second(0).unix();
-
+            // ========================================
+            // JIKA SUDAH LEWAT SEMUA → BESOK EVENT PERTAMA
+            // ========================================
             if (!found) {
-                countdownShalat(next, masterName[0], 'MENJELANG ' + masterName[0]);
+
+                var first = masterSchedule[0];
+                var splt = first.timeStr.split(':');
+
+                var next = moment()
+                    .add(1, 'day')
+                    .hour(splt[0])
+                    .minute(splt[1])
+                    .second(0)
+                    .unix();
+
+                countdownShalat(
+                    next,
+                    first.name,
+                    'MENJELANG ' + first.name,
+                    first.name
+                );
             }
         }
-
         // =========================================
         // NETWORK STATUS DETECTOR
         // =========================================
@@ -1374,38 +1427,84 @@
         // CHECK koneksi INTERNET real time, bukan sekedar adanya WIFI 
         function checkInternet() {
 
-            $.ajax({
-                url: setting.runningTextFile,
-                method: 'HEAD',
-                timeout: 3000,
-                success: function () {
+            var latencyStart = Date.now();
+            var testUrls = [
+                "https://1.1.1.1/cdn-cgi/trace",          // paling kuat (IP langsung)
+                "https://cloudflare.com/cdn-cgi/trace",   // CDN global
+            ];
 
-                    internetFailCount = 0; // reset jika berhasil
+            if (location.origin !== "null") {
+                testUrls.push(location.origin); // tambahkan origin sendiri untuk cek koneksi ke server lokal (jika ada)
+            }
 
-                    $('.net-status, .net-status-header')
-                        .text("ONLINE")
-                        .removeClass('net-offline')
-                        .addClass('net-online');
+            var success = false;
+            var checked = 0;
+            var done = false;
 
-                },
-                error: function () {
+            testUrls.forEach(function (url) {
 
-                    internetFailCount++;
+                if (done) return;
 
-                    console.log("Internet check failed | count:", internetFailCount);
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    cache: false,
+                    timeout: 3000,
 
-                    if (internetFailCount >= internetFailTolerance) {
+                    success: function () {
+
+                        if (done) return;
+                        done = true;
+
+                        internetFailCount = 0;
+                        var latency = Date.now() - latencyStart;
+
+                        if (latency < 200) {
+                            statusText = "ONLINE";
+                        } else if (latency < 1000) {
+                            statusText = "SLOW";
+                        } else {
+                            statusText = "VERY SLOW";
+                        }
 
                         $('.net-status, .net-status-header')
-                            .text("OFFLINE")
-                            .removeClass('net-online')
-                            .addClass('net-offline');
+                            .text(statusText)
+                            .removeClass('net-offline')
+                            .addClass('net-online');
+                    },
+
+                    error: function () {
+
+                        if (done) return;
+
+                        checked++;
+
+                        if (checked === testUrls.length) {
+
+                            internetFailCount++;
+
+                            console.log("Internet check failed | count:", internetFailCount);
+
+                            if (internetFailCount < internetFailTolerance) {
+
+                                $('.net-status, .net-status-header')
+                                    .text("CHECKING...")
+                                    .removeClass('net-online net-offline');
+
+                            } else {
+
+                                $('.net-status, .net-status-header')
+                                    .text("OFFLINE")
+                                    .removeClass('net-online')
+                                    .addClass('net-offline');
+
+                            }
+                        }
                     }
-                }
+                });
+
             });
-
         }
-
 
         // Gunakan Overlay
         function showOverlay(msg1, msg2, msg3) {
