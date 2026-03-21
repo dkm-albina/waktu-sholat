@@ -56,7 +56,7 @@
             /* coklat tua */
             text-align: center;
             border-radius: 4px;
-            margin-top:5px; // posisi turun 5px dari atas
+            margin-top: 5px; // posisi turun 5px dari atas
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -99,7 +99,7 @@
             background-color: #2e7d32;
             /* hijau tua */
             padding: 5px 16px;
-            
+
             height: 96px;
             /*awalnya 100px, dikurangi agar lebih proporsional*/
 
@@ -618,7 +618,7 @@
             </div>
             <div class="col col4">
                 <div class="mybox desc-container"><span class="desc"></span></div>
-                <div class="countdown-event mybox"></div>                
+                <div class="countdown-event mybox"></div>
             </div>
             <div class="clear"></div>
         </div>
@@ -1137,496 +1137,509 @@
             });
         });
 
-            //stop timer
-            function stopTimer() {
-                if (mycountdown) {
-                    clearInterval(mycountdown);
-                    mycountdown = null;
-                }
-
-                if (shalatTimer) {
-                    clearTimeout(shalatTimer);
-                    shalatTimer = null;
-                }
+        //stop timer
+        function stopTimer() {
+            if (mycountdown) {
+                clearInterval(mycountdown);
+                mycountdown = null;
             }
 
-            // =========================
-            // UPDATE CLOCK DISPLAY
-            // agar kode jam tidak duplikat
-            // =========================
-            function updateClockDisplay() {
-
-                var nowMoment = moment();
-
-                $('.masehi').text(nowMoment.format('HH:mm:ss'));
-
-                $('.hijriah').text(
-                    nowMoment.format('ddd, DD/MM/YYYY') +
-                    ' - ' +
-                    nowMoment.clone().add(HIJRI_OFFSET, 'iDate').format('iD iMMMM iYYYY [H]')
-                );
-
+            if (shalatTimer) {
+                clearTimeout(shalatTimer);
+                shalatTimer = null;
             }
+        }
 
-            function countdownShalat(time, name, desc, shalatName = '') {
+        // =========================
+        // UPDATE CLOCK DISPLAY
+        // agar kode jam tidak duplikat
+        // =========================
+        function updateClockDisplay() {
 
-                stopTimer(); // FIX BUG memory leak, pastikan semua timer bersih
-                systemState = name;
-                systemPrayer = shalatName;
+            var nowMoment = moment();
 
-                $('.myprayer').removeClass('highlight');
+            $('.masehi').text(nowMoment.format('HH:mm:ss'));
 
-                // FIX BUG highlight event adzan/iqomah
-                var highlightName = shalatName ? shalatName : name;
-                $('.' + highlightName).closest('.myprayer').addClass('highlight');
+            var bulanHijriID = [
+                "Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir",
+                "Jumadil Awal", "Jumadil Akhir", "Rajab",
+                "Sya'ban", "Ramadhan", "Syawal",
+                "Dzulqa'dah", "Dzulhijjah"
+            ];
 
-                $('.desc').text(desc);
+            var hijriMoment = nowMoment.clone().add(HIJRI_OFFSET, 'iDate');
 
-                finalTime = time;
+            var bulan = bulanHijriID[hijriMoment.iMonth()];
 
-                mycountdown = setInterval(function () {
+            $('.hijriah').text(
+                nowMoment.format('ddd, DD/MM/YYYY') +
+                ' - ' +
+                hijriMoment.format('iD') + ' ' +
+                bulan + ' ' +
+                hijriMoment.format('iYYYY') + ' H'
+            );
 
+        }
 
-                    // =========================
-                    // OPTIMASI MOMENT
-                    // =========================
-                    // var now = moment().unix(); berat di Android 6.0 TV Box, ganti dengan Date.now() yang lebih ringan, karena kita hanya butuh detik saja
-                    var now = Math.floor(Date.now() / 1000);
+        function countdownShalat(time, name, desc, shalatName = '') {
 
-                    var distance = finalTime - now;
+            stopTimer(); // FIX BUG memory leak, pastikan semua timer bersih
+            systemState = name;
+            systemPrayer = shalatName;
 
-                    // ========================================
-                    // COUNTDOWN IQOMAH 60 DETIK TERAKHIR
-                    // ========================================
-                    if (name == 'shalat_sunnah' && distance <= 90) {
+            $('.myprayer').removeClass('highlight');
 
-                        var sec = Math.max(0, distance);
+            // FIX BUG highlight event adzan/iqomah
+            var highlightName = shalatName ? shalatName : name;
+            $('.' + highlightName).closest('.myprayer').addClass('highlight');
 
-                        // tampilkan overlay sekali saja
-                        if (!iqomahCountdownActive) {
+            $('.desc').text(desc);
 
-                            showOverlay("SEBENTAR LAGI IQOMAH", "", "📵 Pastikan Gadget Off / 🔕 Silent");
+            finalTime = time;
 
-                            iqomahCountdownActive = true;
-                        }
+            mycountdown = setInterval(function () {
 
-                        // update hanya jika detik berubah (anti flicker)
-                        if (sec !== iqomahLastSecond) {
 
-                            iqomahLastSecond = sec;
-
-                            /* $('.msg2').text(moment.utc(sec*1000).format("mm:ss"));*/
-                            /* $('.msg2').text(sec.toString().padStart(2,'0'));*/
-                            $('.msg2').text(sec);
-                        }
-                    }
-
-                    // =========================
-                    // COUNTDOWN DISPLAY
-                    // FIX BUG countdown negative time
-                    // =========================
-                    if (distance > 0) {
-                        $(".countdown-event").text(moment.utc(distance * 1000).format("HH:mm:ss"));
-                    } else {
-                        $(".countdown-event").text("00:00:00");
-                    }
-
-                    // =========================
-                    // TRANSISI EVENT
-                    // =========================
-                    if (distance <= 0) {
-
-                        stopTimer();
-
-                        if (name == 'adzan') {
-
-                            showOverlay("Laksanakan", "Shalat Sunnah", "Sebelum Iqomah");
-
-                            iqomahCountdownActive = false;
-                            iqomahLastSecond = -1;
-
-                            if (shalatName == 'SUBUH') {
-                                countdownShalat(
-                                    moment().add(setting.shalatSunnahTimeSubuh).unix(),
-                                    'shalat_sunnah',
-                                    'MENJELANG IQOMAH ' + shalatName,
-                                    shalatName
-                                );
-                            } else {
-                                countdownShalat(
-                                    moment().add(setting.shalatSunnahTime).unix(),
-                                    'shalat_sunnah',
-                                    'MENJELANG IQOMAH ' + shalatName,
-                                    shalatName
-                                );
-                            }
-                            return;
-
-                        } else if (name == 'shalat_sunnah') {
-
-                            beep();
-
-                            showOverlay("IQOMAH", "Luruskan dan Rapatkan Shaf", "🔕 Silent / 📵 Matikan (Off) Gadget");
-
-                            countdownShalat(
-                                moment().add(setting.iqomahTime).unix(),
-                                'iqomah',
-                                'IQOMAH ' + shalatName,
-                                shalatName
-                            );
-                            return;
-
-                        } else if (inArray(name, ['SUBUH', 'ZHUHUR', 'ASHAR', 'MAGHRIB', 'ISYA'])) {
-
-                            beep();
-
-                            showOverlay("📢 ADZAN", "Telah Masuk Waktu", "Shalat " + name);
-
-                            countdownShalat(
-                                moment().add(setting.adzanTime).unix(),
-                                'adzan',
-                                'ADZAN ' + name,
-                                name
-                            );
-                            return;
-
-                        } else if (name == 'iqomah') {
-
-                            // =========================================
-                            // MODE : SHALAT BERLANGSUNG
-                            // =========================================
-
-                            // tampilkan overlay besar
-                            showOverlay("🕋", "SHALAT " + shalatName, "SEDANG BERLANGSUNG");
-
-                            // hentikan slideshow selama shalat
-                            stopOwl();
-
-                            // hentikan running text selama shalat
-                            $('.running-text').marquee('pause');
-
-                            // sembunyikan running text
-                            $('.running-container').hide();
-
-
-                            // ambil durasi shalat dari setting (default 10 menit)
-                            var durasi = setting.shalatDuration[shalatName] || 600000;
-
-                            // update text di header kanan
-                            $('.desc').text('SEDANG SHALAT ' + shalatName);
-
-                            // -----------------------------------------
-                            // hitung waktu selesai shalat
-                            // menggunakan timestamp agar stabil
-                            // -----------------------------------------
-                            finalTime = Math.floor((Date.now() + durasi) / 1000);
-
-                            // -----------------------------------------
-                            // countdown DURASI SHALAT
-                            // -----------------------------------------
-                            mycountdown = setInterval(function () {
-
-                                var now = Math.floor(Date.now() / 1000);
-                                var distance = finalTime - now;
-
-                                if (distance > 0) {
-                                    $(".countdown-event").text(moment.utc(distance * 1000).format("HH:mm:ss"));
-                                } else {
-                                    $(".countdown-event").text("00:00:00");
-                                }
-
-
-                            }, 1000);
-
-                            // -----------------------------------------
-                            // timer akhir shalat
-                            // -----------------------------------------
-                            shalatTimer = setTimeout(function () {
-
-                                // hentikan countdown shalat
-                                stopTimer();
-
-                                // tutup overlay
-                                hideOverlay();
-
-                                // hidupkan kembali slideshow
-                                safeResetOwl();
-
-                                // hidupkan kembali running text
-                                $('.running-text').marquee('resume');
-
-                                // sembunyikan running text
-                                $('.running-container').show();
-
-
-                                // reset state sistem
-                                systemPrayer = "";
-                                systemState = "countdown";
-
-                                // lanjut ke jadwal shalat berikutnya
-                                setTimeout(function () {
-                                    nextSchedule();
-                                }, 300);
-
-                            }, durasi);
-
-                        } else if (name == 'IMSAK') {   // ← TAMBAHAN UNTUK IMSAK
-                            systemState = "countdown"; // langsung kembali normal
-
-                            nextSchedule();
-                            return;
-
-                        } else if (name == 'SYURUQ') {   // ← TAMBAHAN UNTUK SYURUQ
-                            systemState = "countdown"; // langsung kembali normal
-
-                            nextSchedule();
-                            return;
-
-                        } else {
-
-                            nextSchedule();
-
-                        }
-
-                    }
-
-                    // =========================
-                    // UPDATE JAM & TANGGAL
-                    // =========================
-                    //updateClockDisplay();
-                }, 1000);
-            }
-
-            function nextSchedule() {
-
-                // ========================================
-                // PROTEKSI RITUAL PHASE
-                // ========================================
-                console.log("nextSchedule called | state:", systemState);
-
-                if (systemState !== "countdown" && systemState !== "iqomah") {
-
-                    console.log(
-                        "nextSchedule blocked (ritual phase)",
-                        "| state:", systemState,
-                        "| prayer:", systemPrayer,
-                        "| time:", moment().format("HH:mm:ss")
-                    );
-
-                    return;
-                }
-
-                var found = false;
-                systemState = "countdown";
-
-                if (systemPrayer == "") {
-                    hideOverlay();
-                }
-
+                // =========================
+                // OPTIMASI MOMENT
+                // =========================
+                // var now = moment().unix(); berat di Android 6.0 TV Box, ganti dengan Date.now() yang lebih ringan, karena kita hanya butuh detik saja
                 var now = Math.floor(Date.now() / 1000);
 
+                var distance = finalTime - now;
+
                 // ========================================
-                // LOOP MASTER SCHEDULE (SUDAH DISORT)
+                // COUNTDOWN IQOMAH 60 DETIK TERAKHIR
                 // ========================================
-                for (var i = 0; i < masterSchedule.length; i++) {
+                if (name == 'shalat_sunnah' && distance <= 90) {
 
-                    if (now < masterSchedule[i].timestamp) {
+                    var sec = Math.max(0, distance);
 
-                        countdownShalat(
-                            masterSchedule[i].timestamp,
-                            masterSchedule[i].name,
-                            'MENJELANG ' + masterSchedule[i].name,
-                            masterSchedule[i].name
-                        );
+                    // tampilkan overlay sekali saja
+                    if (!iqomahCountdownActive) {
 
-                        found = true;
-                        return false;
+                        showOverlay("SEBENTAR LAGI IQOMAH", "", "📵 Pastikan Gadget Off / 🔕 Silent");
+
+                        iqomahCountdownActive = true;
+                    }
+
+                    // update hanya jika detik berubah (anti flicker)
+                    if (sec !== iqomahLastSecond) {
+
+                        iqomahLastSecond = sec;
+
+                        /* $('.msg2').text(moment.utc(sec*1000).format("mm:ss"));*/
+                        /* $('.msg2').text(sec.toString().padStart(2,'0'));*/
+                        $('.msg2').text(sec);
                     }
                 }
 
-                // ========================================
-                // JIKA SUDAH LEWAT SEMUA → BESOK EVENT PERTAMA
-                // ========================================
-                if (!found) {
+                // =========================
+                // COUNTDOWN DISPLAY
+                // FIX BUG countdown negative time
+                // =========================
+                if (distance > 0) {
+                    $(".countdown-event").text(moment.utc(distance * 1000).format("HH:mm:ss"));
+                } else {
+                    $(".countdown-event").text("00:00:00");
+                }
 
-                    var first = masterSchedule[0];
-                    var splt = first.timeStr.split(':');
+                // =========================
+                // TRANSISI EVENT
+                // =========================
+                if (distance <= 0) {
 
-                    var next = moment()
-                        .add(1, 'day')
-                        .hour(splt[0])
-                        .minute(splt[1])
-                        .second(0)
-                        .unix();
+                    stopTimer();
+
+                    if (name == 'adzan') {
+
+                        showOverlay("Laksanakan", "Shalat Sunnah", "Sebelum Iqomah");
+
+                        iqomahCountdownActive = false;
+                        iqomahLastSecond = -1;
+
+                        if (shalatName == 'SUBUH') {
+                            countdownShalat(
+                                moment().add(setting.shalatSunnahTimeSubuh).unix(),
+                                'shalat_sunnah',
+                                'MENJELANG IQOMAH ' + shalatName,
+                                shalatName
+                            );
+                        } else {
+                            countdownShalat(
+                                moment().add(setting.shalatSunnahTime).unix(),
+                                'shalat_sunnah',
+                                'MENJELANG IQOMAH ' + shalatName,
+                                shalatName
+                            );
+                        }
+                        return;
+
+                    } else if (name == 'shalat_sunnah') {
+
+                        beep();
+
+                        showOverlay("IQOMAH", "Luruskan dan Rapatkan Shaf", "🔕 Silent / 📵 Matikan (Off) Gadget");
+
+                        countdownShalat(
+                            moment().add(setting.iqomahTime).unix(),
+                            'iqomah',
+                            'IQOMAH ' + shalatName,
+                            shalatName
+                        );
+                        return;
+
+                    } else if (inArray(name, ['SUBUH', 'ZHUHUR', 'ASHAR', 'MAGHRIB', 'ISYA'])) {
+
+                        beep();
+
+                        showOverlay("📢 ADZAN", "Telah Masuk Waktu", "Shalat " + name);
+
+                        countdownShalat(
+                            moment().add(setting.adzanTime).unix(),
+                            'adzan',
+                            'ADZAN ' + name,
+                            name
+                        );
+                        return;
+
+                    } else if (name == 'iqomah') {
+
+                        // =========================================
+                        // MODE : SHALAT BERLANGSUNG
+                        // =========================================
+
+                        // tampilkan overlay besar
+                        showOverlay("🕋", "SHALAT " + shalatName, "SEDANG BERLANGSUNG");
+
+                        // hentikan slideshow selama shalat
+                        stopOwl();
+
+                        // hentikan running text selama shalat
+                        $('.running-text').marquee('pause');
+
+                        // sembunyikan running text
+                        $('.running-container').hide();
+
+
+                        // ambil durasi shalat dari setting (default 10 menit)
+                        var durasi = setting.shalatDuration[shalatName] || 600000;
+
+                        // update text di header kanan
+                        $('.desc').text('SEDANG SHALAT ' + shalatName);
+
+                        // -----------------------------------------
+                        // hitung waktu selesai shalat
+                        // menggunakan timestamp agar stabil
+                        // -----------------------------------------
+                        finalTime = Math.floor((Date.now() + durasi) / 1000);
+
+                        // -----------------------------------------
+                        // countdown DURASI SHALAT
+                        // -----------------------------------------
+                        mycountdown = setInterval(function () {
+
+                            var now = Math.floor(Date.now() / 1000);
+                            var distance = finalTime - now;
+
+                            if (distance > 0) {
+                                $(".countdown-event").text(moment.utc(distance * 1000).format("HH:mm:ss"));
+                            } else {
+                                $(".countdown-event").text("00:00:00");
+                            }
+
+
+                        }, 1000);
+
+                        // -----------------------------------------
+                        // timer akhir shalat
+                        // -----------------------------------------
+                        shalatTimer = setTimeout(function () {
+
+                            // hentikan countdown shalat
+                            stopTimer();
+
+                            // tutup overlay
+                            hideOverlay();
+
+                            // hidupkan kembali slideshow
+                            safeResetOwl();
+
+                            // hidupkan kembali running text
+                            $('.running-text').marquee('resume');
+
+                            // sembunyikan running text
+                            $('.running-container').show();
+
+
+                            // reset state sistem
+                            systemPrayer = "";
+                            systemState = "countdown";
+
+                            // lanjut ke jadwal shalat berikutnya
+                            setTimeout(function () {
+                                nextSchedule();
+                            }, 300);
+
+                        }, durasi);
+
+                    } else if (name == 'IMSAK') {   // ← TAMBAHAN UNTUK IMSAK
+                        systemState = "countdown"; // langsung kembali normal
+
+                        nextSchedule();
+                        return;
+
+                    } else if (name == 'SYURUQ') {   // ← TAMBAHAN UNTUK SYURUQ
+                        systemState = "countdown"; // langsung kembali normal
+
+                        nextSchedule();
+                        return;
+
+                    } else {
+
+                        nextSchedule();
+
+                    }
+
+                }
+
+                // =========================
+                // UPDATE JAM & TANGGAL
+                // =========================
+                //updateClockDisplay();
+            }, 1000);
+        }
+
+        function nextSchedule() {
+
+            // ========================================
+            // PROTEKSI RITUAL PHASE
+            // ========================================
+            console.log("nextSchedule called | state:", systemState);
+
+            if (systemState !== "countdown" && systemState !== "iqomah") {
+
+                console.log(
+                    "nextSchedule blocked (ritual phase)",
+                    "| state:", systemState,
+                    "| prayer:", systemPrayer,
+                    "| time:", moment().format("HH:mm:ss")
+                );
+
+                return;
+            }
+
+            var found = false;
+            systemState = "countdown";
+
+            if (systemPrayer == "") {
+                hideOverlay();
+            }
+
+            var now = Math.floor(Date.now() / 1000);
+
+            // ========================================
+            // LOOP MASTER SCHEDULE (SUDAH DISORT)
+            // ========================================
+            for (var i = 0; i < masterSchedule.length; i++) {
+
+                if (now < masterSchedule[i].timestamp) {
 
                     countdownShalat(
-                        next,
-                        first.name,
-                        'MENJELANG ' + first.name,
-                        first.name
+                        masterSchedule[i].timestamp,
+                        masterSchedule[i].name,
+                        'MENJELANG ' + masterSchedule[i].name,
+                        masterSchedule[i].name
                     );
+
+                    found = true;
+                    return false;
                 }
             }
-            // =========================================
-            // NETWORK STATUS DETECTOR
-            // =========================================
 
-            function updateNetworkStatus() {
+            // ========================================
+            // JIKA SUDAH LEWAT SEMUA → BESOK EVENT PERTAMA
+            // ========================================
+            if (!found) {
 
-                if (!navigator.onLine) {
+                var first = masterSchedule[0];
+                var splt = first.timeStr.split(':');
 
-                    $('.net-status, .net-status-header')
-                        .text("OFFLINE")
-                        .removeClass('net-online')
-                        .addClass('net-offline');
+                var next = moment()
+                    .add(1, 'day')
+                    .hour(splt[0])
+                    .minute(splt[1])
+                    .second(0)
+                    .unix();
 
-                    return;
+                countdownShalat(
+                    next,
+                    first.name,
+                    'MENJELANG ' + first.name,
+                    first.name
+                );
+            }
+        }
+        // =========================================
+        // NETWORK STATUS DETECTOR
+        // =========================================
 
-                }
+        function updateNetworkStatus() {
 
-                // jika WIFI ada, cek benar internet hidup
-                checkInternet();
+            if (!navigator.onLine) {
+
+                $('.net-status, .net-status-header')
+                    .text("OFFLINE")
+                    .removeClass('net-online')
+                    .addClass('net-offline');
+
+                return;
 
             }
 
-            // CHECK koneksi INTERNET real time, bukan sekedar adanya WIFI 
-            function checkInternet() {
+            // jika WIFI ada, cek benar internet hidup
+            checkInternet();
 
-                var latencyStart = Date.now();
-                var testUrls = [
-                    "https://1.1.1.1/cdn-cgi/trace",          // paling kuat (IP langsung)
-                    "https://cloudflare.com/cdn-cgi/trace",   // CDN global
-                ];
+        }
 
-                if (location.origin !== "null") {
-                    testUrls.push(location.origin); // tambahkan origin sendiri untuk cek koneksi ke server lokal (jika ada)
-                }
+        // CHECK koneksi INTERNET real time, bukan sekedar adanya WIFI 
+        function checkInternet() {
 
-                var checked = 0;
-                var done = false; // success flag untuk mencegah multiple callback
+            var latencyStart = Date.now();
+            var testUrls = [
+                "https://1.1.1.1/cdn-cgi/trace",          // paling kuat (IP langsung)
+                "https://cloudflare.com/cdn-cgi/trace",   // CDN global
+            ];
 
-                testUrls.forEach(function (url) {
+            if (location.origin !== "null") {
+                testUrls.push(location.origin); // tambahkan origin sendiri untuk cek koneksi ke server lokal (jika ada)
+            }
 
-                    if (done) return;
+            var checked = 0;
+            var done = false; // success flag untuk mencegah multiple callback
 
-                    $.ajax({
-                        url: url,
-                        method: 'GET',
-                        cache: false,
-                        timeout: 4500, // timeout 4.5 detik untuk respons, jika lebih dari ini dianggap gagal
+            testUrls.forEach(function (url) {
 
-                        success: function () {
+                if (done) return;
 
-                            if (done) return;
-                            done = true;
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    cache: false,
+                    timeout: 4500, // timeout 4.5 detik untuk respons, jika lebih dari ini dianggap gagal
 
-                            internetFailCount = 0;
-                            var latency = Date.now() - latencyStart;
+                    success: function () {
 
-                            if (latency < 200) {
-                                statusText = "ONLINE";
-                            } else if (latency < 1000) {
-                                statusText = "SLOW";
+                        if (done) return;
+                        done = true;
+
+                        internetFailCount = 0;
+                        var latency = Date.now() - latencyStart;
+
+                        if (latency < 200) {
+                            statusText = "ONLINE";
+                        } else if (latency < 1000) {
+                            statusText = "SLOW";
+                        } else {
+                            statusText = "VERY SLOW";
+                        }
+
+                        $('.net-status, .net-status-header')
+                            .text(statusText)
+                            .removeClass('net-offline')
+                            .addClass('net-online');
+                    },
+
+                    error: function () {
+
+                        if (done) return;
+
+                        checked++;
+
+                        if (checked === testUrls.length) {
+
+                            internetFailCount++;
+
+                            console.log("Internet check failed | count:", internetFailCount);
+
+                            if (internetFailCount < internetFailTolerance) {
+
+                                $('.net-status, .net-status-header')
+                                    .text("CHECKING...")
+                                    .removeClass('net-online net-offline');
+
                             } else {
-                                statusText = "VERY SLOW";
-                            }
 
-                            $('.net-status, .net-status-header')
-                                .text(statusText)
-                                .removeClass('net-offline')
-                                .addClass('net-online');
-                        },
+                                $('.net-status, .net-status-header')
+                                    .text("OFFLINE")
+                                    .removeClass('net-online')
+                                    .addClass('net-offline');
 
-                        error: function () {
-
-                            if (done) return;
-
-                            checked++;
-
-                            if (checked === testUrls.length) {
-
-                                internetFailCount++;
-
-                                console.log("Internet check failed | count:", internetFailCount);
-
-                                if (internetFailCount < internetFailTolerance) {
-
-                                    $('.net-status, .net-status-header')
-                                        .text("CHECKING...")
-                                        .removeClass('net-online net-offline');
-
-                                } else {
-
-                                    $('.net-status, .net-status-header')
-                                        .text("OFFLINE")
-                                        .removeClass('net-online')
-                                        .addClass('net-offline');
-
-                                }
                             }
                         }
-                    });
-
+                    }
                 });
+
+            });
+        }
+
+        // Gunakan Overlay
+        function showOverlay(msg1, msg2, msg3) {
+
+            $('.msg1').text(msg1);
+            $('.msg2').text(msg2);
+            $('.msg3').text(msg3);
+
+            $('.message-overlay').css('display', 'flex');
+        }
+
+        function hideOverlay() {
+            $('.message-overlay').hide();
+        }
+
+
+        function startOwl() {
+            if (!owlReady) return; // <-- PROTEKSI
+
+            if (!owlRunning) {
+                $('.owl-carousel').trigger('play.owl.autoplay', [setting.slideInterval]);
+                owlRunning = true;
+                console.log("Owl started");
+            }
+        }
+
+        function stopOwl() {
+            if (!owlReady) return; // <-- PROTEKSI
+
+            if (owlRunning) {
+                $('.owl-carousel').trigger('stop.owl.autoplay');
+                owlRunning = false;
+                console.log("Owl stopped");
+            }
+        }
+
+        function safeResetOwl() {
+
+            if (!owlReady) {
+                console.log("Owl not ready, skip reset");
+                return;
             }
 
-            // Gunakan Overlay
-            function showOverlay(msg1, msg2, msg3) {
-
-                $('.msg1').text(msg1);
-                $('.msg2').text(msg2);
-                $('.msg3').text(msg3);
-
-                $('.message-overlay').css('display', 'flex');
+            // batalkan reset sebelumnya (ANTI NUMPUK)
+            if (owlResetTimer) {
+                clearTimeout(owlResetTimer);
             }
 
-            function hideOverlay() {
-                $('.message-overlay').hide();
+            if (owlRunning) {
+                stopOwl();
             }
 
-
-            function startOwl() {
-                if (!owlReady) return; // <-- PROTEKSI
-
-                if (!owlRunning) {
-                    $('.owl-carousel').trigger('play.owl.autoplay', [setting.slideInterval]);
-                    owlRunning = true;
-                    console.log("Owl started");
-                }
-            }
-
-            function stopOwl() {
-                if (!owlReady) return; // <-- PROTEKSI
-
-                if (owlRunning) {
-                    $('.owl-carousel').trigger('stop.owl.autoplay');
-                    owlRunning = false;
-                    console.log("Owl stopped");
-                }
-            }
-
-            function safeResetOwl() {
-
-                if (!owlReady) {
-                    console.log("Owl not ready, skip reset");
-                    return;
-                }
-
-                // batalkan reset sebelumnya (ANTI NUMPUK)
-                if (owlResetTimer) {
-                    clearTimeout(owlResetTimer);
-                }
-
-                if (owlRunning) {
-                    stopOwl();
-                }
-
-                owlResetTimer = setTimeout(function () {
-                    $('.owl-carousel').trigger('to.owl.carousel', [0, 0]);
-                    startOwl();
-                    owlResetTimer = null;
-                }, 100);
-            }
+            owlResetTimer = setTimeout(function () {
+                $('.owl-carousel').trigger('to.owl.carousel', [0, 0]);
+                startOwl();
+                owlResetTimer = null;
+            }, 100);
+        }
 
     </script>
 </body>
