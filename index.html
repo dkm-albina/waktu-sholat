@@ -558,6 +558,39 @@
                 opacity: 1;
             }
         }
+
+        .owl-carousel .animated {
+            animation-duration: 0.3s;
+            animation-fill-mode: both;
+        }
+
+        .owl-carousel .fadeOut {
+            animation-name: fadeOut;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .owl-carousel .fadeIn {
+            animation-name: fadeIn;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
     </style>
 
 </head>
@@ -1074,9 +1107,12 @@
                     autoplayHoverPause: false,
                     touchDrag: true,
                     mouseDrag: false,
-                    smartSpeed: 500, // jangan terlalu lama transisinya, bisa CPU spike
+                    smartSpeed: 600, // jangan terlalu lama transisinya, bisa CPU spike
                     autoplayTimeout: setting.slideInterval,
-                    slideTransition: 'ease-in-out' // bisa dihapus jika dianggap tidak perlu
+                    //slideTransition: 'ease-in-out' // bisa dihapus jika dianggap tidak perlu
+                    // 🔥 Fade effect
+                    animateOut: 'fadeOut',
+                    animateIn: 'fadeIn',
                 });
                 //INIT OWL CAROUSEL SETTING
                 owlReady = true;
