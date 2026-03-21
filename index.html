@@ -1160,6 +1160,11 @@
 
             $('.masehi').text(nowMoment.format('HH:mm:ss'));
 
+            var hariID = [
+                "Ahad", "Senin", "Selasa", "Rabu",
+                "Kamis", "Jumat", "Sabtu"
+            ];
+
             var bulanHijriID = [
                 "Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir",
                 "Jumadil Awal", "Jumadil Akhir", "Rajab",
@@ -1167,12 +1172,14 @@
                 "Dzulqa'dah", "Dzulhijjah"
             ];
 
-            var hijriMoment = nowMoment.clone().add(HIJRI_OFFSET, 'iDate');
+            var hari = hariID[nowMoment.day()];
 
+            var hijriMoment = nowMoment.clone().add(HIJRI_OFFSET, 'iDate');
             var bulan = bulanHijriID[hijriMoment.iMonth()];
 
             $('.hijriah').text(
-                nowMoment.format('ddd, DD/MM/YYYY') +
+                hari + ', ' +
+                nowMoment.format('DD/MM/YYYY') +
                 ' - ' +
                 hijriMoment.format('iD') + ' ' +
                 bulan + ' ' +
