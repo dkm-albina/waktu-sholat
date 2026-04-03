@@ -47,7 +47,7 @@
             /*color:#8d6e63;  kalau mau diganti coklat medium */
             color: #ffe082;
             /* diganti emas muda */
-            font-size: 14px;
+            font-size: 15px;
         }
 
         .first .mybox {
@@ -56,6 +56,7 @@
             /* coklat tua */
             text-align: center;
             border-radius: 4px;
+            margin-top: 5px; // posisi turun 5px dari atas
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -98,6 +99,7 @@
             background-color: #2e7d32;
             /* hijau tua */
             padding: 5px 16px;
+
             height: 96px;
             /*awalnya 100px, dikurangi agar lebih proporsional*/
 
@@ -208,7 +210,7 @@
             font-size: 56px;
             /*dari 50px */
             font-weight: bold;
-            margin: 0 auto 5px auto;
+            margin: 0 auto 3px auto;
             padding: 0px 0px;
             text-transform: uppercase;
             /*color:#66ffff;*/
@@ -224,14 +226,13 @@
 
         .hijriah {
             /*hari skrg*/
-            padding: 5px 0px;
+            padding: 3px 0px;
             font-weight: bold;
             color: #d7ccc8;
             /* coklat muda */
-            font-size: 12px;
+            font-size: 12.8px;
             /*dari 14px */
             line-height: 1.1;
-
         }
 
         .countdown-event {
@@ -241,7 +242,8 @@
 
         .countdown-event {
             /*waktu mundur*/
-            margin: 0 auto 5px auto;
+            margin: -8px auto 3px auto;
+            transform: translateY(-1px);
             padding: 0px 0px;
             font-size: 56px;
             /*60px*/
@@ -337,10 +339,22 @@
             position: relative;
         }
 
-        .wallpaper {
-            position: relative;
+
+        .slide-container {
+            min-height: calc(100vh - 186px);
         }
 
+
+        .wallpaper {
+            position: relative;
+            min-height: calc(100vh - 186px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .wallpaper.ready {
+            opacity: 1;
+        }
 
         .wallpaper .item {
             /*wallpaper slide*/
@@ -442,7 +456,8 @@
 
         .desc-container {
             /*pad menjelang*/
-            padding: 4px 0;
+            padding: 2px 0;
+            margin-bottom: 0px;
             color: #ffd54f;
 
             text-shadow:
@@ -546,6 +561,39 @@
                 opacity: 1;
             }
         }
+
+        .owl-carousel .animated {
+            animation-duration: 1.5s !important;
+            animation-fill-mode: both;
+        }
+
+        .owl-carousel .fadeOut {
+            animation-name: fadeOut;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .owl-carousel .fadeIn {
+            animation-name: fadeIn;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
     </style>
 
 </head>
@@ -569,8 +617,8 @@
                 </div>
             </div>
             <div class="col col4">
-                <div class="countdown-event mybox"></div>
                 <div class="mybox desc-container"><span class="desc"></span></div>
+                <div class="countdown-event mybox"></div>
             </div>
             <div class="clear"></div>
         </div>
@@ -582,7 +630,7 @@
                         <div class="prayer-time IMSAK"></div>
                     </div>
                     <div class="col7 myprayer">
-                        <div class="prayer-title">SUBUH</div>
+                        <div class="prayer-title">SHUBUH</div>
                         <div class="prayer-time SUBUH"></div>
                     </div>
                     <div class="col7 myprayer">
@@ -594,7 +642,7 @@
                         <div class="prayer-time ZHUHUR"></div>
                     </div>
                     <div class="col7 myprayer">
-                        <div class="prayer-title">ASHAR</div>
+                        <div class="prayer-title">'ASHAR</div>
                         <div class="prayer-time ASHAR"></div>
                     </div>
                     <div class="col7 myprayer">
@@ -602,7 +650,7 @@
                         <div class="prayer-time MAGHRIB"></div>
                     </div>
                     <div class="col7 myprayer">
-                        <div class="prayer-title">ISYA</div>
+                        <div class="prayer-title">'ISYA</div>
                         <div class="prayer-time ISYA"></div>
                     </div>
                     <div class="clear"></div>
@@ -637,7 +685,7 @@
             </div>
         </div>
     </div>
-    </div>
+
     <div class="layer"></div>
 
     <!--fix problem : google chrome update will not autoplay audio/video-->
@@ -729,99 +777,107 @@
         var lastMinuteCheck = Date.now();
         var lastWatchdogCheck = Date.now();
         var appStarted = false;
+        var HIJRI_OFFSET = -1;
 
 
         // FIX STABILITY TV BOX MODE
         // tidak reload halaman karena bisa gagal jika internet mati
         // hanya refresh jadwal dan countdown
-        function startHeartbeat() {
+        // =============================
+        // HEARTBEAT 1 MENIT TASK (Midnight + Daily Refresh Safe)
+        // =============================
+        var lastMinuteCheck = Date.now();
+        var todayDate = moment().format("YYYY-MM-DD");
+        var lastMidnightTrigger = null; // flag tambahan untuk midnight
 
-            if (heartbeatInterval) {
-                clearInterval(heartbeatInterval);
+        function heartbeatOneMinuteTask() {
+
+            var now = Date.now();
+
+            // hanya eksekusi jika sudah > 60 detik sejak terakhir
+            if (now - lastMinuteCheck < 60000) return;
+
+            lastMinuteCheck = now;
+
+            var nowMoment = moment();
+            var currentDateStr = nowMoment.format("YYYY-MM-DD");
+
+            var shouldRefresh = false;
+
+            // =========================
+            // 1. Daily refresh: cek pergantian hari
+            // =========================
+            if (currentDateStr !== todayDate && systemState === "countdown") {
+                todayDate = currentDateStr;
+                shouldRefresh = true;
+                console.log("Daily refresh triggered:", currentDateStr);
             }
+
+            // =========================
+            // 2. Midnight refresh: cek jam 00:00
+            // - Gunakan lastMidnightTrigger agar tidak ganda
+            // =========================
+            if (
+                nowMoment.hour() === 0 &&
+                nowMoment.minute() === 0 &&
+                lastMidnightTrigger !== currentDateStr
+            ) {
+                shouldRefresh = true;
+                lastMidnightTrigger = currentDateStr;
+                console.log("Midnight refresh triggered:", currentDateStr);
+            }
+
+            // =========================
+            // 3. Jalankan startApp sekali jika ada trigger aktif
+            // =========================
+            if (shouldRefresh) {
+                startApp(true); // force restart
+            }
+
+            // =========================
+            // 4. Cek status jaringan
+            // =========================
+            updateNetworkStatus();
+
+            // =========================
+            // Opsional: log ringan untuk debugging
+            // =========================
+            if (Math.random() < 0.1) {
+                console.log("Heartbeat 1-min tick:", nowMoment.format("HH:mm:ss"));
+            }
+        }
+
+        // =============================
+        // INTEGRASI DENGAN HEARTBEAT INTERVAL UTAMA
+        // =============================
+        function startHeartbeat() {
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
 
             heartbeatInterval = setInterval(function () {
 
-                heartbeatTick++;
-                var now = Date.now();
-
-                // =========================
-                // 1. BASIC TICK (SETIAP DETIK)
-                // =========================
+                // 1. BASIC TICK SETIAP DETIK
                 if (systemState === "countdown") {
-                    watchdogLastTick = now;
+                    watchdogLastTick = Date.now();
                 }
-
-                // update jam (tanpa tunggu countdown)
                 updateClockDisplay();
 
-                // =========================
-                // 2. 1 MENIT TASK
-                // =========================
-                if (now - lastMinuteCheck > 60000) {
-                    lastMinuteCheck = now;
+                // 2. HEARTBEAT 1 MENIT TASK
+                heartbeatOneMinuteTask();
 
-                    // random log (hemat CPU)
-                    if (Math.random() < 0.1) {
-                        console.log("Bilal heartbeat", Date.now());
+                // 3. WATCHDOG 5 MENIT
+                if (Date.now() - lastWatchdogCheck > 300000) {
+                    lastWatchdogCheck = Date.now();
+                    if (Date.now() - watchdogLastTick > 150000 && systemState === "countdown") {
+                        console.log("Watchdog restart (heartbeat)");
+                        try { startApp(true); } catch (e) { console.log("Watchdog error:", e); }
                     }
-
-                    // cek pergantian hari
-                    currentDate = moment().format("YYYY-MM-DD");
-
-                    if (currentDate !== todayDate && systemState == "countdown") {
-                        todayDate = currentDate;
-                        console.log("Daily refresh triggered");
-                        startApp();
-                    }
-
-                    // cek network
-                    updateNetworkStatus();
                 }
 
-
-                // =========================
-                // 3. 5 MENIT WATCHDOG
-                // =========================
-                if (now - lastWatchdogCheck > 300000) {
-
-                    lastWatchdogCheck = now;
-
-                    var diff = now - watchdogLastTick;
-
-                    if (diff > 150000) {
-
-                        if (systemState === "countdown") {
-
-                            console.log("Watchdog restart (heartbeat)");
-
-                            try {
-                                startApp();
-                            } catch (e) {
-                                console.log("Watchdog error:", e);
-                            }
-
-                        } else {
-                            console.log("Watchdog skipped (ritual)");
-                        }
-
-                    }
-
-                }
-
-                // =========================
-                // 4. 6 JAM STABILITY REFRESH
-                // =========================
-
-
-                if (now - lastStabilityCheck > 21600000) {
-                    lastStabilityCheck = now;
-
+                // 4. STABILITY REFRESH 6 JAM
+                if (Date.now() - lastStabilityCheck > 21600000) {
+                    lastStabilityCheck = Date.now();
                     console.log("Stability refresh (heartbeat)");
-
-                    if (systemState == "countdown") {
-                        startApp();
-                    }
+                    if (systemState == "countdown") startApp(true);
                 }
 
             }, 1000);
@@ -861,11 +917,19 @@
         }
 
         // with FIX BUG geolocation async
-        function startApp() {
+        function startApp(force = false) {
 
-            if (appStarted) {
+            if (appStarted && !force) {
                 console.log("startApp skipped (already started)");
                 return;
+            }
+
+
+            if (force) {
+                console.log("Force restart app");
+
+                systemState = "countdown";
+                systemPrayer = "";
             }
 
             appStarted = true;
@@ -884,6 +948,20 @@
 
             masterTime = [times.imsak, times.fajr, times.sunrise, times.dhuhr, times.asr, times.maghrib, times.isha];
             masterName = setting.aliasName;
+
+            masterSchedule = masterTime.map(function (t, i) {
+                var splt = t.split(':');
+
+                return {
+                    name: masterName[i],
+                    timeStr: t,
+                    timestamp: moment().hour(splt[0]).minute(splt[1]).second(0).unix()
+                };
+            });
+
+            masterSchedule.sort(function (a, b) {
+                return a.timestamp - b.timestamp;
+            });
 
             // FIX BUG reference array (harus copy bukan reference)
             tempShalat = masterTime.slice();
@@ -954,17 +1032,17 @@
                     // FIX BUG timezone
                     setting.timezoneOffset = Math.round(moment().utcOffset() / 60);
 
-                    startApp();
+                    startApp(true);
 
                 },
                     function error() {
-                        startApp(); // fallback jika GPS gagal
+                        startApp(true); // fallback jika GPS gagal
                     },
                     { maximumAge: 10000, timeout: 3000, enableHighAccuracy: true });
 
             } else {
 
-                startApp();
+                startApp(true); // langsung mulai tanpa geolocation
 
             }
 
@@ -978,10 +1056,11 @@
             window.addEventListener('online', updateNetworkStatus);
             window.addEventListener('offline', updateNetworkStatus);
 
-           
+
             //running text
             $.ajax({
                 url: setting.runningTextFile,
+                timeout: 3000,
                 success: function (d) {
                     $('.running-text').text(d);
                 },
@@ -989,11 +1068,15 @@
                     $('.running-text').text("Selamat datang di " + setting.nama);
                 },
                 complete: function () {
+                    if ($('.running-text').data('marquee')) {
+                        $('.running-text').marquee('destroy');
+                    } // jika ada instance marquee sebelumnya, hancurkan dulu agar tidak duplikat
                     $('.running-text').marquee({
                         duration: setting.runningTextSpeed,
                         gap: 50
                     });
                 }
+
             });
 
             //CHECK Visibility
@@ -1012,27 +1095,47 @@
                 $('.slide-container').append('<div class="item" style="background-image: url(\'www/public/Bilal/img/slide/' + a + '.JPG\')"></div>');
             }
 
-            setTimeout(function () {
-                $('.owl-carousel').owlCarousel({
-                    loop: true,
+            requestAnimationFrame(function () {
+                var $owl = $('.owl-carousel');
+
+                if ($owl.data('owl.carousel')) {
+                    $owl.owlCarousel('destroy');
+                }
+
+                var speed = 1500;
+                var interval = setting.slideInterval;
+
+                if (interval <= speed) {
+                    interval = speed + 1000; // lebih lega kalau user swipe
+                }
+
+                $owl.owlCarousel({
                     items: 1,
+                    loop: true,
                     dots: false,
-                    lazyLoad: false,
+
                     autoplay: true,
                     autoplayHoverPause: false,
+                    autoplayTimeout: interval,
+
+                    // 🔥 Swipe aktif
                     touchDrag: true,
                     mouseDrag: false,
-                    smartSpeed: 1000, // jangan terlalu lama transisinya, bisa CPU spike
-                    autoplayTimeout: setting.slideInterval,
-                    slideTransition: 'ease-in-out' // bisa dihapus jika dianggap tidak perlu
+
+                    // 🔥 Fade
+                    animateOut: 'fadeOut',
+                    animateIn: 'fadeIn',
+                    smartSpeed: speed
                 });
-                //INIT OWL CAROUSEL SETTING
-                owlReady = true;
-                owlRunning = true;
-            }, 300);
 
+                //INIT OWL CAROUSEL SETTING 
+                window.owlReady = true;
+                window.owlRunning = true;
+
+                // 🔥 tampilkan setelah siap
+                $('.wallpaper').addClass('ready');
+            });
         });
-
 
         //stop timer
         function stopTimer() {
@@ -1057,10 +1160,30 @@
 
             $('.masehi').text(nowMoment.format('HH:mm:ss'));
 
+            var hariID = [
+                "Ahad", "Senin", "Selasa", "Rabu",
+                "Kamis", "Jumat", "Sabtu"
+            ];
+
+            var bulanHijriID = [
+                "Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir",
+                "Jumadil Awal", "Jumadil Akhir", "Rajab",
+                "Sya'ban", "Ramadhan", "Syawal",
+                "Dzulqa'dah", "Dzulhijjah"
+            ];
+
+            var hari = hariID[nowMoment.day()];
+
+            var hijriMoment = nowMoment.clone().add(HIJRI_OFFSET, 'iDate');
+            var bulan = bulanHijriID[hijriMoment.iMonth()];
+
             $('.hijriah').text(
-                nowMoment.format('ddd, DD/MM/YYYY') +
+                hari + ', ' +
+                nowMoment.format('DD/MM/YYYY') +
                 ' - ' +
-                nowMoment.format('iD iMMMM iYYYY [H]')
+                hijriMoment.format('iD') + ' ' +
+                bulan + ' ' +
+                hijriMoment.format('iYYYY') + ' H'
             );
 
         }
@@ -1137,7 +1260,7 @@
 
                     if (name == 'adzan') {
 
-                        showOverlay("Laksanakan", "Shalat Sunnah", "Sebelum Iqomah");
+                        showOverlay("Berdo'a & Laksanakan", "Shalat Sunnah", "Sebelum Iqomah");
 
                         iqomahCountdownActive = false;
                         iqomahLastSecond = -1;
@@ -1298,9 +1421,7 @@
 
             // ========================================
             // PROTEKSI RITUAL PHASE
-            // nextSchedule hanya boleh berjalan saat mode countdown
             // ========================================
-
             console.log("nextSchedule called | state:", systemState);
 
             if (systemState !== "countdown" && systemState !== "iqomah") {
@@ -1322,32 +1443,50 @@
                 hideOverlay();
             }
 
-            // var now = moment().unix(); // lebih aman diletakkan di luar loop
             var now = Math.floor(Date.now() / 1000);
-            for (var a = 0; a < tempShalat.length; a++) { // FIX BUG global variable
 
-                var splt = tempShalat[a].split(':');
-                var next = moment().hour(splt[0]).minute(splt[1]).second(0).unix();
+            // ========================================
+            // LOOP MASTER SCHEDULE (SUDAH DISORT)
+            // ========================================
+            for (var i = 0; i < masterSchedule.length; i++) {
 
-                if (now < next) {
+                if (now < masterSchedule[i].timestamp) {
 
-                    countdownShalat(next, masterName[a], 'MENJELANG ' + masterName[a]);
+                    countdownShalat(
+                        masterSchedule[i].timestamp,
+                        masterSchedule[i].name,
+                        'MENJELANG ' + masterSchedule[i].name,
+                        masterSchedule[i].name
+                    );
 
                     found = true;
                     return false;
-
                 }
             }
 
-            var splt = tempShalat[0].split(':');
-
-            var next = moment().add(1, 'day').hour(splt[0]).minute(splt[1]).second(0).unix();
-
+            // ========================================
+            // JIKA SUDAH LEWAT SEMUA → BESOK EVENT PERTAMA
+            // ========================================
             if (!found) {
-                countdownShalat(next, masterName[0], 'MENJELANG ' + masterName[0]);
+
+                var first = masterSchedule[0];
+                var splt = first.timeStr.split(':');
+
+                var next = moment()
+                    .add(1, 'day')
+                    .hour(splt[0])
+                    .minute(splt[1])
+                    .second(0)
+                    .unix();
+
+                countdownShalat(
+                    next,
+                    first.name,
+                    'MENJELANG ' + first.name,
+                    first.name
+                );
             }
         }
-
         // =========================================
         // NETWORK STATUS DETECTOR
         // =========================================
@@ -1373,38 +1512,83 @@
         // CHECK koneksi INTERNET real time, bukan sekedar adanya WIFI 
         function checkInternet() {
 
-            $.ajax({
-                url: setting.runningTextFile,
-                method: 'HEAD',
-                timeout: 3000,
-                success: function () {
+            var latencyStart = Date.now();
+            var testUrls = [
+                "https://1.1.1.1/cdn-cgi/trace",          // paling kuat (IP langsung)
+                "https://cloudflare.com/cdn-cgi/trace",   // CDN global
+            ];
 
-                    internetFailCount = 0; // reset jika berhasil
+            if (location.origin !== "null") {
+                testUrls.push(location.origin); // tambahkan origin sendiri untuk cek koneksi ke server lokal (jika ada)
+            }
 
-                    $('.net-status, .net-status-header')
-                        .text("ONLINE")
-                        .removeClass('net-offline')
-                        .addClass('net-online');
+            var checked = 0;
+            var done = false; // success flag untuk mencegah multiple callback
 
-                },
-                error: function () {
+            testUrls.forEach(function (url) {
 
-                    internetFailCount++;
+                if (done) return;
 
-                    console.log("Internet check failed | count:", internetFailCount);
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    cache: false,
+                    timeout: 4500, // timeout 4.5 detik untuk respons, jika lebih dari ini dianggap gagal
 
-                    if (internetFailCount >= internetFailTolerance) {
+                    success: function () {
+
+                        if (done) return;
+                        done = true;
+
+                        internetFailCount = 0;
+                        var latency = Date.now() - latencyStart;
+
+                        if (latency < 200) {
+                            statusText = "ONLINE";
+                        } else if (latency < 1000) {
+                            statusText = "SLOW";
+                        } else {
+                            statusText = "VERY SLOW";
+                        }
 
                         $('.net-status, .net-status-header')
-                            .text("OFFLINE")
-                            .removeClass('net-online')
-                            .addClass('net-offline');
+                            .text(statusText)
+                            .removeClass('net-offline')
+                            .addClass('net-online');
+                    },
+
+                    error: function () {
+
+                        if (done) return;
+
+                        checked++;
+
+                        if (checked === testUrls.length) {
+
+                            internetFailCount++;
+
+                            console.log("Internet check failed | count:", internetFailCount);
+
+                            if (internetFailCount < internetFailTolerance) {
+
+                                $('.net-status, .net-status-header')
+                                    .text("CHECKING...")
+                                    .removeClass('net-online net-offline');
+
+                            } else {
+
+                                $('.net-status, .net-status-header')
+                                    .text("OFFLINE")
+                                    .removeClass('net-online')
+                                    .addClass('net-offline');
+
+                            }
+                        }
                     }
-                }
+                });
+
             });
-
         }
-
 
         // Gunakan Overlay
         function showOverlay(msg1, msg2, msg3) {
