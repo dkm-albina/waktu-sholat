@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🕌 MASJID AL-BINA</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #1f3d2b, #3b2f2f, #1abc9c);
+    }
+
+    .container {
+      text-align: center;
+      color: white;
+    }
+
+    h1 {
+      margin-bottom: 40px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      width: 160px;
+      height: 160px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      color: white;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn i {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .online {
+      background: linear-gradient(135deg, #1abc9c, #16a085);
+    }
+
+    .offline {
+      background: linear-gradient(135deg, #6b4f3b, #8e6e53);
+    }
+
+    .btn:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    h1 i {
+      margin-right: 10px;
+      color: #ffd369;
+      /* warm gold tone */
+    }
+
+    .clock-analog {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+
+    .dial {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      position: relative;
+
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4),
+        inset 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+
+    /* hands */
+    .hand {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform-origin: bottom;
+      transform: translateX(-50%) rotate(0deg);
+      border-radius: 6px;
+    }
+
+    .hour {
+      width: 6px;
+      height: 45px;
+      background: #d4af37;
+      /* gold */
+    }
+
+    .minute {
+      width: 4px;
+      height: 65px;
+      background: #1abc9c;
+      /* turquoise */
+    }
+
+    .second {
+      width: 2px;
+      height: 75px;
+      background: #ff6b6b;
+    }
+
+    .center-dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: white;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="clock-analog">
+      <div class="dial">
+        <div class="hand hour"></div>
+        <div class="hand minute"></div>
+        <div class="hand second"></div>
+        <div class="center-dot"></div>
+      </div>
+    </div>
+    <h1>WAKTU SHOLAT v2.0<br><i class="fas fa-mosque"></i>MASJID AL-BINA<br>Select Mode</h1>
+    <div class="buttons">
+      <button class="btn online" onclick="goOnline()">
+        <i class="fas fa-wifi"></i>
+        ONLINE
+      </button>
+
+      <button class="btn offline" onclick="goOffline()">
+        <i class="fas fa-plug"></i>
+        OFFLINE
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function updateAnalogClock() {
+      const now = new Date();
+
+      const sec = now.getSeconds();
+      const min = now.getMinutes();
+      const hr = now.getHours();
+
+      const secDeg = sec * 6;
+      const minDeg = min * 6 + sec * 0.1;
+      const hrDeg = (hr % 12) * 30 + min * 0.5;
+
+      document.querySelector(".second").style.transform =
+        `translateX(-50%) rotate(${secDeg}deg)`;
+
+      document.querySelector(".minute").style.transform =
+        `translateX(-50%) rotate(${minDeg}deg)`;
+
+      document.querySelector(".hour").style.transform =
+        `translateX(-50%) rotate(${hrDeg}deg)`;
+    }
+
+    setInterval(updateAnalogClock, 1000);
+    updateAnalogClock();
+
+    function goOnline() {
+      window.location.href = "https://andryan-github.github.io/waktu-sholat/";
+    }
+
+    function goOffline() {
+      window.location.href = "index.html";
+    }
+  </script>
+
+</body>
+
+</html>
