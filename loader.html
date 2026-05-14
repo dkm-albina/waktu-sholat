@@ -1,107 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta charset="utf-8">
-<base href="./">
-<title>Bilal Loader</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🕌 MASJID AL-BINA</title>
 
-<script>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-// =========================================
-// BILAL APP LOADER
-// Digunakan sebagai halaman awal kiosk
-// Tujuan:
-// 1. Mengecek apakah internet tersedia
-// 2. Jika online → load versi terbaru dari GitHub
-// 3. Jika offline → load versi yang sudah ada di cache browser
-// =========================================
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
 
-// Membuat URL index dengan timestamp
-// Tujuannya agar browser tidak memakai cache lama
-// jika internet tersedia
-var url = "index.html?v=" + Date.now();
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #1f3d2b, #3b2f2f, #1abc9c);
+    }
 
+    .container {
+      text-align: center;
+      color: white;
+    }
 
-// =========================================
-// FUNGSI LOAD APP
-// =========================================
+    h1 {
+      margin-bottom: 40px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
 
-function loadApp(){
+    .buttons {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
 
-    // mencoba mengambil index.html dari server
-    // cache:"no-store" memastikan request benar-benar
-    // mencoba ke internet (bukan dari cache)
-    fetch(url,{cache:"no-store"})
+    .btn {
+      width: 160px;
+      height: 160px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      color: white;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
 
-    .then(function(){
+    .btn i {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
 
-        // =========================================
-        // JIKA ONLINE
-        // =========================================
-        // Jika request berhasil berarti internet ada
-        // maka kita load index terbaru
-        console.log("Online → loading latest version");
+    .online {
+      background: linear-gradient(135deg, #1abc9c, #16a085);
+    }
 
-        window.location.href = url;
+    .offline {
+      background: linear-gradient(135deg, #6b4f3b, #8e6e53);
+    }
 
-    })
+    .btn:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
 
-    .catch(function(){
+    .btn:active {
+      transform: scale(0.95);
+    }
 
-        // =========================================
-        // JIKA OFFLINE
-        // =========================================
-        // Jika fetch gagal berarti internet tidak ada
-        // maka kita load index.html tanpa parameter
-        // sehingga browser menggunakan cache lokal
-        console.log("Offline → loading cached version");
+    h1 i {
+      margin-right: 10px;
+      color: #ffd369;
+      /* warm gold tone */
+    }
 
-        window.location.href = "index.html";
+    .clock {
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: #e8fdf5;
+      margin-bottom: 20px;
 
-    });
+      background: rgba(255, 255, 255, 0.08);
+      padding: 12px 30px;
+      border-radius: 16px;
 
-}
-
-
-// =========================================
-// MENJALANKAN LOADER
-// =========================================
-
-loadApp();
-
-
-// =========================================
-// AUTO REFRESH LOADER
-// =========================================
-// Loader akan refresh setiap 6 jam
-// Tujuannya:
-//
-// 1. memastikan aplikasi tetap sinkron dengan server
-// 2. membersihkan kemungkinan memory leak browser
-// 3. memaksa cek update jika internet kembali tersedia
-//
-// Jika internet mati, loader tetap mencoba
-// memuat versi cache dari index.html
-// =========================================
-
-setInterval(function(){
-
-    console.log("Loader refresh (6 hours)");
-
-    location.reload();
-
-},21600000); // 6 jam
-
-
-</script>
-
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+  </style>
 </head>
 
+<body>
 
-<body style="background:black;color:white;font-family:Arial;text-align:center;margin-top:20%">
+  <div class="container">
+    <div class="clock" id="clock">00:00:00</div>
+    <h1>WAKTU SHOLAT v2.0<br><i class="fas fa-mosque"></i>MASJID AL-BINA<br>Select Mode</h1>
+    <div class="buttons">
+      <button class="btn online" onclick="goOnline()">
+        <i class="fas fa-wifi"></i>
+        ONLINE
+      </button>
 
-Loading BilalApp...
+      <button class="btn offline" onclick="goOffline()">
+        <i class="fas fa-plug"></i>
+        OFFLINE
+      </button>
+    </div>
+  </div>
+
+  <script>
+
+    function updateClock() {
+      const now = new Date();
+
+      let h = String(now.getHours()).padStart(2, '0');
+      let m = String(now.getMinutes()).padStart(2, '0');
+      let s = String(now.getSeconds()).padStart(2, '0');
+
+      document.getElementById("clock").textContent = `${h}:${m}:${s}`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function goOnline() {
+      window.location.href = "https://andryan-github.github.io/waktu-sholat/";
+    }
+
+    function goOffline() {
+      window.location.href = "index.html";
+    }
+  </script>
 
 </body>
+
 </html>
