@@ -594,6 +594,54 @@
                 opacity: 1;
             }
         }
+
+        .freeze-indicator {
+            position: absolute;
+            right: 10px;
+            bottom: 35px;
+            font-size: 11px;
+            color: #ff5252;
+            opacity: 0;
+        }
+
+        .image-overlay {
+            position: fixed;
+            /* 🔥 wajib supaya tidak ikut parent */
+            inset: 0;
+
+            display: none;
+            /* default hidden */
+            opacity: 0;
+            /* untuk animasi fade */
+
+            justify-content: center;
+            align-items: center;
+
+            z-index: 99999;
+            background: transparent;
+            /* biar blur wallpaper kelihatan */
+        }
+
+        .image-overlay img {
+            width: 100%;
+            /* 🔥 stretch ke lebar penuh */
+            height: 100%;
+
+            max-width: 1200px;
+            max-height: 600px;
+            /* 🔥 batasi maksimal lebar dan tinggi agar tidak terlalu besar di layar besar */
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+            display: block;
+            margin: auto;
+        }
+
+        .wallpaper.blurred {
+            filter: blur(6px);
+            transform: scale(1.001);
+            /* biar tidak kelihatan pinggir kosong */
+        }
     </style>
 
 </head>
@@ -663,7 +711,9 @@
                     </div>
                     <div class="running-container">
                         <div class="running-text"></div>
+                        <div class="freeze-indicator"></div>
                     </div>
+
                     <div class="message-overlay">
                         <div class="message-box">
                             <div class="msg1"></div>
@@ -671,6 +721,9 @@
                             <div class="msg3"></div>
                         </div>
                     </div>
+                </div>
+                <div class="image-overlay">
+                    <img class="overlay-img" src="" />
                 </div>
             </div>
 
@@ -707,7 +760,7 @@
 
         //app setting
         var app = {
-            version: '1.2.9', // FIX BUG + auto refresh daily + stability fix + owl fix + normalize heartbeat (19/03/2026) by Andryan Nugraha
+            version: '1.2.9 (with Recovery and Freeze Detection)', // FIX BUG + auto refresh daily + stability fix + owl fix + normalize heartbeat (19/03/2026) by Andryan Nugraha
             name: 'Bilal App',
             autoLocation: false // SET true, jika anda ingin menggunakan autolocation, setelah memilih opsi enable GPS pada browser, lalukan refresh pada browser. Fitur ini hanya berfungsi jika device terkoneksi dengan internet saja.
         };
@@ -777,8 +830,318 @@
         var lastMinuteCheck = Date.now();
         var lastWatchdogCheck = Date.now();
         var appStarted = false;
-        var HIJRI_OFFSET = -1;
+        var HIJRI_OFFSET = -1; // sesuaikan secara manual (cek Kemenag)
+        var lastTickTime = Date.now();
+        var freezeThreshold = 2000; // 2 detik (bisa tuning)
 
+        function playImageOverlay(src, repeat = 5, showMs = 30000, gapMs = 2000) {
+
+            let count = 0;
+
+            function loop() {
+
+                if (count >= repeat) {
+                    $('.image-overlay').hide();
+                    $('.wallpaper').removeClass('blurred'); // 🔥 matikan blur
+
+                    startOwl();
+                    $('.running-text').marquee('resume');
+                    $('.running-container').show();
+                    return;
+                }
+
+                console.log("Overlay show:", count + 1);
+
+                stopOwl();
+                $('.running-text').marquee('pause');
+                $('.running-container').hide();
+
+                // 🔥 AKTIFKAN BLUR BACKGROUND
+                $('.wallpaper').addClass('blurred');
+
+                $('.overlay-img').attr('src', src);
+                $('.image-overlay')
+                    .stop(true, true)
+                    .css({
+                        display: 'flex',
+                        opacity: 0
+                    })
+                    .animate({ opacity: 1 }, 300);
+
+                setTimeout(() => {
+                    $('.image-overlay')
+                        .stop(true, true)
+                        .animate({ opacity: 0 }, 300, function () {
+                            $(this).css('display', 'none');
+                        });
+
+                    count++;
+
+                    setTimeout(loop, gapMs);
+
+                }, showMs);
+            }
+
+            loop();
+        }
+
+        function getOverlayImage() {
+            const now = new Date();
+
+            const schedules = [
+                {
+                    until: new Date("2026-04-20T23:59:59"),
+                    img: "www/public/Bilal/img/info/info_kajian_190426.png"
+                },
+                {
+                    until: new Date("2026-04-27T23:59:59"),
+                    img: "www/public/Bilal/img/info/info_kajian_260426.png"
+                }
+            ];
+
+            for (let s of schedules) {
+                if (now <= s.until) return s.img;
+            }
+
+            return "www/public/Bilal/img/info/info_default_1280x610.png";
+        }
+
+        // =============================
+        // Fungsi untuk mendeteksi freeze atau lag berat pada aplikasi
+        // Jika aplikasi mengalami freeze atau lag berat, maka fungsi ini 
+        // akan mendeteksi loncatan waktu yang tidak wajar dan memanggil fungsi handleFreeze untuk menangani kondisi tersebut
+        // Fungsi ini dipanggil secara berkala setiap beberapa detik untuk memastikan aplikasi tetap responsif dan countdown tetap akurat
+        // =============================
+        function detectFreeze() {
+
+            var now = Date.now();
+            var delta = now - lastTickTime;
+
+            lastTickTime = now;
+
+            // kalau loncat lebih dari threshold → freeze terdeteksi
+            if (delta > freezeThreshold) {
+
+                console.log("⚠️ FREEZE DETECTED:", delta, "ms");
+                showFreeze(Math.round(delta / 1000));
+                handleFreeze(delta);
+            }
+        }
+
+        var totalFreeze = 0;
+        function showFreeze(sec) {
+            var el = document.querySelector('.freeze-indicator');
+            if (!el) return;
+
+            totalFreeze += sec;
+
+            if (sec <= 2) color = "#ffeb3b";   // kuning
+            else if (sec <= 5) color = "#ff9800"; // orange
+            else color = "#ff5252"; // merah
+
+            el.textContent = "⚠️ +" + sec + "s" + (totalFreeze > 0 ? " (total +" + totalFreeze + "s)" : "");
+            el.style.color = color;
+            el.style.opacity = 1;
+
+            setTimeout(() => {
+                el.style.opacity = 0;
+            }, 3000);
+        }
+
+        // =============================
+        // Fungsi untuk menangani kondisi freeze atau lag berat yang terdeteksi oleh fungsi detectFreeze
+        // Fungsi ini akan menghentikan semua timer yang sedang berjalan, mereset overlay khusus (seperti iqomah countdown), 
+        // dan mencoba untuk memulihkan state aplikasi berdasarkan waktu saat ini
+        // Jika aplikasi sedang dalam fase ritual (adzan, iqomah, atau shalat berlangsung), maka fungsi ini akan mencoba untuk 
+        // melanjutkan countdown sesuai dengan fase yang seharusnya berdasarkan waktu saat ini   
+        // Jika aplikasi tidak sedang dalam fase ritual, maka fungsi ini akan melanjutkan dengan normal dan menampilkan jadwal berikutnya 
+        // seperti biasa tanpa mengganggu pengalaman pengguna secara signifikan, meskipun aplikasi sempat mengalami freeze atau lag berat
+        // Fungsi ini juga akan mencatat log terkait proses recovery untuk membantu dalam debugging dan pemantauan performa aplikasi
+        // Fungsi ini dipanggil oleh fungsi detectFreeze saat terdeteksi adanya freeze atau lag berat pada aplikasi
+        // =============================
+        function handleFreeze(delta) {
+
+            console.log(
+                "Freeze recovery |",
+                "state:", systemState,
+                "| prayer:", systemPrayer,
+                "| now:", moment().format("HH:mm:ss")
+            );
+
+            // =========================================
+            // 1. STOP semua timer lama
+            // =========================================
+            stopTimer();
+
+            // =========================================
+            // 2. RESET overlay khusus (biar nggak nyangkut)
+            // =========================================
+            iqomahCountdownActive = false;
+            iqomahLastSecond = -1;
+
+            // =========================================
+            // 3. RECOVER STATE BERDASARKAN WAKTU SEKARANG
+            // =========================================
+
+            if (!resumeCurrentPrayer()) {
+
+                // kalau tidak sedang dalam ritual → lanjut normal
+                systemState = "countdown";
+                systemPrayer = "";
+
+                nextSchedule();
+            }
+
+            console.log("✅ Freeze recovery done");
+        }
+
+        // =============================
+        // Fungsi untuk melanjutkan countdown jika sudah melewati fase sebelumnya
+        // Misal: jika sudah melewati fase adzan, maka langsung lanjut ke fase iqomah atau shalat berlangsung
+        // Fungsi ini dipanggil saat aplikasi pertama kali dimulai, untuk memastikan countdown tetap akurat meskipun aplikasi dimulai di tengah-tengah jadwal shalat
+        // =============================
+        function resumeCurrentPrayer() {
+
+            var now = Math.floor(Date.now() / 1000);
+
+            // =========================
+            // 1. CARI PREV & NEXT
+            // =========================
+            var prev = null;
+            var next = null;
+
+            for (var i = 0; i < masterSchedule.length; i++) {
+
+                if (now >= masterSchedule[i].timestamp) {
+                    prev = masterSchedule[i];
+                } else {
+                    next = masterSchedule[i];
+                    break;
+                }
+            }
+
+            // jika belum ada prev → berarti sebelum IMSAK
+            if (!prev) return false;
+
+            // jika tidak ada next → berarti setelah ISYA → next = IMSAK besok
+            if (!next) {
+                var first = masterSchedule[0];
+                var splt = first.timeStr.split(':');
+
+                next = {
+                    name: first.name,
+                    timestamp: moment()
+                        .add(1, 'day')
+                        .hour(splt[0])
+                        .minute(splt[1])
+                        .second(0)
+                        .unix()
+                };
+            }
+
+            console.log("RESUME WINDOW:", prev.name, "→", next.name);
+
+            // =========================
+            // 2. HITUNG FASE RITUAL
+            // =========================
+
+            var start = prev.timestamp;
+
+            // durasi adzan
+            var adzanEnd = start + (setting.adzanTime / 1000);
+
+            // durasi sunnah (khusus subuh beda)
+            var sunnahDuration = (
+                prev.name === 'SUBUH'
+                    ? setting.shalatSunnahTimeSubuh
+                    : setting.shalatSunnahTime
+            ) / 1000;
+
+            var sunnahEnd = adzanEnd + sunnahDuration;
+
+            var iqomahEnd = sunnahEnd + (setting.iqomahTime / 1000);
+
+            var shalatDuration = (setting.shalatDuration[prev.name] || 600000) / 1000;
+            var shalatEnd = iqomahEnd + shalatDuration;
+
+            // =========================
+            // 3. BATASI JANGAN LEWAT NEXT SCHEDULE
+            // =========================
+            var hardEnd = Math.min(shalatEnd, next.timestamp);
+
+            // kalau sudah lewat semua ritual → skip
+            if (now >= hardEnd) return false;
+
+            console.log("RESUME PHASE:", prev.name);
+
+            // =========================
+            // 4. MASUK KE FASE SESUAI POSISI
+            // =========================
+
+            if (now < adzanEnd) {
+
+                countdownShalat(adzanEnd, 'adzan', 'ADZAN ' + prev.name, prev.name);
+
+            } else if (now < sunnahEnd) {
+
+                countdownShalat(sunnahEnd, 'shalat_sunnah', 'MENJELANG IQOMAH ' + prev.name, prev.name);
+
+            } else if (now < iqomahEnd) {
+
+                countdownShalat(iqomahEnd, 'iqomah', 'IQOMAH ' + prev.name, prev.name);
+
+            } else {
+
+                // =========================
+                // MODE SHALAT BERLANGSUNG
+                // =========================
+
+                systemState = "iqomah";
+                systemPrayer = prev.name;
+
+                showOverlay("🕋", "SHALAT " + prev.name, "SEDANG BERLANGSUNG");
+
+                stopOwl();
+                $('.running-text').marquee('pause');
+                $('.running-container').hide();
+
+                var remaining = (hardEnd - now) * 1000;
+
+                // countdown display
+                finalTime = hardEnd;
+
+                mycountdown = setInterval(function () {
+
+                    var now2 = Math.floor(Date.now() / 1000);
+                    var distance = finalTime - now2;
+
+                    if (distance > 0) {
+                        $(".countdown-event").text(moment.utc(distance * 1000).format("HH:mm:ss"));
+                    } else {
+                        $(".countdown-event").text("00:00:00");
+                    }
+
+                }, 1000);
+
+                shalatTimer = setTimeout(function () {
+
+                    stopTimer();
+
+                    hideOverlay();
+                    safeResetOwl();
+                    $('.running-text').marquee('resume');
+                    $('.running-container').show();
+
+                    systemState = "countdown";
+                    systemPrayer = "";
+
+                    nextSchedule();
+
+                }, remaining);
+            }
+
+            return true;
+        }
 
         // FIX STABILITY TV BOX MODE
         // tidak reload halaman karena bisa gagal jika internet mati
@@ -855,9 +1218,13 @@
 
             heartbeatInterval = setInterval(function () {
 
+                detectFreeze(); // 🔥 WAJIB DI ATAS
+
                 // 1. BASIC TICK SETIAP DETIK
                 if (systemState === "countdown") {
                     watchdogLastTick = Date.now();
+                    // di dalam setInterval 1 detik
+                    runtimeResync();
                 }
                 updateClockDisplay();
 
@@ -868,8 +1235,8 @@
                 if (Date.now() - lastWatchdogCheck > 300000) {
                     lastWatchdogCheck = Date.now();
                     if (Date.now() - watchdogLastTick > 150000 && systemState === "countdown") {
-                        console.log("Watchdog restart (heartbeat)");
-                        try { startApp(true); } catch (e) { console.log("Watchdog error:", e); }
+                        console.log("Watchdog trigger → soft recovery");
+                        handleFreeze(999999); // pakai handleFreeze untuk recovery, dengan delta besar agar dianggap sebagai freeze
                     }
                 }
 
@@ -916,8 +1283,43 @@
 
         }
 
-        // with FIX BUG geolocation async
+        function runtimeResync() {
+
+            // hanya cek saat mode normal
+            if (systemState !== "countdown") return;
+
+            var now = Math.floor(Date.now() / 1000);
+
+            // cari next schedule
+            for (var i = 0; i < masterSchedule.length; i++) {
+
+                var target = masterSchedule[i].timestamp;
+
+                // jika sudah lewat tapi belum trigger
+                if (now >= target) {
+
+                    console.log("RUNTIME RESYNC TRIGGER:", masterSchedule[i].name);
+
+                    stopTimer();
+
+                    countdownShalat(
+                        target,
+                        masterSchedule[i].name,
+                        'MENJELANG ' + masterSchedule[i].name,
+                        masterSchedule[i].name
+                    );
+
+                    return;
+                }
+            }
+        }
+
+        // with FIX BUG geolocation async and auto refresh daily tracking
+        var hasResumed = false;
         function startApp(force = false) {
+
+            if (appStarted && !force) return;
+            hasResumed = false;
 
             if (appStarted && !force) {
                 console.log("startApp skipped (already started)");
@@ -939,7 +1341,9 @@
             var offsetIcon = setting.timezoneOffset > 0 ? '+' : (setting.timezoneOffset == 0) ? '' : '-';
             var now = new Date(); // today
 
-            // watchdogLastTick = Date.now(); // Sengaja dihapus saja agar tidak mengganggu proses loading jadwal, karena jika loading jadwal lama (misal karena metode perhitungan yang kompleks), maka bisa menyebabkan watchdog restart yang tidak perlu
+            // watchdogLastTick = Date.now(); 
+            // Sengaja dihapus saja agar tidak mengganggu proses loading jadwal, karena jika loading jadwal lama 
+            // (misal karena metode perhitungan yang kompleks), maka bisa menyebabkan watchdog restart yang tidak perlu
 
             prayTimes.setMethod(setting.methodCalc);
             prayTimes.tune(setting.tune);
@@ -985,7 +1389,12 @@
 
             safeResetOwl(); // ← khusus owl, agar tidak error jika jadwal berubah saat slide show berjalan
 
-            nextSchedule();
+            if (!hasResumed && resumeCurrentPrayer()) {
+                hasResumed = true;
+            } else {
+                nextSchedule();
+            }
+
         }
 
 
@@ -1262,6 +1671,14 @@
 
                         showOverlay("Berdo'a & Laksanakan", "Shalat Sunnah", "Sebelum Iqomah");
 
+                        // 🔥 TAMBAHAN OVERLAY IMAGE
+                            playImageOverlay(
+                                getOverlayImage(),
+                                3, // frekuensi munculnya overlay 5x
+                                20000, // durasi total termasuk fade in/out, agar lebih smooth dan tidak terlalu cepat hilang, karena ini momen penting setelah shalat selesai
+                                3000 // jeda 3 detik sebelum mulai fade out, agar pengguna punya waktu untuk melihat pesan setelah shalat selesai
+                            );
+
                         iqomahCountdownActive = false;
                         iqomahLastSecond = -1;
 
@@ -1375,9 +1792,16 @@
                             // hidupkan kembali running text
                             $('.running-text').marquee('resume');
 
-                            // sembunyikan running text
+                            // tampilkan running text
                             $('.running-container').show();
 
+                            // 🔥 TAMBAHAN OVERLAY IMAGE
+                            playImageOverlay(
+                                getOverlayImage(),
+                                5, // frekuensi munculnya overlay 5x
+                                30000, // durasi total termasuk fade in/out, agar lebih smooth dan tidak terlalu cepat hilang, karena ini momen penting setelah shalat selesai
+                                3000 // jeda 3 detik sebelum mulai fade out, agar pengguna punya waktu untuk melihat pesan setelah shalat selesai
+                            );
 
                             // reset state sistem
                             systemPrayer = "";
