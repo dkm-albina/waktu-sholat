@@ -886,25 +886,28 @@
         }
 
         function getOverlayImage() {
-            const now = new Date();
+    const now = new Date();
 
-            const schedules = [
-                {
-                    until: new Date("2026-04-20T23:59:59"),
-                    img: "www/public/Bilal/img/info/info_kajian_190426.png"
-                },
-                {
-                    until: new Date("2026-04-27T23:59:59"),
-                    img: "www/public/Bilal/img/info/info_kajian_260426.png"
-                }
-            ];
+    const base =
+        "https://raw.githubusercontent.com/andryan-github/waktu-sholat/main/www/public/Bilal/img/info/";
 
-            for (let s of schedules) {
-                if (now <= s.until) return s.img;
-            }
-
-            return "www/public/Bilal/img/info/info_default_1280x610.png";
+    const schedules = [
+        {
+            until: new Date("2026-04-20T23:59:59"),
+            img: base + "info_kajian_190426.png"
+        },
+        {
+            until: new Date("2026-04-27T23:59:59"),
+            img: base + "info_kajian_260426.png"
         }
+    ];
+
+    for (let s of schedules) {
+        if (now <= s.until) return s.img;
+    }
+
+    return base + "info_default_1280x610.png";
+}
 
         // =============================
         // Fungsi untuk mendeteksi freeze atau lag berat pada aplikasi
