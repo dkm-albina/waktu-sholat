@@ -1576,7 +1576,7 @@
 
             var bulanHijriID = [
                 "Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir",
-                "Jumadil Awal", "Jumadil Akhir", "Rajab",
+                "JumadilAwal", "JumadilAkhir", "Rajab",
                 "Sya'ban", "Ramadhan", "Syawal",
                 "Dzulqa'dah", "Dzulhijjah"
             ];
@@ -1590,8 +1590,8 @@
                 hari + ',' +
                 nowMoment.format('DD/MM/YYYY') +
                 '-' +
-                hijriMoment.format('iD') + ' ' +
-                bulan + ' ' +
+                hijriMoment.format('iD') +
+                bulan +
                 hijriMoment.format('iYYYY') + 'H'
             );
 
